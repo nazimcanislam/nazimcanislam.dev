@@ -2,7 +2,6 @@
 import me from "@assets/pictures/me.jpg";
 import Button from "@ui/Button.astro";
 import BubbleBackgroundCanvas from "@sections/BubbleBackgroundCanvas.astro";
-import { Picture } from "astro:assets";
 import { getLang, useTranslations } from "@/i18n/utils";
 
 const lang = getLang(Astro.request);
@@ -222,13 +221,13 @@ const t = useTranslations(lang);
       <div class="hero-image-glow" aria-hidden="true"></div>
 
       <div class="hero-image-frame">
-        <Picture
-          src={me}
+        <img
+          src={me.src}
           alt="Nazımcan İslam"
-          formats={["avif", "webp", "jpeg"]}
           loading="eager"
           fetchpriority="high"
           width={320}
+          height={427}
           title={t("home", "portrait_title")}
         />
         <div class="hero-scanlines" aria-hidden="true"></div>
