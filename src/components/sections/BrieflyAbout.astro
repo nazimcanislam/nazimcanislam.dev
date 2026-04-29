@@ -1,0 +1,187 @@
+---
+import { getLang, useTranslations } from "@/i18n/utils";
+import { Icon } from "astro-icon/components";
+import { Code } from "astro:components";
+import Button from "@ui/Button.astro";
+
+function calculateAge(birthYear: number, birthMonth = 1, birthDay = 1): number {
+  const today = new Date();
+  const age = today.getFullYear() - birthYear;
+  const hasBirthdayPassed =
+    today.getMonth() + 1 > birthMonth ||
+    (today.getMonth() + 1 === birthMonth && today.getDate() >= birthDay);
+  return hasBirthdayPassed ? age : age - 1;
+}
+
+const currentAge = calculateAge(2002, 7, 28);
+const brieflyAbout = `{
+  "personal": {
+    "name": "Nazımcan İslam",
+    "birth_year": 2002, // ${currentAge} years old
+    "region": "🇹🇷 Turkey",
+    "language": ["tr", "en"],
+    "role": "Software Developer"
+  }
+}`;
+
+const t = useTranslations(getLang(Astro.request));
+---
+
+<style>
+  .briefly-about {
+    padding: 0 16px;
+  }
+
+  .code-block {
+    text-align: left;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    max-width: 1024px;
+    width: 100%;
+    margin-inline: auto;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
+  }
+
+  .code-block pre {
+    background-color: var(--color-code-background) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow-y: hidden;
+    line-height: 1;
+    margin: 0;
+    padding: 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    border-top: none;
+  }
+
+  .code-block pre code {
+    background: none !important;
+    padding: 0 !important;
+  }
+
+  .code-title-bar {
+    background-color: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .code-title-filename {
+    color: var(--color-text-secondary);
+    font-size: 0.825rem;
+  }
+
+  #about-copy-button .about-copy-button-onclick-icon {
+    display: none;
+  }
+
+  #about-copy-button.copied .about-copy-button-default-icon {
+    display: none;
+  }
+
+  #about-copy-button.copied .about-copy-button-onclick-icon {
+    display: block;
+  }
+</style>
+
+<section
+  class="briefly-about mt-lg mb-lg"
+  aria-labelledby="briefly-about-title"
+>
+  <h2 class="h2 h2--terminal text-center mb-lg" id="briefly-about-title">
+    {t("home_about", "title").trim()}
+  </h2>
+
+  <div class="code-block mb-lg">
+    <div class="code-title-bar">
+      <code class="code-title-filename">briefly-about.json</code>
+      <Button
+        variant="secondary"
+        size="sm"
+        id="about-copy-button"
+        aria-label={t("home_about", "copy")}
+        data-copy-text={brieflyAbout}
+        data-default-text={t("home_about", "copy")}
+        data-copied-text={t("home_about", "copied")}
+      >
+        <Icon
+          name="mdi:content-copy"
+          class="about-copy-button-default-icon"
+          aria-hidden="true"
+        />
+        <Icon
+          name="mdi:check"
+          class="about-copy-button-onclick-icon"
+          aria-hidden="true"
+        />
+        <span id="about-copy-button-text">{t("home_about", "copy")}</span>
+      </Button>
+    </div>
+    <Code code={brieflyAbout} lang="json" theme="catppuccin-macchiato" />
+  </div>
+</section>
+
+<script>
+  async function copyToClipboard(text: string): Promise<boolean> {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {}
+    }
+
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.cssText =
+        "position:fixed;top:0;left:0;opacity:0;pointer-events:none;";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      const success = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      return success;
+    } catch {
+      return false;
+    }
+  }
+
+  function initCopyButton() {
+    const button = document.getElementById(
+      "about-copy-button",
+    ) as HTMLButtonElement | null;
+    if (!button) return;
+
+    const label = button.querySelector<HTMLSpanElement>(
+      "#about-copy-button-text",
+    );
+    const textToCopy = button.dataset.copyText ?? "";
+    const defaultText = button.dataset.defaultText ?? "";
+    const copiedText = button.dataset.copiedText ?? "";
+    let resetTimer: ReturnType<typeof setTimeout> | null = null;
+
+    button.addEventListener("click", async () => {
+      const success = await copyToClipboard(textToCopy);
+      if (!success) return;
+
+      button.classList.add("copied");
+      button.setAttribute("aria-label", copiedText);
+      if (label) label.textContent = copiedText;
+
+      if (resetTimer) clearTimeout(resetTimer);
+
+      resetTimer = setTimeout(() => {
+        button.classList.remove("copied");
+        button.setAttribute("aria-label", defaultText);
+        if (label) label.textContent = defaultText;
+        resetTimer = null;
+      }, 3000);
+    });
+  }
+
+  initCopyButton();
+</script>

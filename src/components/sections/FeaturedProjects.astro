@@ -1,0 +1,267 @@
+---
+import { getLang, useTranslations } from "@/i18n/utils";
+import type { Badge } from "@ui/Badges.astro";
+import Badges from "@ui/Badges.astro";
+import Button from "@ui/Button.astro";
+
+export interface Project {
+  title: string;
+  description: { section: string; desc: string };
+  url: string;
+  tech: Badge[];
+}
+
+const t = useTranslations(getLang(Astro.request));
+
+const projects: Project[] = [
+  {
+    title: "Shrinkify",
+    description: {
+      section: "featured_projects",
+      desc: "shrinkify_desc",
+    },
+    url: "https://github.com/nazimcanislam/shrinkify",
+    tech: [
+      {
+        name: "Python",
+        color: "blue",
+        theme: "tech",
+      },
+    ],
+  },
+  // {
+  //   title: "Fast Prime Finder",
+  //   description: {
+  //     section: "featured_projects",
+  //     desc: "fast_prime_finder_desc",
+  //   },
+  //   url: "https://github.com/nazimcanislam/fast-prime-finder",
+  //   tech: [
+  //     {
+  //       name: "C",
+  //       color: "gray",
+  //       theme: "tech",
+  //     },
+  //     {
+  //       name: "Makefile",
+  //       color: "gray",
+  //       theme: "tech",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Word Warden",
+  //   description: { section: "featured_projects", desc: "word_warden_desc" },
+  //   url: "https://github.com/nazimcanislam/word-warden",
+  //   tech: [
+  //     {
+  //       name: "C",
+  //       color: "gray",
+  //       theme: "tech",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Credit Card Validator",
+  //   description: {
+  //     section: "featured_projects",
+  //     desc: "credit_card_validator_desc",
+  //   },
+  //   url: "https://github.com/nazimcanislam/credit-card-validator",
+  //   tech: [
+  //     {
+  //       name: "Python",
+  //       color: "blue",
+  //       theme: "tech",
+  //     },
+  //   ],
+  // },
+  {
+    title: "MD Write",
+    description: { section: "featured_projects", desc: "mdwrite_desc" },
+    url: "https://github.com/nazimcanislam/md-write",
+    tech: [
+      {
+        name: "TypeScript",
+        color: "blue",
+        theme: "tech",
+      },
+      {
+        name: "JavaScript",
+        color: "yellow",
+        theme: "tech",
+      },
+      {
+        name: "CSS",
+        color: "purple",
+        theme: "tech",
+      },
+    ],
+  },
+  // {
+  //   title: "Memory Game",
+  //   description: { section: "featured_projects", desc: "memory_game_desc" },
+  //   url: "https://github.com/nazimcanislam/memory-game",
+  //   tech: [
+  //     {
+  //       name: "JavaScript",
+  //       color: "yellow",
+  //       theme: "tech",
+  //     },
+  //     {
+  //       name: "CSS",
+  //       color: "purple",
+  //       theme: "tech",
+  //     },
+  //     {
+  //       name: "HTML",
+  //       color: "red",
+  //       theme: "tech",
+  //     },
+  //   ],
+  // },
+  {
+    title: "Employee Log Screen",
+    description: {
+      section: "featured_projects",
+      desc: "employee_log_screen_desc",
+    },
+    url: "https://github.com/nazimcanislam/employee-log-screen",
+    tech: [
+      {
+        name: "HTML",
+        color: "red",
+        theme: "tech",
+      },
+      {
+        name: "JavaScript",
+        color: "yellow",
+        theme: "tech",
+      },
+      {
+        name: "Python",
+        color: "blue",
+        theme: "tech",
+      },
+      {
+        name: "Dockerfile",
+        color: "gray",
+        theme: "tech",
+      },
+    ],
+  },
+];
+---
+
+<style>
+  .featured-projects {
+    padding: 0 16px;
+    margin: 48px auto;
+    width: 100%;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    column-gap: 16px;
+    row-gap: 24px;
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+
+  .featured-project {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 24px 32px;
+    border-radius: 24px;
+    height: 100%;
+
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
+
+    transition: transform 0.3s ease;
+  }
+
+  .featured-project:hover,
+  .featured-project:focus-within {
+    transform: translateY(-4px);
+  }
+
+  .featured-project a {
+    color: var(--color-text-primary);
+  }
+
+  .featured-project a:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+
+  .featured-project h3 {
+    margin-top: 0;
+    font-size: clamp(1.3rem, 2.5vw, 1.5rem);
+  }
+
+  .featured-project p {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+  }
+</style>
+
+{
+  projects.length > 0 && (
+    <section
+      class="featured-projects"
+      aria-labelledby="featured-projects-title"
+    >
+      <h2
+        class="h2 h2--terminal text-center mb-lg"
+        id="featured-projects-title"
+      >
+        {t("featured_projects", "title")}
+      </h2>
+
+      <ul class="projects-grid">
+        {projects.map((project) => (
+          <li class="featured-project">
+            <div>
+              <h3 class="mb-md" translate="no" lang="en">
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-describedby={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
+                >
+                  {project.title}
+                </a>
+              </h3>
+              <p
+                class="lead"
+                id={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
+              >
+                {t(project.description.section, project.description.desc)}
+              </p>
+            </div>
+
+            <Badges items={project.tech} />
+          </li>
+        ))}
+      </ul>
+
+      <div class="text-center mt-lg">
+        <p class="lead">{t("featured_projects", "want_learn_projects")}</p>
+        <Button variant="primary" size="lg" href="/projects">
+          {t("featured_projects", "want_learn_projects_button")}
+        </Button>
+      </div>
+    </section>
+  )
+}

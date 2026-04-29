@@ -1,0 +1,135 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-width: auto;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+:root {
+  color-scheme: dark light;
+
+  /* Base */
+  --color-accent: #2563eb;
+  --color-accent-rgb: 137, 180, 250; /* #89b4fa */
+
+  /* Text */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+
+  /* Surface */
+  --color-background: #ffffff;
+  --color-card: #f8f9fa;
+  --color-border: #e5e7eb;
+  --color-glass-bg: rgba(255, 255, 255, 0.6);
+  --color-glass-border: rgba(255, 255, 255, 0.3);
+
+  --color-code-background: rgba(15, 23, 42, 1);
+  --color-code-green-text: #166534;
+  --color-code-green-background: rgba(22, 101, 52, 0.08);
+  --color-code-green-border: rgba(22, 101, 52, 0.2);
+
+  --border-radius-for-section: 24px;
+  --border-radius-for-button: 8px;
+}
+
+::selection {
+  color: #ffffff;
+  background-color: var(--color-accent);
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 8px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.svg-icon {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-accent: #2f6feb;
+    --color-text-primary: #e5e7eb;
+    --color-text-secondary: #94a3b8;
+    --color-background: #020617;
+    --color-border: #1e293b;
+    --color-card: #131932;
+    --color-glass-bg: rgba(15, 23, 42, 0.6);
+    --color-glass-border: rgba(255, 255, 255, 0.08);
+    --color-code-background: rgba(15, 23, 42, 0.6);
+    --color-code-green-text: #a6e3a1;
+    --color-code-green-background: rgba(166, 227, 161, 0.1);
+    --color-code-green-border: rgba(166, 227, 161, 0.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-transparency) {
+  :root {
+    --color-glass-bg: rgba(255, 255, 255, 1);
+    --color-glass-border: rgba(255, 255, 255, 1);
+  }
+
+  .glass {
+    background-color: var(--color-background);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-transparency) and (prefers-color-scheme: dark) {
+  :root {
+    --color-glass-bg: rgba(15, 23, 42, 1);
+    --color-glass-border: rgba(15, 23, 42, 1);
+  }
+}

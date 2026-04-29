@@ -1,0 +1,180 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getLang, useTranslations } from "@/i18n/utils";
+import { getCollection, getEntry } from "astro:content";
+
+const lang = getLang(Astro.request);
+const t = useTranslations(lang);
+
+const { slug } = Astro.params;
+if (!slug) return Astro.redirect("/blog");
+
+const post = await getEntry("blog", slug);
+if (!post) return Astro.redirect("/blog");
+
+const { Content } = await post.render();
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString(lang === "tr" ? "tr-TR" : "en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+---
+
+<style>
+  .post-page {
+    max-width: 720px;
+    margin-inline: auto;
+    padding: 64px 16px;
+  }
+
+  .post-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    margin-bottom: 40px;
+    padding: 6px 12px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .post-back:hover {
+    color: var(--color-accent);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+  }
+
+  .post-header { margin-bottom: 48px; }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .post-date {
+    font-family: ui-monospace, monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+  }
+  .post-tag {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(var(--color-accent-rgb), 0.08);
+    border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+    border-radius: 12px;
+    color: var(--color-accent);
+  }
+
+  .post-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 0 16px;
+    color: var(--color-text-primary);
+  }
+
+  .post-desc {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .post-divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 48px 0;
+  }
+
+  /* Markdown content styles */
+  .post-content {
+    line-height: 1.8;
+    color: var(--color-text-primary);
+  }
+  .post-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 48px 0 16px;
+    color: var(--color-text-primary);
+  }
+  .post-content h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 32px 0 12px;
+    color: var(--color-text-primary);
+  }
+  .post-content p {
+    margin-bottom: 20px;
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+  .post-content a { color: var(--color-accent); }
+  .post-content ul, .post-content ol {
+    margin: 0 0 20px 24px;
+    color: var(--color-text-secondary);
+  }
+  .post-content li { margin-bottom: 6px; line-height: 1.7; }
+  .post-content pre {
+    border-radius: 12px;
+    margin: 24px 0;
+    border: 1px solid var(--color-border);
+    overflow-x: auto;
+  }
+  .post-content code:not(pre code) {
+    font-family: ui-monospace, monospace;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: var(--color-accent);
+  }
+  .post-content blockquote {
+    border-left: 3px solid var(--color-accent);
+    margin: 24px 0;
+    padding: 0 0 0 20px;
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+</style>
+
+<Layout title={`${post.data.title} — Nazımcan İslam`} description={post.data.description}>
+  <article class="post-page">
+
+    <a href="/blog" class="post-back">
+      {t("blog", "back_to_blog")}
+    </a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time class="post-date" datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate)}
+        </time>
+        {post.data.tags.map((tag) => (
+          <span class="post-tag">#{tag}</span>
+        ))}
+      </div>
+      <h1 class="post-title">{post.data.title}</h1>
+      <p class="post-desc">{post.data.description}</p>
+    </header>
+
+    <hr class="post-divider" />
+
+    <div class="post-content">
+      <Content />
+    </div>
+
+  </article>
+</Layout>

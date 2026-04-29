@@ -1,0 +1,121 @@
+---
+/*
+  Optimized Canvas Bubble Background
+  - Mobile safe
+  - Resize safe
+  - Stable 60fps
+  - Low GC
+*/
+---
+
+<canvas id="bubble-canvas" aria-hidden="true" role="presentation"></canvas>
+
+<script>
+  (function () {
+    const isTouchDevice =
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia("(pointer: coarse)").matches;
+
+    if (isTouchDevice) {
+      document.getElementById("bubble-canvas")?.remove();
+      return;
+    }
+
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!motionQuery.matches) {
+      const canvas = document.getElementById(
+        "bubble-canvas",
+      ) as HTMLCanvasElement;
+
+      if (!canvas || !("transferControlToOffscreen" in canvas)) {
+      } else {
+        const offscreen = canvas.transferControlToOffscreen();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        const worker = new Worker("/bubble-worker.js");
+
+        worker.postMessage(
+          {
+            type: "init",
+            canvas: offscreen,
+            dpr,
+            w: window.innerWidth,
+            h: window.innerHeight,
+            isDark: window.matchMedia("(prefers-color-scheme: dark)").matches,
+            isTouchDevice:
+              "ontouchstart" in window || navigator.maxTouchPoints > 0,
+          },
+          [offscreen],
+        );
+
+        window.addEventListener(
+          "pointermove",
+          (e) => {
+            worker.postMessage({
+              type: "pointermove",
+              x: e.clientX,
+              y: e.clientY,
+            });
+          },
+          { passive: true },
+        );
+
+        window.addEventListener("pointerdown", () => {
+          worker.postMessage({ type: "pointerdown" });
+        });
+
+        window.addEventListener("pointerup", () => {
+          worker.postMessage({ type: "pointerup" });
+        });
+
+        let resizeTimeout: ReturnType<typeof setTimeout>;
+        let stableHeight = window.innerHeight;
+
+        window.addEventListener("resize", () => {
+          const rawH = window.visualViewport?.height ?? window.innerHeight;
+          const w = window.visualViewport?.width ?? window.innerWidth;
+
+          if (Math.abs(rawH - stableHeight) < 100) return;
+          stableHeight = rawH;
+
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            worker.postMessage({ type: "resize", w, h: rawH });
+          }, 150);
+        });
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", (e) => {
+            worker.postMessage({ type: "theme", isDark: e.matches });
+          });
+
+        document.addEventListener("visibilitychange", () => {
+          worker.postMessage({
+            type: document.hidden ? "pause" : "resume",
+          });
+        });
+
+        motionQuery.addEventListener("change", (e) => {
+          if (e.matches) worker.postMessage({ type: "pause" });
+          else worker.postMessage({ type: "resume" });
+        });
+      }
+    }
+  })();
+</script>
+
+<style>
+  #bubble-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+    will-change: transform;
+  }
+</style>

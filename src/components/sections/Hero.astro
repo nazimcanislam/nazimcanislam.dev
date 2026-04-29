@@ -1,0 +1,270 @@
+---
+import me from "@assets/pictures/me.jpg";
+import Button from "@ui/Button.astro";
+import BubbleBackgroundCanvas from "@sections/BubbleBackgroundCanvas.astro";
+import { Picture } from "astro:assets";
+import { getLang, useTranslations } from "@/i18n/utils";
+
+const lang = getLang(Astro.request);
+const t = useTranslations(lang);
+---
+
+<style>
+  .home-hero {
+    position: relative;
+    padding: 64px 16px;
+  }
+
+  .home-hero-content {
+    position: relative;
+    z-index: 5;
+    max-width: 960px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    align-items: center;
+    gap: 48px;
+  }
+
+  /* ── Image column ── */
+  .hero-image-col {
+    animation: float 6s ease-in-out infinite;
+    position: relative;
+  }
+
+  .hero-image-glow {
+    position: absolute;
+    inset: -24px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(var(--color-accent-rgb), 0.12) 0%,
+      transparent 70%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero-image-frame {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow:
+      0 24px 64px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    aspect-ratio: 3 / 4;
+  }
+
+  .hero-image-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Scanline overlay */
+  .hero-scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.06) 2px,
+      rgba(0, 0, 0, 0.06) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Online dot */
+  .hero-status-dot {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a6e3a1;
+    box-shadow: 0 0 8px #a6e3a1;
+    z-index: 2;
+  }
+
+  /* Floating status tag */
+  .hero-status-tag {
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.7rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-accent);
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
+    z-index: 3;
+  }
+
+  .hero-status-tag-value {
+    color: var(--color-code-green-text);
+  }
+
+  /* ── Text column ── */
+  .home-hero-text {
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-whoami {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 16px;
+    letter-spacing: 0.04em;
+    opacity: 0.9;
+  }
+
+  .hero-whoami-path {
+    color: var(--color-accent);
+  }
+
+  .hero-whoami-prompt {
+    color: #a6e3a1;
+  }
+
+  .hero-name {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    color: var(--color-text-primary);
+  }
+
+  .hero-name-dot {
+    color: var(--color-accent);
+  }
+
+  .hero-role {
+    font-family: ui-monospace, monospace;
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    font-weight: 400;
+    color: var(--color-accent);
+    margin: 0 0 20px;
+    letter-spacing: 0.01em;
+  }
+
+  .home-hero-text p {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    margin: 0 0 32px;
+  }
+
+  .hero-buttons-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ── Animations ── */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .home-hero-content {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .hero-image-col {
+      max-width: 320px;
+      margin-inline: auto;
+    }
+  }
+
+  @media (max-width: 426px) {
+    .home-hero {
+      padding: 0;
+    }
+
+    .home-hero-content {
+      padding: 24px 16px;
+    }
+  }
+</style>
+
+<div class="home-hero">
+  <BubbleBackgroundCanvas />
+
+  <div class="home-hero-content">
+    <!-- Image column -->
+    <div class="hero-image-col">
+      <div class="hero-image-glow" aria-hidden="true"></div>
+
+      <div class="hero-image-frame">
+        <Picture
+          src={me}
+          alt="Nazımcan İslam"
+          formats={["avif", "webp", "jpeg"]}
+          loading="eager"
+          fetchpriority="high"
+          width={320}
+          title={t("home", "portrait_title")}
+        />
+        <div class="hero-scanlines" aria-hidden="true"></div>
+        <div class="hero-status-dot" aria-hidden="true"></div>
+      </div>
+
+      <div class="hero-status-tag" aria-hidden="true">
+        status: <span class="hero-status-tag-value">open_to_work</span>
+      </div>
+    </div>
+
+    <!-- Text column -->
+    <div class="home-hero-text">
+      <p class="hero-whoami" aria-hidden="true">
+        <span class="hero-whoami-path">~/portfolio</span>
+        {" "}
+        <span class="hero-whoami-prompt">❯</span>
+        {" whoami"}
+      </p>
+
+      <h1 class="hero-name" translate="no" lang="tr">
+        Nazımcan İslam<span class="hero-name-dot" aria-hidden="true">.</span>
+      </h1>
+
+      <p class="hero-role" aria-hidden="true">{">"} {t("home", "role")}</p>
+
+      <p>{t("home", "bio")}</p>
+
+      <div class="hero-buttons-group">
+        <Button href="/projects" size="lg" variant="primary">
+          {t("home", "btn_projects")}
+        </Button>
+        <Button href="/about" size="lg" variant="ghost">
+          {t("home", "btn_about")}
+        </Button>
+      </div>
+    </div>
+  </div>
+</div>

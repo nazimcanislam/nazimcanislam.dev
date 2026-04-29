@@ -1,0 +1,144 @@
+---
+interface Props {
+  id?: string;
+  href?: string;
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+  target?: string;
+  singleIcon?: boolean;
+  type?: "button" | "submit";
+}
+
+const {
+  id,
+  href,
+  variant = "primary",
+  size = "md",
+  class: className = "",
+  target,
+  singleIcon,
+  type,
+  ...rest
+} = Astro.props;
+
+const isLink = Boolean(href);
+const Tag = isLink ? "a" : "button";
+---
+
+<Tag
+  id={id}
+  href={href}
+  target={href ? target : undefined}
+  type={isLink ? undefined : type}
+  rel={isLink && target === "_blank" ? "noopener noreferrer" : undefined}
+  class:list={[
+    "btn",
+    `btn-${variant}`,
+    `btn-${size}`,
+    className,
+    { "single-icon": singleIcon },
+  ]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.5rem;
+    min-height: 40px;
+    padding: 0;
+
+    font: inherit;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+
+    border-radius: var(--border-radius-for-button);
+    border: 1px solid transparent;
+
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.05s ease;
+  }
+
+  .btn.single-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 0 !important;
+  }
+
+  .btn-sm {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-md {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .btn-lg {
+    padding: 0.7rem 1.4rem;
+    font-size: 1.125rem;
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #ffffff;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-card);
+  }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--color-text-primary);
+  }
+
+  .btn-ghost:hover {
+    background-color: var(--color-card);
+  }
+
+  .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--color-accent) 40%, transparent);
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (hover: hover) {
+    .btn-primary:hover {
+      background-color: color-mix(in srgb, var(--color-accent) 100%, black 90%);
+    }
+
+    .btn-secondary:hover,
+    .btn-ghost:hover {
+      background-color: var(--color-card);
+    }
+  }
+</style>

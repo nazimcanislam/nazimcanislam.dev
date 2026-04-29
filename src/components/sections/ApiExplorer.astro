@@ -1,0 +1,497 @@
+---
+// src/sections/ApiExplorer.astro
+import { getLang, useTranslations } from "@/i18n/utils";
+import Button from "@ui/Button.astro";
+
+const t = useTranslations(getLang(Astro.request));
+
+interface Endpoint {
+  method: string;
+  path: string;
+  key: string;
+  response: Record<string, unknown>;
+}
+
+function calculateAge(birthYear: number, birthMonth = 1, birthDay = 1): number {
+  const today = new Date();
+  const age = today.getFullYear() - birthYear;
+  const hasBirthdayPassed =
+    today.getMonth() + 1 > birthMonth ||
+    (today.getMonth() + 1 === birthMonth && today.getDate() >= birthDay);
+  return hasBirthdayPassed ? age : age - 1;
+}
+
+const endpoints: Endpoint[] = [
+  {
+    method: "GET",
+    path: "/api/me/personal",
+    key: "personal",
+    response: {
+      name: "Nazımcan İslam",
+      birth_year: 2002,
+      age: calculateAge(2002, 7, 28),
+      gender: "he/him",
+      region: "🇹🇷 Turkey",
+      languages: ["tr", "en"],
+      role: "Software Developer",
+      interests: ["games", "linux", "anime", "phones", "ai", "basically tech"],
+    },
+  },
+  {
+    method: "GET",
+    path: "/api/me/skills",
+    key: "skills",
+    response: {
+      languages: ["TypeScript", "JavaScript", "CSS", "Python"],
+      frameworks: ["React", "Astro", "Django"],
+      tools: ["Git", "Docker", "Linux"],
+      currently_learning: "Rust",
+      interested_in: ["compilers", "systems", "open-source"],
+    },
+  },
+  {
+    method: "GET",
+    path: "/api/me/contact",
+    key: "contact",
+    response: {
+      email: "nazimcanislam@gmail.com",
+      github: "github.com/nazimcanislam",
+      linkedin: "linkedin.com/in/nazimcanislam",
+      open_to_dm: true,
+    },
+  },
+];
+---
+
+<style>
+  .wrapper {
+    padding: 0 16px;
+  }
+
+  .api-explorer {
+    max-width: 1024px;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .api-base-url-label {
+    font-size: 0.6rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+
+  .api-base-url-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    margin-bottom: 20px;
+  }
+
+  .api-base-url-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #a6e3a1;
+    box-shadow: 0 0 8px #a6e3a1;
+    flex-shrink: 0;
+  }
+
+  .api-base-url-text {
+    font-size: 0.8rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-text-primary);
+  }
+
+  .api-panel {
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
+  }
+
+  .api-endpoints {
+    border-bottom: 1px solid var(--color-border);
+    padding: 8px 0;
+  }
+
+  .api-endpoints-label {
+    font-size: 0.6rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 16px 8px;
+    margin: 0;
+  }
+
+  .api-endpoint-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-left: 2px solid transparent;
+    padding: 10px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.15s ease;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .api-endpoint-btn:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .api-endpoint-btn[aria-selected="true"] {
+    background: rgba(137, 180, 250, 0.07);
+    border-left-color: #89b4fa;
+  }
+
+  .api-method-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    font-family: ui-monospace, monospace;
+    color: var(--color-code-green-text);
+    background: var(--color-code-green-background);
+    border: 1px solid var(--color-code-green-border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .api-endpoint-path {
+    font-size: 0.78rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-text-secondary);
+    transition: color 0.15s ease;
+    text-align: left;
+  }
+
+  .api-endpoint-btn[aria-selected="true"] .api-endpoint-path {
+    color: var(--color-text-primary);
+  }
+
+  /* Response panel */
+  .api-response {
+    min-height: 180px;
+  }
+
+  .api-response-inner {
+    padding: 16px;
+    display: none;
+  }
+
+  .api-response-inner.active {
+    display: block;
+  }
+
+  .api-response-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .api-response-label {
+    font-size: 0.6rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .api-response-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .api-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.5625rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-code-green-text);
+    background: var(--color-code-green-background);
+    border: 1px solid var(--color-code-green-border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    line-height: normal;
+    transition: opacity 0.3s ease;
+  }
+
+  .api-status-badge.visible {
+    opacity: 1;
+  }
+
+  .api-status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #a6e3a1;
+    box-shadow: 0 0 5px #a6e3a1;
+  }
+
+  .api-content-type {
+    font-size: 0.6rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-text-secondary);
+    opacity: 0.9;
+  }
+
+  .api-json-block {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 14px 16px;
+    border: 1px solid var(--color-border);
+  }
+
+  .api-json-block pre {
+    margin: 0;
+    font-family: ui-monospace, monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--color-text-primary);
+    /* white-space: pre-wrap; */
+    overflow-x: auto;
+    word-break: break-word;
+    background: none !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  .api-empty {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-family: ui-monospace, monospace;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.04em;
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .cursor {
+    animation: blink 1s step-end infinite;
+    display: inline-block;
+  }
+
+  /* JSON syntax colors */
+  .json-key {
+    color: #89b4fa;
+  }
+  .json-str {
+    color: #a6e3a1;
+  }
+  .json-num {
+    color: #f9e2af;
+  }
+  .json-bool {
+    color: #fab387;
+  }
+  .json-punct {
+    color: #585b70;
+  }
+</style>
+
+<div class="wrapper">
+  <div class="api-explorer" lang="en" translate="no">
+    <p class="api-base-url-label">base url</p>
+    <div class="api-base-url-badge">
+      <span class="api-base-url-dot"></span>
+      <span class="api-base-url-text">nazimcanislam.dev</span>
+    </div>
+
+    <div class="api-panel">
+      <div class="api-endpoints">
+        <p class="api-endpoints-label">Endpoints</p>
+        {
+          endpoints.map((ep) => (
+            <button
+              class="api-endpoint-btn"
+              aria-pressed="false"
+              data-key={ep.key}
+              data-response={JSON.stringify(ep.response)}
+              type="button"
+            >
+              <span class="api-method-badge">{ep.method}</span>
+              <span class="api-endpoint-path">{ep.path}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="api-response">
+        {
+          endpoints.map((ep) => (
+            <div class="api-response-inner" id={`response-${ep.key}`}>
+              <div class="api-response-header">
+                <span class="api-response-label">Response body</span>
+                <div class="api-response-meta">
+                  <span class="api-status-badge" id={`status-${ep.key}`}>
+                    <span class="api-status-dot" />
+                    <span>200 OK</span>
+                  </span>
+                  <span class="api-content-type">application/json</span>
+                </div>
+              </div>
+              <div class="api-json-block">
+                <pre id={`json-${ep.key}`} />
+              </div>
+            </div>
+          ))
+        }
+
+        <div class="api-empty" id="api-empty-state">← select an endpoint</div>
+      </div>
+    </div>
+
+    <div class="text-center mt-lg">
+      <p class="lead">{t("home_about", "want_learn_more")}</p>
+      <Button variant="primary" size="lg" href="/about">
+        {t("home_about", "about_button")}
+      </Button>
+    </div>
+  </div>
+</div>
+
+<script>
+  type JsonValue =
+    | string
+    | number
+    | boolean
+    | null
+    | JsonValue[]
+    | { [k: string]: JsonValue };
+
+  function highlightJson(text: string): string {
+    return text.replace(
+      /("(?:[^"\\]|\\.)*")(\s*:)?|(\btrue\b|\bfalse\b|\bnull\b)|(-?\d+(?:\.\d+)?)|([{}\[\],])/g,
+      (_, str, colon, bool, num, punct) => {
+        if (str && colon) return `<span class="json-key">${str}</span>${colon}`;
+        if (str) return `<span class="json-str">${str}</span>`;
+        if (bool) return `<span class="json-bool">${bool}</span>`;
+        if (num) return `<span class="json-num">${num}</span>`;
+        if (punct) return `<span class="json-punct">${punct}</span>`;
+        return _;
+      },
+    );
+  }
+
+  function typewrite(
+    el: HTMLPreElement,
+    text: string,
+    statusEl: HTMLElement,
+    speed = 10,
+  ): void {
+    let i = 0;
+    let lastTime: number | null = null;
+    let rafId: number;
+
+    const tick = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const elapsed = timestamp - lastTime;
+
+      if (elapsed >= speed) {
+        lastTime = timestamp;
+        i++;
+        const current = text.slice(0, i);
+
+        if (i >= text.length) {
+          el.innerHTML = highlightJson(current);
+          statusEl.classList.add("visible");
+          return;
+        }
+
+        el.innerHTML = current + '<span class="cursor">▊</span>';
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function initApiExplorer(): void {
+    const buttons =
+      document.querySelectorAll<HTMLButtonElement>(".api-endpoint-btn");
+    const emptyState = document.getElementById("api-empty-state");
+
+    let activeKey: string | null = null;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.key;
+        if (!key) return;
+
+        // Toggle
+        if (key === activeKey) {
+          btn.setAttribute("aria-pressed", "false");
+          document
+            .getElementById(`response-${key}`)
+            ?.classList.remove("active");
+          if (emptyState) emptyState.style.display = "";
+          activeKey = null;
+          return;
+        }
+
+        // Deactivate previous
+        if (activeKey) {
+          document
+            .querySelector<HTMLButtonElement>(`[data-key="${activeKey}"]`)
+            ?.setAttribute("aria-pressed", "false");
+          document
+            .getElementById(`response-${activeKey}`)
+            ?.classList.remove("active");
+        }
+
+        // Activate new
+        btn.setAttribute("aria-pressed", "true");
+        const responseEl = document.getElementById(`response-${key}`);
+        const jsonEl = document.getElementById(
+          `json-${key}`,
+        ) as HTMLPreElement | null;
+        const statusEl = document.getElementById(`status-${key}`);
+
+        if (!responseEl || !jsonEl || !statusEl) return;
+
+        if (emptyState) emptyState.style.display = "none";
+        responseEl.classList.add("active");
+
+        // Reset & retype
+        statusEl.classList.remove("visible");
+        jsonEl.innerHTML = "";
+
+        const raw = btn.dataset.response ?? "{}";
+        const text = JSON.stringify(JSON.parse(raw), null, 2);
+        typewrite(jsonEl, text, statusEl);
+
+        activeKey = key;
+      });
+    });
+  }
+
+  initApiExplorer();
+</script>

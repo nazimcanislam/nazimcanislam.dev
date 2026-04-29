@@ -1,0 +1,236 @@
+---
+import Logo from "@assets/logo.svg";
+import Button from "@ui/Button.astro";
+import { Icon } from "astro-icon/components";
+import { getLang, useTranslations } from "@/i18n/utils";
+import { NAV_LINKS } from "../constants/navigation";
+
+const lang = getLang(Astro.request);
+const t = useTranslations(lang);
+const { pathname } = Astro.url;
+---
+
+<style>
+  header {
+    padding: 12px 16px;
+    position: -webkit-sticky;
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.1));
+  }
+
+  nav {
+    max-width: 1024px;
+    width: 100%;
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar-brand,
+  .navbar-brand svg {
+    display: block;
+  }
+
+  /* Desktop nav */
+  .navbar-navs {
+    display: flex;
+    list-style-type: none;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar-navs a {
+    text-decoration: none;
+    color: var(--color-text-primary);
+    padding: 8px 12px;
+    border-radius: var(--border-radius-for-button);
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .navbar-navs a.active,
+  .navbar-navs a:hover,
+  .navbar-navs a:focus-visible {
+    color: var(--color-accent);
+    background-color: var(--color-card);
+  }
+
+  .navbar-navs a.active::before {
+    content: "> ";
+    opacity: 0.6;
+  }
+
+  /* Mobile toggle button */
+  .navbar-toggle {
+    display: none;
+  }
+
+  /* Mobile dropdown */
+  .navbar-mobile {
+    display: none;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .navbar-mobile.open {
+    max-height: 320px;
+    opacity: 1;
+  }
+
+  .navbar-mobile-inner {
+    max-width: 1024px;
+    margin-inline: auto;
+    padding: 8px 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-top: 1px solid var(--color-border);
+    margin-top: 8px;
+  }
+
+  .navbar-mobile-inner a {
+    text-decoration: none;
+    color: var(--color-text-primary);
+    padding: 10px 12px;
+    border-radius: var(--border-radius-for-button);
+    font-size: 1rem;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .navbar-mobile-inner a.active,
+  .navbar-mobile-inner a:hover,
+  .navbar-mobile-inner a:focus-visible {
+    color: var(--color-accent);
+    background-color: var(--color-card);
+  }
+
+  .navbar-mobile-inner a.active::before {
+    content: "> ";
+    opacity: 0.6;
+  }
+
+  /* Chevron animation */
+  .navbar-toggle-icon {
+    transition: transform 0.3s ease;
+  }
+
+  .navbar-toggle[aria-expanded="true"] .navbar-toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  @media (max-width: 640px) {
+    .navbar-navs {
+      display: none;
+    }
+
+    .navbar-toggle {
+      display: flex;
+    }
+
+    .navbar-mobile {
+      display: block;
+    }
+  }
+</style>
+
+<header class="glass">
+  <nav aria-label="Main navigation">
+    <a
+      href="/"
+      class="navbar-brand"
+      translate="no"
+      lang="tr"
+      aria-label="Nazımcan İslam homepage"
+    >
+      <Logo height={40} aria-hidden="true" />
+    </a>
+
+    <!-- Desktop -->
+    <ul class="navbar-navs">
+      {
+        NAV_LINKS.map((link) => {
+          const isActive =
+            pathname === link.href || pathname.startsWith(link.href + "/");
+          return (
+            <li>
+              <a
+                href={link.href}
+                class={isActive ? "active" : ""}
+                aria-current={isActive ? "page" : null}
+              >
+                {t("nav", link.labelKey)}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <!-- Mobile toggle -->
+    <Button
+      variant="ghost"
+      size="lg"
+      singleIcon
+      id="navbar-toggle"
+      class="navbar-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="navbar-mobile"
+      aria-label="Toggle navigation"
+    >
+      <Icon name="mdi:chevron-down" class="navbar-toggle-icon" aria-hidden="true"style="font-size: 32px" />
+    </Button>
+  </nav>
+
+  <!-- Mobile dropdown -->
+  <div id="navbar-mobile" class="navbar-mobile" aria-hidden="true">
+    <div class="navbar-mobile-inner">
+      {
+        NAV_LINKS.map((link) => {
+          const isActive =
+            pathname === link.href || pathname.startsWith(link.href + "/");
+          return (
+            <a
+              href={link.href}
+              class={isActive ? "active" : ""}
+              aria-current={isActive ? "page" : null}
+            >
+              {t("nav", link.labelKey)}
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("navbar-toggle") as HTMLButtonElement | null;
+  const menu = document.getElementById("navbar-mobile") as HTMLDivElement | null;
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = menu?.classList.contains("open");
+
+    menu?.classList.toggle("open", !isOpen);
+    toggle.setAttribute("aria-expanded", String(!isOpen));
+    menu?.setAttribute("aria-hidden", String(isOpen));
+  });
+
+  menu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      menu.classList.remove("open");
+      toggle?.setAttribute("aria-expanded", "false");
+      menu.setAttribute("aria-hidden", "true");
+    });
+  });
+</script>

@@ -1,0 +1,316 @@
+<script>
+  const reduceMotion: boolean = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (typeof window !== "undefined" && !reduceMotion) {
+    // Thanks to: https://github.com/baunov/gradients-bg
+    const interBubble: HTMLDivElement =
+      document.querySelector<HTMLDivElement>(".interactive")!;
+    if (interBubble) {
+      let curX: number = 0;
+      let curY: number = 0;
+      let tgX: number = 0;
+      let tgY: number = 0;
+
+      let scale: number = 1;
+      let targetScale: number = 1;
+      let rafId: number;
+
+      function move() {
+        curX += (tgX - curX) / 20;
+        curY += (tgY - curY) / 20;
+
+        scale += (targetScale - scale) / 12;
+
+        interBubble.style.transform = `
+        translate3d(${curX}px, ${curY}px, 0)
+        scale(${scale})
+      `;
+
+        rafId = requestAnimationFrame(move);
+      }
+
+      function resetScale() {
+        targetScale = 1;
+      }
+
+      window.addEventListener("pointermove", (event) => {
+        tgX = event.pageX;
+        tgY = event.pageY;
+      });
+
+      window.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          cancelAnimationFrame(rafId);
+        } else {
+          move();
+        }
+      });
+
+      window.addEventListener("pointerdown", () => {
+        targetScale = 1.5;
+      });
+
+      window.addEventListener("pointerup", resetScale);
+      window.addEventListener("pointercancel", resetScale);
+      window.addEventListener("pointerleave", resetScale);
+
+      move();
+    }
+  }
+</script>
+
+<style>
+  #home-hero-bubble-background {
+    --header-height: 65.8px;
+
+    --color-bg-1: var(--color-background);
+    --color-bg-2: color-mix(
+      in var(--color-background),
+      var(--color-text-primary)
+    );
+    --color1: 18, 113, 255;
+    --color2: 221, 74, 255;
+    --color3: 100, 228, 255;
+    --color4: 200, 50, 55;
+    --color5: 100, 180, 55;
+    --color-interactive: 37, 99, 235;
+    --circle-size: 20%;
+    --blending: hard-light;
+
+    position: absolute;
+    overflow: hidden;
+    top: calc(var(--header-height) * -1);
+    left: 0;
+
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+
+    background: linear-gradient(40deg, var(--color-bg-1), var(--color-bg-2));
+
+    z-index: 0;
+    pointer-events: none;
+
+    /* Performance for iOS Safari */
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  .gradients-container {
+    filter: url(#goo) blur(24px);
+
+    width: 100%;
+    height: 100%;
+  }
+
+  .g1,
+  .g2,
+  .g3,
+  .g4,
+  .g5 {
+    will-change: transform;
+  }
+
+  .g1 {
+    position: absolute;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--color1), 0.8) 0,
+        rgba(var(--color1), 0) 50%
+      )
+      no-repeat;
+    mix-blend-mode: var(--blending);
+
+    width: var(--circle-size);
+    height: var(--circle-size);
+    top: calc(50% - var(--circle-size) / 2);
+    left: calc(50% - var(--circle-size) / 2);
+
+    transform-origin: center center;
+    animation:
+      moveVertical 30s ease infinite,
+      floaty 12s ease-in-out infinite;
+
+    opacity: 1;
+  }
+
+  .g2 {
+    position: absolute;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--color2), 0.8) 0,
+        rgba(var(--color2), 0) 50%
+      )
+      no-repeat;
+    mix-blend-mode: var(--blending);
+
+    width: var(--circle-size);
+    height: var(--circle-size);
+    top: 30%;
+    left: 0%;
+
+    transform-origin: calc(50% - 400px);
+    animation:
+      moveInCircle 20s reverse infinite,
+      floaty 15s ease-in-out infinite;
+
+    opacity: 1;
+  }
+
+  .g3 {
+    position: absolute;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--color3), 0.8) 0,
+        rgba(var(--color3), 0) 50%
+      )
+      no-repeat;
+    mix-blend-mode: var(--blending);
+
+    width: var(--circle-size);
+    height: var(--circle-size);
+    top: 80%;
+    left: 12%;
+
+    transform-origin: calc(50% + 400px);
+    animation:
+      moveInCircle 40s linear infinite,
+      floaty 18s ease-in-out infinite;
+
+    opacity: 1;
+  }
+
+  .g4 {
+    position: absolute;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--color4), 0.8) 0,
+        rgba(var(--color4), 0) 50%
+      )
+      no-repeat;
+    mix-blend-mode: var(--blending);
+
+    width: var(--circle-size);
+    height: var(--circle-size);
+    top: 70%;
+    left: 80%;
+
+    transform-origin: calc(50% - 200px);
+    animation:
+      moveHorizontal 40s ease infinite,
+      floaty 14s ease-in-out infinite;
+
+    opacity: 0.7;
+  }
+
+  .g5 {
+    position: absolute;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--color5), 0.8) 0,
+        rgba(var(--color5), 0) 50%
+      )
+      no-repeat;
+    mix-blend-mode: var(--blending);
+
+    width: calc(var(--circle-size) * 2);
+    height: calc(var(--circle-size) * 2);
+    top: 20%;
+    left: 80%;
+
+    transform-origin: calc(50% - 800px) calc(50% + 200px);
+    animation:
+      moveInCircle 20s ease infinite,
+      floaty 20s ease-in-out infinite;
+
+    opacity: 1;
+  }
+
+  .interactive {
+    position: absolute;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--color-interactive), 0.8) 0,
+        rgba(var(--color-interactive), 0) 50%
+      )
+      no-repeat;
+    mix-blend-mode: var(--blending);
+
+    width: 100%;
+    height: 100%;
+    top: -50%;
+    left: -50%;
+
+    opacity: 0.7;
+  }
+
+  #home-hero-bubble-background svg {
+    display: none;
+  }
+
+  @keyframes floaty {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    20% {
+      transform: translate(4px, -6px) scale(1.03);
+    }
+    40% {
+      transform: translate(-6px, 3px) scale(0.97);
+    }
+    60% {
+      transform: translate(3px, 7px) scale(1.02);
+    }
+    80% {
+      transform: translate(-4px, -3px) scale(0.99);
+    }
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gradients-container {
+      filter: none;
+    }
+
+    .g1,
+    .g2,
+    .g3,
+    .g4,
+    .g5 {
+      animation: none;
+    }
+
+    .interactive {
+      display: none;
+    }
+  }
+</style>
+
+<div id="home-hero-bubble-background">
+  <svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"
+        ></feGaussianBlur>
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
+          result="goo"></feColorMatrix>
+        <feBlend in="SourceGraphic" in2="goo"></feBlend>
+      </filter>
+    </defs>
+  </svg>
+  <div class="gradients-container">
+    <div class="g1"></div>
+    <div class="g2"></div>
+    <div class="g3"></div>
+    <div class="g4"></div>
+    <div class="g5"></div>
+    <div class="interactive"></div>
+  </div>
+</div>

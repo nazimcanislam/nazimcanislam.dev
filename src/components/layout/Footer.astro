@@ -1,0 +1,187 @@
+---
+import Logo from "@assets/logo.svg";
+import Button from "@ui/Button.astro";
+import { getLang, useTranslations } from "@/i18n/utils";
+import { NAV_LINKS, SOCIAL_LINKS } from "../constants/navigation";
+import { Icon } from "astro-icon/components";
+
+const { pathname } = Astro.url;
+const t = useTranslations(getLang(Astro.request));
+const currentYear = new Date().getFullYear();
+---
+
+<style>
+  footer {
+    background-color: var(--color-glass-bg);
+    border-top: 1px solid var(--color-border);
+    filter: drop-shadow(0 -8px 32px rgba(0, 0, 0, 0.1));
+  }
+
+  .footer-brand,
+  .footer-brand svg {
+    display: block;
+  }
+
+  .footer-inner {
+    padding: 32px 16px;
+  }
+
+  .footer-content {
+    max-width: 1024px;
+    width: 100%;
+    margin-inline: auto;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+    column-gap: 16px;
+    row-gap: 32px;
+  }
+
+  .footer-bottom {
+    width: 100%;
+    padding: 16px;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .footer-bottom p {
+    margin: 0;
+  }
+
+  .footer-nav,
+  .footer-social {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    padding: 8px 12px;
+    border-radius: var(--border-radius-for-button);
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .footer-link.active,
+  .footer-link:hover,
+  .footer-link:focus-visible {
+    color: var(--color-accent);
+    background-color: var(--color-card);
+    outline-offset: 2px;
+  }
+
+  .footer-link.active::before {
+    content: "> ";
+    opacity: 0.6;
+  }
+
+  .link-icon {
+    display: block;
+  }
+</style>
+
+<footer aria-label="Site footer">
+  <div class="footer-inner">
+    <div class="footer-content">
+      <div>
+        <a
+          href="/"
+          class="footer-brand"
+          translate="no"
+          lang="tr"
+          aria-label="Nazımcan İslam homepage"
+        >
+          <Logo height={40} aria-hidden="true" />
+        </a>
+        <p class="lead" lang="tr" translate="no">Nazımcan İslam</p>
+        <small class="small">{t("meta", "description")}</small>
+      </div>
+
+      <nav aria-label="Footer navigation">
+        <p class="lead mb-sm">{t("footer", "navigation")}</p>
+        <ul class="footer-nav">
+          {
+            NAV_LINKS.map((link) => {
+              const isActive =
+                pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+              return (
+                <li>
+                  <a
+                    href={link.href}
+                    class:list={["footer-link", { active: isActive }]}
+                    aria-current={isActive ? "page" : null}
+                  >
+                    {t("nav", link.labelKey)}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <p class="lead mb-sm">{t("footer", "social")}</p>
+        <ul class="footer-social" aria-label="Social media links">
+          {
+            SOCIAL_LINKS.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="footer-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${link.label} (opens in new tab)`}
+                >
+                  <Icon name={link.icon} class="link-icon" aria-hidden="true" />
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <p class="lead mb-sm">{t("footer", "subscribe_blog")}</p>
+        <form>
+          <small class="small">{t("footer", "subscribe_desc")}</small>
+          <div class="mt-sm mb-sm">
+            <label for="email">{t("footer", "email_address")}</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="input mt-sm mb-sm"
+              placeholder={t("footer", "email_placeholder")}
+              autocomplete="email"
+              required
+            />
+          </div>
+
+          <Button type="submit" size="sm" variant="primary">
+            {t("footer", "subscribe")}
+          </Button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p lang="tr" translate="no">© {currentYear} Nazımcan İslam</p>
+    <small class="small">Built with Astro and ❤️</small>
+  </div>
+</footer>

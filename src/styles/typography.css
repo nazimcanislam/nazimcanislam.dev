@@ -1,0 +1,92 @@
+/* Headings */
+.h1 {
+  font-size: clamp(2.1rem, 2.5vw, 2.7rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 1rem 0;
+}
+
+.h2 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0 0 1rem 0;
+}
+
+.h2--terminal {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.h2--terminal::before {
+  content: ">_";
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75em;
+  font-weight: 400;
+  color: var(--color-accent);
+  opacity: 0.85;
+  letter-spacing: -0.05em;
+  flex-shrink: 0;
+}
+
+.text-center .h2--terminal,
+.h2--terminal.text-center {
+  display: flex;
+  justify-content: center;
+}
+
+.h3 {
+  font-size: clamp(1.3rem, 2vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 0.75rem 0;
+}
+
+/* Paragraph */
+p {
+  margin: 0 0 1rem 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* Lead text (hero açıklaması gibi) */
+.lead {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+/* Links */
+a {
+  color: var(--color-accent);
+  transition: opacity 0.15s ease;
+}
+
+a:hover {
+  opacity: 0.9;
+}
+
+/* Small text */
+.small {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+/* Code */
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background-color: var(--color-card);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.text-center {
+  text-align: center;
+}

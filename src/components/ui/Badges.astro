@@ -1,0 +1,124 @@
+---
+export type Badge = {
+  name: string;
+  color: "blue" | "green" | "purple" | "orange" | "red" | "yellow" | "gray";
+  theme?: "normal" | "tech";
+};
+
+interface Props {
+  items: Badge[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items?.length > 0 && (
+    <div class="badges">
+      {items.map((badge) => (
+        <div
+          class={`badge color-${badge.color}${badge.theme ? ` badge-${badge.theme}` : ""}`}
+          translate={badge.theme === "tech" ? "no" : "yes"}
+        >
+          {badge.name}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .badges {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .badge {
+    border: 1px solid var(--color-text-primary);
+    border-radius: 16px;
+    padding: 2px 8px;
+    min-width: 30px;
+    text-align: center;
+    font-size: clamp(0.75rem, 2.5vw, 0.825rem);
+  }
+
+  /* theme variants */
+  .badge-tech {
+    font-family: ui-monospace, monospace;
+    letter-spacing: 0.03em;
+  }
+
+  /* color variants */
+  .color-blue {
+    border-color: #1d4ed8;
+    color: #1d4ed8;
+  }
+
+  .color-green {
+    border-color: #15803d;
+    color: #15803d;
+  }
+
+  .color-purple {
+    border-color: #7e22ce;
+    color: #7e22ce;
+  }
+
+  .color-orange {
+    border-color: #c2410c;
+    color: #c2410c;
+  }
+
+  .color-red {
+    border-color: #b91c1c;
+    color: #b91c1c;
+  }
+
+  .color-yellow {
+    border-color: #854d0e;
+    color: #854d0e;
+  }
+
+  .color-gray {
+    border-color: #374151;
+    color: #374151;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .color-blue {
+      border-color: #93c5fd;
+      color: #93c5fd;
+    }
+
+    .color-green {
+      border-color: #86efac;
+      color: #86efac;
+    }
+
+    .color-purple {
+      border-color: #d8b4fe;
+      color: #d8b4fe;
+    }
+
+    .color-orange {
+      border-color: #fdba74;
+      color: #fdba74;
+    }
+
+    .color-red {
+      border-color: #fca5a5;
+      color: #fca5a5;
+    }
+
+    .color-yellow {
+      border-color: #fde047;
+      color: #fde047;
+    }
+
+    .color-gray {
+      border-color: #9ca3af;
+      color: #9ca3af;
+    }
+  }
+</style>

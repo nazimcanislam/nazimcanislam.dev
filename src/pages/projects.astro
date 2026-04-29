@@ -1,0 +1,278 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getLang, useTranslations } from "@/i18n/utils";
+
+const lang = getLang(Astro.request);
+const t = useTranslations(lang);
+
+// Build-time fetch from GitHub API
+let repos: Array<{
+  name: string;
+  description: string | null;
+  html_url: string;
+  stargazers_count: number;
+  forks_count: number;
+  language: string | null;
+  topics: string[];
+  updated_at: string;
+}> = [];
+
+let fetchError = false;
+
+try {
+  const res = await fetch("https://api.github.com/users/nazimcanislam/repos?sort=updated&per_page=100&type=public", {
+    headers: { "User-Agent": "nazimcanislam.dev" },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    repos = data.filter((r: { fork: boolean }) => !r.fork);
+  } else {
+    fetchError = true;
+  }
+} catch {
+  fetchError = true;
+}
+
+const langColorMap: Record<string, string> = {
+  TypeScript: "#3178c6",
+  JavaScript: "#f7df1e",
+  Python: "#3572A5",
+  Rust: "#dea584",
+  Swift: "#F05138",
+  C: "#555555",
+  "C++": "#f34b7d",
+  CSS: "#563d7c",
+  HTML: "#e34c26",
+  Go: "#00ADD8",
+  Kotlin: "#A97BFF",
+  Java: "#b07219",
+  Shell: "#89e051",
+};
+---
+
+<style>
+  .projects-page {
+    max-width: 960px;
+    margin-inline: auto;
+    padding: 64px 16px;
+  }
+
+  .projects-hero { margin-bottom: 56px; }
+
+  .projects-path {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.04em;
+    margin: 0 0 16px;
+  }
+  .projects-path span { color: var(--color-accent); }
+
+  .projects-hero-title {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    color: var(--color-text-primary);
+  }
+  .projects-hero-title .dot { color: var(--color-accent); }
+
+  .projects-hero-subtitle {
+    font-family: ui-monospace, monospace;
+    font-size: 1rem;
+    color: var(--color-accent);
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+    padding: 5px 12px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+  }
+  .section-label::before { content: "# "; color: var(--color-accent); font-weight: 600; }
+
+  .repos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+    grid-auto-rows: 1fr;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .repo-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px 24px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 16px;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    text-decoration: none;
+  }
+  .repo-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(var(--color-accent-rgb), 0.35);
+  }
+
+  .repo-name {
+    font-family: ui-monospace, monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 0 0 8px;
+    word-break: break-word;
+  }
+
+  .repo-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    flex: 1;
+    margin: 0 0 16px;
+  }
+
+  .repo-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .repo-topic {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(var(--color-accent-rgb), 0.08);
+    border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+    border-radius: 12px;
+    color: var(--color-accent);
+  }
+
+  .repo-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: auto;
+  }
+  .repo-lang {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+  }
+  .repo-lang-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .repo-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+  }
+
+  .error-state, .empty-state {
+    text-align: center;
+    padding: 64px 16px;
+    color: var(--color-text-secondary);
+    font-family: ui-monospace, monospace;
+  }
+  .error-state a { color: var(--color-accent); }
+
+  @media (max-width: 500px) {
+    .projects-page { padding: 40px 16px; }
+  }
+</style>
+
+<Layout title={t("projects", "meta_title")} description={t("projects", "meta_desc")}>
+  <div class="projects-page">
+
+    <header class="projects-hero">
+      <p class="projects-path" aria-hidden="true">
+        <span>{t("projects", "hero_label")}</span>
+        {" ❯ ls -la"}
+      </p>
+      <h1 class="projects-hero-title">
+        {t("projects", "hero_title")}<span class="dot" aria-hidden="true">.</span>
+      </h1>
+      <p class="projects-hero-subtitle">{">"} {t("projects", "hero_subtitle")}</p>
+    </header>
+
+    <div class="section-label" aria-hidden="true">{t("projects", "section_title")}</div>
+
+    {fetchError ? (
+      <div class="error-state">
+        <p>{t("projects", "error")}</p>
+        <a href="https://github.com/nazimcanislam" target="_blank" rel="noopener noreferrer">
+          github.com/nazimcanislam
+        </a>
+      </div>
+    ) : repos.length === 0 ? (
+      <div class="empty-state">{t("projects", "loading")}</div>
+    ) : (
+      <ul class="repos-grid">
+        {repos.map((repo) => (
+          <li>
+            <a
+              href={repo.html_url}
+              class="repo-card"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${repo.name} — ${repo.description ?? t("projects", "no_desc")}`}
+              translate="no"
+            >
+              <h2 class="repo-name">{repo.name}</h2>
+              <p class="repo-desc">{repo.description ?? t("projects", "no_desc")}</p>
+              {repo.topics.length > 0 && (
+                <div class="repo-topics" aria-hidden="true">
+                  {repo.topics.slice(0, 3).map((topic) => (
+                    <span class="repo-topic">{topic}</span>
+                  ))}
+                </div>
+              )}
+              <div class="repo-meta" aria-hidden="true">
+                {repo.language && (
+                  <span class="repo-lang">
+                    <span
+                      class="repo-lang-dot"
+                      style={`background: ${langColorMap[repo.language] ?? "#888"}`}
+                    ></span>
+                    {repo.language}
+                  </span>
+                )}
+                {repo.stargazers_count > 0 && (
+                  <span class="repo-stat" title={`${repo.stargazers_count} ${t("projects", "stars")}`}>
+                    ★ {repo.stargazers_count}
+                  </span>
+                )}
+                {repo.forks_count > 0 && (
+                  <span class="repo-stat" title={`${repo.forks_count} ${t("projects", "forks")}`}>
+                    ⑂ {repo.forks_count}
+                  </span>
+                )}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+  </div>
+</Layout>

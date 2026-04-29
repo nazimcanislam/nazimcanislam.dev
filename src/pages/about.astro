@@ -1,0 +1,352 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getLang, useTranslations } from "@/i18n/utils";
+import Button from "@ui/Button.astro";
+
+const lang = getLang(Astro.request);
+const t = useTranslations(lang);
+
+const skills = {
+  languages: ["TypeScript", "JavaScript", "Python", "CSS", "Swift"],
+  frameworks: ["React", "Astro", "Node.js", "Django"],
+  tools: ["Git", "Docker", "Linux", "Vercel"],
+  learning: "Rust",
+};
+
+const interests = [
+  "compilers",
+  "systems programming",
+  "open-source",
+  "AI/ML",
+  "linux",
+  "game dev concepts",
+  "Jungian psychology",
+  "competitive gaming",
+];
+---
+
+<style>
+  .about-page {
+    max-width: 960px;
+    margin-inline: auto;
+    padding: 64px 16px;
+  }
+
+  .about-hero { margin-bottom: 72px; }
+
+  .about-path {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.04em;
+    margin: 0 0 16px;
+  }
+  .about-path span { color: var(--color-accent); }
+
+  .about-hero-title {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    color: var(--color-text-primary);
+  }
+  .about-hero-title .dot { color: var(--color-accent); }
+
+  .about-hero-subtitle {
+    font-family: ui-monospace, monospace;
+    font-size: 1rem;
+    color: var(--color-accent);
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .about-section {
+    margin-bottom: 64px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .about-section:nth-child(2) { animation-delay: 0.05s; }
+  .about-section:nth-child(3) { animation-delay: 0.1s; }
+  .about-section:nth-child(4) { animation-delay: 0.15s; }
+  .about-section:nth-child(5) { animation-delay: 0.2s; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5ch;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    margin-bottom: 24px;
+    padding: 5px 12px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+  }
+  .section-label::before { content: "#"; color: var(--color-accent); font-weight: 600; }
+
+  .bio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .bio-text p {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+  .bio-text p:last-child { margin-bottom: 0; }
+
+  .bio-card {
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 16px;
+    padding: 24px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    align-self: start;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.15));
+  }
+  .bio-card-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+  .bio-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .bio-stat:last-child { border-bottom: none; }
+  .bio-stat-key { color: #89b4fa; }
+  .bio-stat-value { color: #a6e3a1; text-align: right; max-width: 55%; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .skill-card {
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .skill-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+  }
+  .skill-card-label {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+    opacity: 0.9;
+  }
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .skill-item {
+    font-family: ui-monospace, monospace;
+    font-size: 0.8rem;
+    padding: 3px 10px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  .skill-item.learning {
+    border-color: rgba(var(--color-accent-rgb), 0.5);
+    color: var(--color-accent);
+    background: rgba(var(--color-accent-rgb), 0.06);
+  }
+
+  .interests-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .interest-tag {
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 8px;
+    color: var(--color-text-secondary);
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .interest-tag:hover {
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+    color: var(--color-text-primary);
+  }
+  .interest-tag::before { content: "// "; color: var(--color-accent); opacity: 0.7; }
+
+  .about-cta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 32px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 20px;
+    filter: drop-shadow(0 8px 32px rgba(0,0,0,0.15));
+  }
+  .about-cta-text { flex: 1; }
+  .about-cta-text p { margin: 0; font-size: 1rem; }
+
+  .about-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-code-green-text);
+    background: var(--color-code-green-background);
+    border: 1px solid var(--color-code-green-border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-bottom: 8px;
+  }
+  .about-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+    flex-shrink: 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 700px) {
+    .bio-grid { grid-template-columns: 1fr; }
+    .about-cta { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+
+<Layout title={t("about", "meta_title")} description={t("about", "meta_desc")}>
+  <div class="about-page">
+
+    <header class="about-hero">
+      <p class="about-path" aria-hidden="true">
+        <span>{t("about", "hero_label")}</span>
+        {" ❯ whoami"}
+      </p>
+      <h1 class="about-hero-title">
+        {t("about", "hero_title")}<span class="dot" aria-hidden="true">.</span>
+      </h1>
+      <p class="about-hero-subtitle">{">"} {t("about", "hero_subtitle")}</p>
+    </header>
+
+    <section class="about-section" aria-labelledby="whoami-label">
+      <div class="section-label" id="whoami-label" aria-hidden="true">{t("about", "section_whoami")}</div>
+      <div class="bio-grid">
+        <div class="bio-text">
+          <p>{t("about", "bio_1")}</p>
+          <p>{t("about", "bio_2")}</p>
+          <p>{t("about", "bio_3")}</p>
+        </div>
+        <div class="bio-card" lang="en" translate="no" aria-label="Personal stats">
+          <p class="bio-card-title">personal.json</p>
+          <div class="bio-stat">
+            <span class="bio-stat-key">"name"</span>
+            <span class="bio-stat-value">"Nazımcan İslam"</span>
+          </div>
+          <div class="bio-stat">
+            <span class="bio-stat-key">"location"</span>
+            <span class="bio-stat-value">"Istanbul, 🇹🇷"</span>
+          </div>
+          <div class="bio-stat">
+            <span class="bio-stat-key">"role"</span>
+            <span class="bio-stat-value">"Software Dev"</span>
+          </div>
+          <div class="bio-stat">
+            <span class="bio-stat-key">"languages"</span>
+            <span class="bio-stat-value">["tr", "en"]</span>
+          </div>
+          <div class="bio-stat">
+            <span class="bio-stat-key">"open_to_work"</span>
+            <span class="bio-stat-value">true</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="skills-label">
+      <div class="section-label" id="skills-label" aria-hidden="true">{t("about", "section_skills")}</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <p class="skill-card-label">{t("about", "skills_languages")}</p>
+          <ul class="skill-list">
+            {skills.languages.map((s) => <li class="skill-item" translate="no">{s}</li>)}
+          </ul>
+        </div>
+        <div class="skill-card">
+          <p class="skill-card-label">{t("about", "skills_frameworks")}</p>
+          <ul class="skill-list">
+            {skills.frameworks.map((s) => <li class="skill-item" translate="no">{s}</li>)}
+          </ul>
+        </div>
+        <div class="skill-card">
+          <p class="skill-card-label">{t("about", "skills_tools")}</p>
+          <ul class="skill-list">
+            {skills.tools.map((s) => <li class="skill-item" translate="no">{s}</li>)}
+          </ul>
+        </div>
+        <div class="skill-card">
+          <p class="skill-card-label">{t("about", "skills_learning")}</p>
+          <ul class="skill-list">
+            <li class="skill-item learning" translate="no">{skills.learning}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="interests-label">
+      <div class="section-label" id="interests-label" aria-hidden="true">{t("about", "section_interests")}</div>
+      <p class="lead" style="margin-bottom: 20px;">{t("about", "interests_text")}</p>
+      <ul class="interests-list">
+        {interests.map((item) => <li class="interest-tag" translate="no">{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="about-section about-cta" aria-labelledby="contact-cta-label">
+      <div class="about-cta-text">
+        <div class="about-status" aria-label="Status: open to work">
+          <span class="about-status-dot" aria-hidden="true"></span>
+          {t("contact", "open_to")}
+        </div>
+        <p id="contact-cta-label">{t("about", "contact_text")}</p>
+      </div>
+      <Button href="/contact" variant="primary" size="lg">
+        {t("about", "contact_button")}
+      </Button>
+    </section>
+
+  </div>
+</Layout>
