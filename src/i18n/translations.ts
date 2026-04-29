@@ -46,23 +46,29 @@ export const translations = {
     },
     about: {
       meta_title: "About — Nazımcan İslam",
-      meta_desc: "Learn more about Nazımcan İslam — a software developer from Istanbul passionate about clean systems, open source, and building things that last.",
+      meta_desc:
+        "Learn more about Nazımcan İslam — a software developer from Istanbul passionate about clean systems, open source, and building things that last.",
       hero_label: "~/about",
       hero_title: "About Me",
       hero_subtitle: "Software developer. Systems thinker. Perpetual learner.",
       section_whoami: "whoami",
-      bio_1: "I'm Nazımcan, a 23-year-old software developer based in Istanbul. I see software not just as lines of code, but as the art of transforming ideas into working systems. My focus is on clean, sustainable, and maintainable solutions.",
-      bio_2: "Currently studying Software Engineering and working with TypeScript, React, Astro, Node.js and Python. I enjoy the entire lifecycle — from architecture decisions to deployment pipelines.",
-      bio_3: "Outside of code, I'm into Linux, competitive gaming (Diamond in League of Legends), anime, and anything at the intersection of technology and craft.",
+      bio_1:
+        "I'm Nazımcan, a 23-year-old software developer based in Istanbul. I see software not just as lines of code, but as the art of transforming ideas into working systems. My focus is on clean, sustainable, and maintainable solutions.",
+      bio_2:
+        "Currently studying Software Engineering and working with TypeScript, React, Astro, Node.js and Python. I enjoy the entire lifecycle — from architecture decisions to deployment pipelines.",
+      bio_3:
+        "Outside of code, I'm into Linux, competitive gaming (Diamond in League of Legends), anime, and anything at the intersection of technology and craft.",
       section_skills: "skills",
       skills_languages: "Languages",
       skills_frameworks: "Frameworks & Runtimes",
       skills_tools: "Tools & Platforms",
       skills_learning: "Currently Learning",
       section_interests: "interests",
-      interests_text: "I'm drawn to compiler internals, systems programming, open-source infrastructure, and the philosophy of good software design. I believe code should be readable by humans first.",
+      interests_text:
+        "I'm drawn to compiler internals, systems programming, open-source infrastructure, and the philosophy of good software design. I believe code should be readable by humans first.",
       section_contact: "contact",
-      contact_text: "I'm open to interesting conversations, collaborations, and opportunities. Feel free to reach out.",
+      contact_text:
+        "I'm open to interesting conversations, collaborations, and opportunities. Feel free to reach out.",
       contact_button: "Get in Touch",
     },
     projects: {
@@ -70,7 +76,8 @@ export const translations = {
       meta_desc: "A collection of open-source projects by Nazımcan İslam.",
       hero_label: "~/projects",
       hero_title: "Projects",
-      hero_subtitle: "Things I've built, experiments I've run, and problems I've solved.",
+      hero_subtitle:
+        "Things I've built, experiments I've run, and problems I've solved.",
       loading: "Fetching repositories...",
       error: "Could not load repositories. Check GitHub directly.",
       view_github: "View on GitHub",
@@ -81,7 +88,8 @@ export const translations = {
     },
     blog: {
       meta_title: "Blog — Nazımcan İslam",
-      meta_desc: "Thoughts on software development, systems, and technology by Nazımcan İslam.",
+      meta_desc:
+        "Thoughts on software development, systems, and technology by Nazımcan İslam.",
       hero_label: "~/blog",
       hero_title: "Blog",
       hero_subtitle: "Occasional notes on things I build and learn.",
@@ -96,10 +104,12 @@ export const translations = {
       meta_desc: "Get in touch with Nazımcan İslam.",
       hero_label: "~/contact",
       hero_title: "Contact",
-      hero_subtitle: "The best way to reach me is via email or GitHub. I try to respond within a few days.",
+      hero_subtitle:
+        "The best way to reach me is via email or GitHub. I try to respond within a few days.",
       section_channels: "channels",
       email_label: "Email",
-      email_note: "For professional inquiries, collaborations, or just to say hi.",
+      email_note:
+        "For professional inquiries, collaborations, or just to say hi.",
       github_label: "GitHub",
       github_note: "Open an issue on any of my repos, or just follow along.",
       linkedin_label: "LinkedIn",
@@ -110,11 +120,6 @@ export const translations = {
       open_to_note: "Currently open to freelance and full-time opportunities.",
     },
     footer: {
-      subscribe_blog: "Subscribe Blog",
-      subscribe: "Subscribe",
-      subscribe_desc: "Subscribe to get notified about new posts.",
-      email_address: "Email Address",
-      email_placeholder: "example@example.com",
       navigation: "Navigation",
       social: "Social",
     },
@@ -167,23 +172,29 @@ export const translations = {
     },
     about: {
       meta_title: "Hakkımda — Nazımcan İslam",
-      meta_desc: "Nazımcan İslam hakkında — İstanbul'dan, temiz sistemlere, açık kaynak koduna ve kalıcı şeyler inşa etmeye tutkuyla bağlı bir yazılım geliştirici.",
+      meta_desc:
+        "Nazımcan İslam hakkında — İstanbul'dan, temiz sistemlere, açık kaynak koduna ve kalıcı şeyler inşa etmeye tutkuyla bağlı bir yazılım geliştirici.",
       hero_label: "~/hakkımda",
       hero_title: "Hakkımda",
       hero_subtitle: "Yazılım geliştirici. Sistem düşünürü. Sürekli öğrenen.",
       section_whoami: "whoami",
-      bio_1: "Merhaba, ben Nazımcan. İstanbul'da yaşayan 23 yaşında bir yazılım geliştiriciyim. Yazılımı sadece kod satırları olarak değil, fikirleri çalışan sistemlere dönüştürme sanatı olarak görüyorum. Temiz, sürdürülebilir ve bakımı kolay çözümler üretmeye odaklanıyorum.",
-      bio_2: "Şu anda Yazılım Mühendisliği okuyor ve TypeScript, React, Astro, Node.js ve Python ile çalışıyorum. Mimari kararlardan deployment pipeline'larına kadar yazılımın tüm yaşam döngüsünü seviyorum.",
-      bio_3: "Kodun dışında Linux, rekabetçi oyun (League of Legends'ta Diamond), anime ve teknoloji ile zanaat kesişimindeki her şeyle ilgileniyorum.",
+      bio_1:
+        "Merhaba, ben Nazımcan. İstanbul'da yaşayan 23 yaşında bir yazılım geliştiriciyim. Yazılımı sadece kod satırları olarak değil, fikirleri çalışan sistemlere dönüştürme sanatı olarak görüyorum. Temiz, sürdürülebilir ve bakımı kolay çözümler üretmeye odaklanıyorum.",
+      bio_2:
+        "Şu anda Yazılım Mühendisliği okuyor ve TypeScript, React, Astro, Node.js ve Python ile çalışıyorum. Mimari kararlardan deployment pipeline'larına kadar yazılımın tüm yaşam döngüsünü seviyorum.",
+      bio_3:
+        "Kodun dışında Linux, rekabetçi oyun (League of Legends'ta Diamond), anime ve teknoloji ile zanaat kesişimindeki her şeyle ilgileniyorum.",
       section_skills: "yetenekler",
       skills_languages: "Diller",
       skills_frameworks: "Framework & Runtime",
       skills_tools: "Araçlar & Platformlar",
       skills_learning: "Şu An Öğreniyorum",
       section_interests: "ilgi alanları",
-      interests_text: "Derleyici içleri, sistem programlama, açık kaynak altyapısı ve iyi yazılım tasarımı felsefesiyle ilgileniyorum. Kodun önce insanlar tarafından okunabilir olması gerektiğine inanıyorum.",
+      interests_text:
+        "Derleyici içleri, sistem programlama, açık kaynak altyapısı ve iyi yazılım tasarımı felsefesiyle ilgileniyorum. Kodun önce insanlar tarafından okunabilir olması gerektiğine inanıyorum.",
       section_contact: "iletişim",
-      contact_text: "İlginç konuşmalara, iş birliklerine ve fırsatlara açığım. İletişime geçmekten çekinme.",
+      contact_text:
+        "İlginç konuşmalara, iş birliklerine ve fırsatlara açığım. İletişime geçmekten çekinme.",
       contact_button: "İletişime Geç",
     },
     projects: {
@@ -191,7 +202,8 @@ export const translations = {
       meta_desc: "Nazımcan İslam'ın açık kaynak projeleri.",
       hero_label: "~/projeler",
       hero_title: "Projeler",
-      hero_subtitle: "İnşa ettiğim şeyler, yaptığım deneyler ve çözdüğüm problemler.",
+      hero_subtitle:
+        "İnşa ettiğim şeyler, yaptığım deneyler ve çözdüğüm problemler.",
       loading: "Repolar yükleniyor...",
       error: "Repolar yüklenemedi. Doğrudan GitHub'a göz at.",
       view_github: "GitHub'da Gör",
@@ -202,10 +214,12 @@ export const translations = {
     },
     blog: {
       meta_title: "Blog — Nazımcan İslam",
-      meta_desc: "Nazımcan İslam'dan yazılım geliştirme, sistemler ve teknoloji üzerine düşünceler.",
+      meta_desc:
+        "Nazımcan İslam'dan yazılım geliştirme, sistemler ve teknoloji üzerine düşünceler.",
       hero_label: "~/blog",
       hero_title: "Blog",
-      hero_subtitle: "İnşa ettiğim ve öğrendiğim şeyler üzerine ara sıra notlar.",
+      hero_subtitle:
+        "İnşa ettiğim ve öğrendiğim şeyler üzerine ara sıra notlar.",
       read_more: "Devamını oku",
       back_to_blog: "← Bloga dön",
       tags_label: "Etiketler",
@@ -217,25 +231,23 @@ export const translations = {
       meta_desc: "Nazımcan İslam ile iletişime geç.",
       hero_label: "~/iletişim",
       hero_title: "İletişim",
-      hero_subtitle: "Ulaşmanın en iyi yolu e-posta veya GitHub. Birkaç gün içinde yanıt vermeye çalışıyorum.",
+      hero_subtitle:
+        "Ulaşmanın en iyi yolu e-posta veya GitHub. Birkaç gün içinde yanıt vermeye çalışıyorum.",
       section_channels: "kanallar",
       email_label: "E-Posta",
-      email_note: "Profesyonel teklifler, iş birlikleri veya merhaba demek için.",
+      email_note:
+        "Profesyonel teklifler, iş birlikleri veya merhaba demek için.",
       github_label: "GitHub",
       github_note: "Repolarımdan birinde issue aç ya da takip et.",
       linkedin_label: "LinkedIn",
       linkedin_note: "Profesyonel ağ ve fırsatlar için.",
       instagram_label: "Instagram",
-      instagram_note: "Gündelik şeyler, teknoloji keşifleri ve rastgele düşünceler.",
+      instagram_note:
+        "Gündelik şeyler, teknoloji keşifleri ve rastgele düşünceler.",
       open_to: "iş_arayışındayım",
       open_to_note: "Şu an freelance ve tam zamanlı fırsatlara açığım.",
     },
     footer: {
-      subscribe_blog: "Bloğa Abone Ol",
-      subscribe: "Abone Ol",
-      subscribe_desc: "Yeni yazılardan haberdar olmak için abone ol.",
-      email_address: "E-Posta Adresi",
-      email_placeholder: "örnek@örnek.com",
       navigation: "Navigasyon",
       social: "Sosyal",
     },

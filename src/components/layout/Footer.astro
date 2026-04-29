@@ -1,6 +1,5 @@
 ---
 import Logo from "@assets/logo.svg";
-import Button from "@ui/Button.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 import { NAV_LINKS, SOCIAL_LINKS } from "../constants/navigation";
 import { Icon } from "astro-icon/components";
@@ -153,29 +152,6 @@ const currentYear = new Date().getFullYear();
             ))
           }
         </ul>
-      </div>
-
-      <div>
-        <p class="lead mb-sm">{t("footer", "subscribe_blog")}</p>
-        <form>
-          <small class="small">{t("footer", "subscribe_desc")}</small>
-          <div class="mt-sm mb-sm">
-            <label for="email">{t("footer", "email_address")}</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              class="input mt-sm mb-sm"
-              placeholder={t("footer", "email_placeholder")}
-              autocomplete="email"
-              required
-            />
-          </div>
-
-          <Button type="submit" size="sm" variant="primary">
-            {t("footer", "subscribe")}
-          </Button>
-        </form>
       </div>
     </div>
   </div>
