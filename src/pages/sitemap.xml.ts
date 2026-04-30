@@ -29,6 +29,6 @@ ${[...staticUrls, ...blogUrls].join("\n")}
 </urlset>`;
 
   return new Response(xml, {
-    headers: { "Content-Type": "application/xml" },
+    headers: { "Content-Type": "application/xml; charset=utf-8" },
   });
 };
