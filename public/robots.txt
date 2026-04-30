@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://nazimcanislam-dev.vercel.app/sitemap.xml
