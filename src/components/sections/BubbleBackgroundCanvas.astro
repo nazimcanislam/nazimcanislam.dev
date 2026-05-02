@@ -5,6 +5,8 @@
   - Resize safe
   - Stable 60fps
   - Low GC
+  - Dark-only: Worker is not started, lazy initialization occurs when the theme changes.
+  - Automatic pause when tab is hidden.
 */
 ---
 
@@ -12,97 +14,157 @@
 
 <script>
   (function () {
+    // --- Touch device: remove canvas, exit ---
     const isTouchDevice =
       "ontouchstart" in window ||
       navigator.maxTouchPoints > 0 ||
       window.matchMedia("(pointer: coarse)").matches;
 
     if (isTouchDevice) {
+      console.info(
+        "Touch device detected, removing bubble canvas for performance.",
+      );
       document.getElementById("bubble-canvas")?.remove();
       return;
     }
 
+    // --- Reduced motion: exit ---
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!motionQuery.matches) {
-      const canvas = document.getElementById(
-        "bubble-canvas",
-      ) as HTMLCanvasElement;
+    if (motionQuery.matches) {
+      console.info(
+        "Prefers reduced motion detected, skipping bubble canvas for accessibility.",
+      );
+      return;
+    }
 
-      if (!canvas || !("transferControlToOffscreen" in canvas)) {
+    const canvas = document.getElementById(
+      "bubble-canvas",
+    ) as HTMLCanvasElement;
+    if (!canvas || !("transferControlToOffscreen" in canvas)) {
+      console.warn(
+        "OffscreenCanvas not supported, bubble background will not be initialized.",
+      );
+      return;
+    }
+
+    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    // -------------------------------------------------------
+    // Worker state
+    // -------------------------------------------------------
+    let worker: Worker | null = null;
+    let workerStarted = false;
+
+    function startWorker() {
+      if (workerStarted) return;
+      workerStarted = true;
+
+      const offscreen = canvas.transferControlToOffscreen();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      worker = new Worker("/bubble-worker.js");
+
+      worker.postMessage(
+        {
+          type: "init",
+          canvas: offscreen,
+          dpr,
+          w: window.innerWidth,
+          h: window.innerHeight,
+          isDark: true,
+          isTouchDevice: false,
+        },
+        [offscreen],
+      );
+
+      canvas.style.display = "";
+
+      // Pointer events
+      window.addEventListener(
+        "pointermove",
+        (e) => {
+          worker?.postMessage({
+            type: "pointermove",
+            x: e.clientX,
+            y: e.clientY,
+          });
+        },
+        { passive: true },
+      );
+      window.addEventListener("pointerdown", () => {
+        worker?.postMessage({ type: "pointerdown" });
+      });
+      window.addEventListener("pointerup", () => {
+        worker?.postMessage({ type: "pointerup" });
+      });
+
+      // Resize
+      let resizeTimeout: ReturnType<typeof setTimeout>;
+      let stableHeight = window.innerHeight;
+      window.addEventListener("resize", () => {
+        const rawH = window.visualViewport?.height ?? window.innerHeight;
+        const w = window.visualViewport?.width ?? window.innerWidth;
+        if (Math.abs(rawH - stableHeight) < 100) return;
+        stableHeight = rawH;
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          worker?.postMessage({ type: "resize", w, h: rawH });
+        }, 150);
+      });
+
+      // Tab visibility — CPU savings
+      document.addEventListener("visibilitychange", () => {
+        if (!workerStarted) return;
+        worker?.postMessage({ type: document.hidden ? "pause" : "resume" });
+      });
+
+      // Reduced motion changes at runtime
+      motionQuery.addEventListener("change", (e) => {
+        if (!workerStarted) return;
+        worker?.postMessage({ type: e.matches ? "pause" : "resume" });
+      });
+    }
+
+    function syncTheme(isDark: boolean) {
+      if (isDark) {
+        if (!workerStarted) {
+          startWorker();
+        } else {
+          // It's already started, send theme update and show canvas
+          worker?.postMessage({ type: "theme", isDark: true });
+          canvas.style.display = "";
+          // If a tab appears, resume
+          if (!document.hidden) {
+            worker?.postMessage({ type: "resume" });
+          }
+        }
       } else {
-        const offscreen = canvas.transferControlToOffscreen();
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-        const worker = new Worker("/bubble-worker.js");
-
-        worker.postMessage(
-          {
-            type: "init",
-            canvas: offscreen,
-            dpr,
-            w: window.innerWidth,
-            h: window.innerHeight,
-            isDark: window.matchMedia("(prefers-color-scheme: dark)").matches,
-            isTouchDevice:
-              "ontouchstart" in window || navigator.maxTouchPoints > 0,
-          },
-          [offscreen],
-        );
-
-        window.addEventListener(
-          "pointermove",
-          (e) => {
-            worker.postMessage({
-              type: "pointermove",
-              x: e.clientX,
-              y: e.clientY,
-            });
-          },
-          { passive: true },
-        );
-
-        window.addEventListener("pointerdown", () => {
-          worker.postMessage({ type: "pointerdown" });
-        });
-
-        window.addEventListener("pointerup", () => {
-          worker.postMessage({ type: "pointerup" });
-        });
-
-        let resizeTimeout: ReturnType<typeof setTimeout>;
-        let stableHeight = window.innerHeight;
-
-        window.addEventListener("resize", () => {
-          const rawH = window.visualViewport?.height ?? window.innerHeight;
-          const w = window.visualViewport?.width ?? window.innerWidth;
-
-          if (Math.abs(rawH - stableHeight) < 100) return;
-          stableHeight = rawH;
-
-          clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(() => {
-            worker.postMessage({ type: "resize", w, h: rawH });
-          }, 150);
-        });
-
-        window
-          .matchMedia("(prefers-color-scheme: dark)")
-          .addEventListener("change", (e) => {
-            worker.postMessage({ type: "theme", isDark: e.matches });
-          });
-
-        document.addEventListener("visibilitychange", () => {
-          worker.postMessage({
-            type: document.hidden ? "pause" : "resume",
-          });
-        });
-
-        motionQuery.addEventListener("change", (e) => {
-          if (e.matches) worker.postMessage({ type: "pause" });
-          else worker.postMessage({ type: "resume" });
-        });
+        // Light theme: pause animation and hide canvas
+        if (workerStarted) {
+          worker?.postMessage({ type: "pause" });
+          worker?.postMessage({ type: "theme", isDark: false });
+          canvas.style.display = "none";
+        }
+        // If workerStarted doesn't mean it never started, so there's nothing to do
       }
     }
+
+    // -------------------------------------------------------
+    // First load check: if dark, start worker. If light, do nothing (lazy init on theme change)
+    // -------------------------------------------------------
+    if (!darkQuery.matches) {
+      // Light theme: don't start worker, hide canvas
+      canvas.style.display = "none";
+    } else {
+      startWorker();
+    }
+
+    // -------------------------------------------------------
+    // System theme change listener
+    // -------------------------------------------------------
+    darkQuery.addEventListener("change", (e) => {
+      syncTheme(e.matches);
+    });
   })();
 </script>
 
