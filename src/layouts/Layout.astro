@@ -49,9 +49,9 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />
 
-    <link rel="canonical" href={Astro.url.href} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
   </head>
   <body>
     <Header />
