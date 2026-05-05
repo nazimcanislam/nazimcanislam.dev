@@ -55,9 +55,9 @@ export const translations = {
       bio_1:
         "I'm Nazımcan, a 23-year-old software developer based in Istanbul. I see software not just as lines of code, but as the art of transforming ideas into working systems. My focus is on clean, sustainable, and maintainable solutions.",
       bio_2:
-        "Currently studying Software Engineering and working with TypeScript, React, Astro, Node.js and Python. I enjoy the entire lifecycle — from architecture decisions to deployment pipelines.",
+        "Currently preparing for the DGS exam for Computer Engineering and I am working with TypeScript, React, Astro, Node.js, and Python. I enjoy the entire software lifecycle, from architectural decisions to deployment pipelines.",
       bio_3:
-        "Outside of code, I'm into Linux, competitive gaming (Master in League of Legends), anime, and anything at the intersection of technology and craft.",
+        "Outside of code, I'm into Linux, competitive gaming (Master in League of Legends and Zed main), anime, and anything at the intersection of technology and craft.",
       section_skills: "skills",
       skills_languages: "Languages",
       skills_frameworks: "Frameworks & Runtimes",
@@ -181,9 +181,9 @@ export const translations = {
       bio_1:
         "Merhaba, ben Nazımcan. İstanbul'da yaşayan 23 yaşında bir yazılım geliştiriciyim. Yazılımı sadece kod satırları olarak değil, fikirleri çalışan sistemlere dönüştürme sanatı olarak görüyorum. Temiz, sürdürülebilir ve bakımı kolay çözümler üretmeye odaklanıyorum.",
       bio_2:
-        "Şu anda Yazılım Mühendisliği okuyor ve TypeScript, React, Astro, Node.js ve Python ile çalışıyorum. Mimari kararlardan deployment pipeline'larına kadar yazılımın tüm yaşam döngüsünü seviyorum.",
+        "Şu anda Bilgisayar Mühendisliği için DGS'ye hazırlanıyorum ve TypeScript, React, Astro, Node.js ve Python ile çalışıyorum. Mimari kararlardan deployment pipeline'larına kadar yazılımın tüm yaşam döngüsünü seviyorum.",
       bio_3:
-        "Kodun dışında Linux, rekabetçi oyun (League of Legends'ta Master), anime ve teknoloji ile zanaat kesişimindeki her şeyle ilgileniyorum.",
+        "Kodun dışında Linux, rekabetçi oyun (League of Legends'ta Master ve Zed main), anime ve teknoloji ile zanaat kesişimindeki her şeyle ilgileniyorum.",
       section_skills: "yetenekler",
       skills_languages: "Diller",
       skills_frameworks: "Framework & Runtime",
