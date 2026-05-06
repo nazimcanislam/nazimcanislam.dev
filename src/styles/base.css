@@ -22,7 +22,7 @@ html {
 
   /* Surface */
   --color-background: #ffffff;
-  --color-card: #f8f9fa;
+  --color-card: #dce3ea;
   --color-border: #e5e7eb;
   --color-glass-bg: rgba(255, 255, 255, 0.6);
   --color-glass-border: rgba(255, 255, 255, 0.3);
@@ -34,6 +34,14 @@ html {
 
   --border-radius-for-section: 24px;
   --border-radius-for-button: 8px;
+
+  /* JSON Syntax Highlighting */
+  --color-json-background: #f1f5f9;
+  --color-json-key: #1d4ed8;
+  --color-json-str: #166534;
+  --color-json-num: #92400e;
+  --color-json-bool: #9a3412;
+  --color-json-punct: #6b7280;
 }
 
 ::selection {
@@ -89,6 +97,25 @@ body {
   height: 28px;
 }
 
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--color-accent);
+  color: #ffffff;
+  border-radius: 0 0 var(--border-radius-for-button)
+    var(--border-radius-for-button);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 0;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-accent: #2f6feb;
@@ -103,6 +130,14 @@ body {
     --color-code-green-text: #a6e3a1;
     --color-code-green-background: rgba(166, 227, 161, 0.1);
     --color-code-green-border: rgba(166, 227, 161, 0.2);
+
+    /* JSON Syntax Highlighting */
+    --color-json-background: rgba(0, 0, 0, 0.2);
+    --color-json-key: #89b4fa;
+    --color-json-str: #a6e3a1;
+    --color-json-num: #f9e2af;
+    --color-json-bool: #fab387;
+    --color-json-punct: #585b70;
   }
 }
 
@@ -118,6 +153,8 @@ body {
   :root {
     --color-glass-bg: rgba(255, 255, 255, 1);
     --color-glass-border: rgba(255, 255, 255, 1);
+    --color-json-background: rgb(238, 244, 251);
+    --color-code-background: rgba(255, 255, 255, 1);
   }
 
   .glass {
@@ -125,11 +162,17 @@ body {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
+
+  .code-title-bar {
+    border-color: var(--color-border) !important;
+  }
 }
 
 @media (prefers-reduced-transparency) and (prefers-color-scheme: dark) {
   :root {
     --color-glass-bg: rgba(15, 23, 42, 1);
     --color-glass-border: rgba(15, 23, 42, 1);
+    --color-json-background: rgb(20, 28, 40);
+    --color-code-background: rgba(15, 23, 42, 1);
   }
 }

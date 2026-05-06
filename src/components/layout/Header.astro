@@ -54,11 +54,20 @@ const { pathname } = Astro.url;
       background-color 0.2s ease;
   }
 
-  .navbar-navs a.active,
+  .navbar-navs a.active {
+    color: var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-card) 50%, transparent);
+  }
+
+  .navbar-navs a:active {
+    color: var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-card) 100%, transparent);
+  }
+
   .navbar-navs a:hover,
   .navbar-navs a:focus-visible {
     color: var(--color-accent);
-    background-color: color-mix(in srgb, var(--color-card) 60%, transparent);
+    background-color: color-mix(in srgb, var(--color-card) 70%, transparent);
   }
 
   .navbar-navs a.active::before {
@@ -76,7 +85,9 @@ const { pathname } = Astro.url;
     display: none;
     overflow: hidden;
     max-height: 0;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
+    transition:
+      max-height 0.3s ease,
+      opacity 0.3s ease;
     opacity: 0;
   }
 
@@ -188,7 +199,12 @@ const { pathname } = Astro.url;
       aria-controls="navbar-mobile"
       aria-label="Toggle navigation"
     >
-      <Icon name="mdi:chevron-down" class="navbar-toggle-icon" aria-hidden="true"style="font-size: 32px" />
+      <Icon
+        name="mdi:chevron-down"
+        class="navbar-toggle-icon"
+        aria-hidden="true"
+        style="font-size: 32px"
+      />
     </Button>
   </nav>
 
@@ -215,8 +231,12 @@ const { pathname } = Astro.url;
 </header>
 
 <script>
-  const toggle = document.getElementById("navbar-toggle") as HTMLButtonElement | null;
-  const menu = document.getElementById("navbar-mobile") as HTMLDivElement | null;
+  const toggle = document.getElementById(
+    "navbar-toggle",
+  ) as HTMLButtonElement | null;
+  const menu = document.getElementById(
+    "navbar-mobile",
+  ) as HTMLDivElement | null;
 
   toggle?.addEventListener("click", () => {
     const isOpen = menu?.classList.contains("open");

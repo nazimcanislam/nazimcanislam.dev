@@ -42,10 +42,10 @@ const endpoints: Endpoint[] = [
     path: "/api/me/skills",
     key: "skills",
     response: {
-      languages: ["TypeScript", "JavaScript", "CSS", "Python"],
+      languages: ["TypeScript", "JavaScript", "CSS", "Python", "C"],
       frameworks: ["React", "Astro", "Django"],
       tools: ["Git", "Docker", "Linux"],
-      currently_learning: "Rust",
+      currently_learning: "Godot Engine",
       interested_in: ["compilers", "systems", "open-source"],
     },
   },
@@ -143,15 +143,18 @@ const endpoints: Endpoint[] = [
     align-items: center;
     gap: 10px;
     transition: all 0.15s ease;
-    border-radius: 0 6px 6px 0;
   }
 
   .api-endpoint-btn:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .api-endpoint-btn:active {
+    background: rgba(255, 255, 255, 0.09);
   }
 
   .api-endpoint-btn[aria-selected="true"] {
-    background: rgba(137, 180, 250, 0.07);
+    background: rgba(137, 180, 250, 0.2);
     border-left-color: #89b4fa;
   }
 
@@ -252,9 +255,10 @@ const endpoints: Endpoint[] = [
   }
 
   .api-json-block {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--color-json-background);
     border-radius: 6px;
     padding: 14px 16px;
+
     border: 1px solid var(--color-border);
   }
 
@@ -299,20 +303,20 @@ const endpoints: Endpoint[] = [
   }
 
   /* JSON syntax colors */
-  .json-key {
-    color: #89b4fa;
+  :global(.json-key) {
+    color: var(--color-json-key);
   }
-  .json-str {
-    color: #a6e3a1;
+  :global(.json-str) {
+    color: var(--color-json-str);
   }
-  .json-num {
-    color: #f9e2af;
+  :global(.json-num) {
+    color: var(--color-json-num);
   }
-  .json-bool {
-    color: #fab387;
+  :global(.json-bool) {
+    color: var(--color-json-bool);
   }
-  .json-punct {
-    color: #585b70;
+  :global(.json-punct) {
+    color: var(--color-json-punct);
   }
 </style>
 
@@ -320,30 +324,33 @@ const endpoints: Endpoint[] = [
   <div class="api-explorer" lang="en" translate="no">
     <p class="api-base-url-label">base url</p>
     <div class="api-base-url-badge">
-      <span class="api-base-url-dot"></span>
+      <span class="api-base-url-dot" role="img" aria-label="Online"></span>
       <span class="api-base-url-text">nazimcanislam.dev</span>
     </div>
 
     <div class="api-panel">
       <div class="api-endpoints">
         <p class="api-endpoints-label">Endpoints</p>
-        {
-          endpoints.map((ep) => (
-            <button
-              class="api-endpoint-btn"
-              aria-pressed="false"
-              data-key={ep.key}
-              data-response={JSON.stringify(ep.response)}
-              type="button"
-            >
-              <span class="api-method-badge">{ep.method}</span>
-              <span class="api-endpoint-path">{ep.path}</span>
-            </button>
-          ))
-        }
+        <div role="tablist">
+          {
+            endpoints.map((ep) => (
+              <button
+                role="tab"
+                class="api-endpoint-btn"
+                aria-selected="false"
+                data-key={ep.key}
+                data-response={JSON.stringify(ep.response)}
+                type="button"
+              >
+                <span class="api-method-badge">{ep.method}</span>
+                <span class="api-endpoint-path">{ep.path}</span>
+              </button>
+            ))
+          }
+        </div>
       </div>
 
-      <div class="api-response">
+      <div class="api-response" aria-live="polite" aria-atomic="true">
         {
           endpoints.map((ep) => (
             <div class="api-response-inner" id={`response-${ep.key}`}>
@@ -378,13 +385,12 @@ const endpoints: Endpoint[] = [
 </div>
 
 <script>
-  type JsonValue =
-    | string
-    | number
-    | boolean
-    | null
-    | JsonValue[]
-    | { [k: string]: JsonValue };
+  function escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
 
   function highlightJson(text: string): string {
     return text.replace(
@@ -408,7 +414,6 @@ const endpoints: Endpoint[] = [
   ): void {
     let i = 0;
     let lastTime: number | null = null;
-    let rafId: number;
 
     const tick = (timestamp: number) => {
       if (!lastTime) lastTime = timestamp;
@@ -417,7 +422,7 @@ const endpoints: Endpoint[] = [
       if (elapsed >= speed) {
         lastTime = timestamp;
         i++;
-        const current = text.slice(0, i);
+        const current = escapeHtml(text.slice(0, i));
 
         if (i >= text.length) {
           el.innerHTML = highlightJson(current);
@@ -425,13 +430,13 @@ const endpoints: Endpoint[] = [
           return;
         }
 
-        el.innerHTML = current + '<span class="cursor">▊</span>';
+        el.innerHTML = highlightJson(current) + '<span class="cursor">▊</span>';
       }
 
-      rafId = requestAnimationFrame(tick);
+      requestAnimationFrame(tick);
     };
 
-    rafId = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
   }
 
   function initApiExplorer(): void {
@@ -448,7 +453,7 @@ const endpoints: Endpoint[] = [
 
         // Toggle
         if (key === activeKey) {
-          btn.setAttribute("aria-pressed", "false");
+          btn.setAttribute("aria-selected", "false");
           document
             .getElementById(`response-${key}`)
             ?.classList.remove("active");
@@ -461,14 +466,14 @@ const endpoints: Endpoint[] = [
         if (activeKey) {
           document
             .querySelector<HTMLButtonElement>(`[data-key="${activeKey}"]`)
-            ?.setAttribute("aria-pressed", "false");
+            ?.setAttribute("aria-selected", "false");
           document
             .getElementById(`response-${activeKey}`)
             ?.classList.remove("active");
         }
 
         // Activate new
-        btn.setAttribute("aria-pressed", "true");
+        btn.setAttribute("aria-selected", "true");
         const responseEl = document.getElementById(`response-${key}`);
         const jsonEl = document.getElementById(
           `json-${key}`,

@@ -1,5 +1,8 @@
 export const translations = {
   en: {
+    shared: {
+      "skip_to_main_content": "Skip to main content",
+    },
     meta: {
       title: "Nazımcan İslam — Frontend & Android Developer",
       description:
@@ -125,6 +128,9 @@ export const translations = {
     },
   },
   tr: {
+    shared: {
+      "skip_to_main_content": "Ana içeriğe atla",
+    },
     meta: {
       title: "Nazımcan İslam — Frontend & Android Geliştirici",
       description:

@@ -67,8 +67,11 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
   </head>
   <body>
+    <a href="#main-content" class="skip-link"
+      >{t("shared", "skip_to_main_content")}</a
+    >
     <Header />
-    <main>
+    <main id="main-content">
       <BubbleBackgroundCanvas />
       <slot />
     </main>
