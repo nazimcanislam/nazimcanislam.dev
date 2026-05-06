@@ -19,6 +19,9 @@ const { pathname } = Astro.url;
     top: 0;
     left: 0;
     filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.1));
+    border-top: none;
+    border-left: none;
+    border-right: none;
   }
 
   nav {
@@ -159,9 +162,8 @@ const { pathname } = Astro.url;
     <a
       href="/"
       class="navbar-brand"
-      translate="no"
-      lang="tr"
-      aria-label="Nazımcan İslam homepage"
+      aria-label={t("shared", "logo_title")}
+      title={t("shared", "logo_title")}
     >
       <Logo height={40} aria-hidden="true" />
     </a>
@@ -197,7 +199,8 @@ const { pathname } = Astro.url;
       type="button"
       aria-expanded="false"
       aria-controls="navbar-mobile"
-      aria-label="Toggle navigation"
+      aria-label={t("nav", "menu")}
+      title={t("nav", "menu")}
     >
       <Icon
         name="mdi:chevron-down"

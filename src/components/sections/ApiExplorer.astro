@@ -341,6 +341,7 @@ const endpoints: Endpoint[] = [
                 data-key={ep.key}
                 data-response={JSON.stringify(ep.response)}
                 type="button"
+                title={`Get ${ep.path} endpoint response`}
               >
                 <span class="api-method-badge">{ep.method}</span>
                 <span class="api-endpoint-path">{ep.path}</span>
@@ -377,7 +378,12 @@ const endpoints: Endpoint[] = [
 
     <div class="text-center mt-lg">
       <p class="lead">{t("home_about", "want_learn_more")}</p>
-      <Button variant="primary" size="lg" href="/about">
+      <Button
+        variant="primary"
+        size="lg"
+        href="/about"
+        title={t("home_about", "about_button")}
+      >
         {t("home_about", "about_button")}
       </Button>
     </div>

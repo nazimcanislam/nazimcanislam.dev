@@ -107,6 +107,7 @@ const t = useTranslations(getLang(Astro.request));
         data-copy-text={brieflyAbout}
         data-default-text={t("home_about", "copy")}
         data-copied-text={t("home_about", "copied")}
+        title={t("home_about", "copy")}
       >
         <Icon
           name="mdi:content-copy"

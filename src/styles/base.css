@@ -152,13 +152,14 @@ body {
 @media (prefers-reduced-transparency) {
   :root {
     --color-glass-bg: rgba(255, 255, 255, 1);
-    --color-glass-border: rgba(255, 255, 255, 1);
+    --color-glass-border: var(--color-border);
     --color-json-background: rgb(238, 244, 251);
     --color-code-background: rgba(255, 255, 255, 1);
   }
 
   .glass {
     background-color: var(--color-background);
+    border-color: var(--color-border);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
@@ -171,7 +172,7 @@ body {
 @media (prefers-reduced-transparency) and (prefers-color-scheme: dark) {
   :root {
     --color-glass-bg: rgba(15, 23, 42, 1);
-    --color-glass-border: rgba(15, 23, 42, 1);
+    --color-glass-border: var(--color-border);
     --color-json-background: rgb(20, 28, 40);
     --color-code-background: rgba(15, 23, 42, 1);
   }

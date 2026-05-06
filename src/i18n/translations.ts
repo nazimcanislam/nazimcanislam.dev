@@ -2,6 +2,7 @@ export const translations = {
   en: {
     shared: {
       "skip_to_main_content": "Skip to main content",
+      "logo_title": "Nazımcan İslam logo",
     },
     meta: {
       title: "Nazımcan İslam — Frontend & Android Developer",
@@ -14,6 +15,7 @@ export const translations = {
       projects: "Projects",
       blog: "Blog",
       contact: "Contact",
+      menu: "Menu",
     },
     home: {
       role: "Software Developer 👨🏻‍💻",
@@ -130,6 +132,7 @@ export const translations = {
   tr: {
     shared: {
       "skip_to_main_content": "Ana içeriğe atla",
+      "logo_title": "Nazımcan İslam logo",
     },
     meta: {
       title: "Nazımcan İslam — Frontend & Android Geliştirici",
@@ -142,6 +145,7 @@ export const translations = {
       projects: "Projeler",
       blog: "Blog",
       contact: "İletişim",
+      menu: "Menü",
     },
     home: {
       role: "Yazılım Geliştirici 👨🏻‍💻",

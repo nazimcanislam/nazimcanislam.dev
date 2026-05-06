@@ -235,10 +235,20 @@ const t = useTranslations(lang);
       <p>{t("home", "bio")}</p>
 
       <div class="hero-buttons-group">
-        <Button href="/projects" size="lg" variant="primary">
+        <Button
+          href="/projects"
+          size="lg"
+          variant="primary"
+          title={t("home", "btn_projects_title")}
+        >
           {t("home", "btn_projects")}
         </Button>
-        <Button href="/about" size="lg" variant="ghost">
+        <Button
+          href="/about"
+          size="lg"
+          variant="ghost"
+          title={t("home", "btn_about_title")}
+        >
           {t("home", "btn_about")}
         </Button>
       </div>

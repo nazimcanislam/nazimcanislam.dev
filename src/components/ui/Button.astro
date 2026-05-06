@@ -8,6 +8,7 @@ interface Props {
   target?: string;
   singleIcon?: boolean;
   type?: "button" | "submit";
+  title?: string;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   target,
   singleIcon,
   type,
+  title,
   ...rest
 } = Astro.props;
 
@@ -39,6 +41,7 @@ const Tag = isLink ? "a" : "button";
     className,
     { "single-icon": singleIcon },
   ]}
+  title={title}
   {...rest}
 >
   <slot />

@@ -11,9 +11,9 @@ const currentYear = new Date().getFullYear();
 
 <style>
   footer {
-    background-color: var(--color-glass-bg);
-    border-top: 1px solid var(--color-border);
-    filter: drop-shadow(0 -8px 32px rgba(0, 0, 0, 0.1));
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
   }
 
   .footer-brand,
@@ -91,19 +91,19 @@ const currentYear = new Date().getFullYear();
   }
 </style>
 
-<footer aria-label="Site footer">
+<footer class="glass" aria-label="Site footer">
   <div class="footer-inner">
     <div class="footer-content">
       <div>
         <a
           href="/"
           class="footer-brand"
-          translate="no"
-          lang="tr"
-          aria-label="Nazımcan İslam homepage"
+          aria-label={t("shared", "logo_title")}
+          title={t("shared", "logo_title")}
         >
           <Logo height={40} aria-hidden="true" />
         </a>
+
         <p class="lead" lang="tr" translate="no">Nazımcan İslam</p>
         <small class="small">{t("meta", "description")}</small>
       </div>

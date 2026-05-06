@@ -437,7 +437,12 @@ const interests = [
           </div>
           <p id="contact-cta-label">{t("about", "contact_text")}</p>
         </div>
-        <Button href="/contact" variant="primary" size="lg">
+        <Button
+          href="/contact"
+          variant="primary"
+          size="lg"
+          title={t("about", "contact_button_title")}
+        >
           {t("about", "contact_button")}
         </Button>
       </section>
