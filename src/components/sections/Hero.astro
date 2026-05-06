@@ -3,6 +3,7 @@ import me from "@assets/pictures/me.jpg";
 import Button from "@ui/Button.astro";
 import BubbleBackgroundCanvas from "@sections/BubbleBackgroundCanvas.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
+import PageCommand from "../ui/PageCommand.astro";
 
 const lang = getLang(Astro.request);
 const t = useTranslations(lang);
@@ -17,7 +18,7 @@ const t = useTranslations(lang);
   .home-hero-content {
     position: relative;
     z-index: 5;
-    max-width: 960px;
+    max-width: 1024px;
     margin-inline: auto;
     display: grid;
     grid-template-columns: 1fr 1.4fr;
@@ -111,28 +112,6 @@ const t = useTranslations(lang);
     color: var(--color-code-green-text);
   }
 
-  /* ── Text column ── */
-  .home-hero-text {
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .hero-whoami {
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    margin: 0 0 16px;
-    letter-spacing: 0.04em;
-    opacity: 0.9;
-  }
-
-  .hero-whoami-path {
-    color: var(--color-accent);
-  }
-
-  .hero-whoami-prompt {
-    color: #a6e3a1;
-  }
-
   .hero-name {
     font-size: clamp(2.2rem, 5vw, 3rem);
     font-weight: 700;
@@ -153,6 +132,10 @@ const t = useTranslations(lang);
     color: var(--color-accent);
     margin: 0 0 20px;
     letter-spacing: 0.01em;
+  }
+
+  .home-hero-text {
+    animation: fadeUp 0.6s ease both;
   }
 
   .home-hero-text p {
@@ -213,8 +196,6 @@ const t = useTranslations(lang);
 </style>
 
 <div class="home-hero">
-  <BubbleBackgroundCanvas />
-
   <div class="home-hero-content">
     <!-- Image column -->
     <div class="hero-image-col">
@@ -241,12 +222,7 @@ const t = useTranslations(lang);
 
     <!-- Text column -->
     <div class="home-hero-text">
-      <p class="hero-whoami" aria-hidden="true">
-        <span class="hero-whoami-path">~/portfolio</span>
-        {" "}
-        <span class="hero-whoami-prompt">❯</span>
-        {" whoami"}
-      </p>
+      <PageCommand pageTitle={"portfolio"} command="whoami" largeText />
 
       <h1 class="hero-name" translate="no" lang="tr">
         Nazımcan İslam<span class="hero-name-dot" aria-hidden="true">.</span>

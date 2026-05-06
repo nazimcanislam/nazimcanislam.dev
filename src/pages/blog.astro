@@ -1,4 +1,5 @@
 ---
+import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 import { getCollection } from "astro:content";
@@ -7,7 +8,9 @@ const lang = getLang(Astro.request);
 const t = useTranslations(lang);
 
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
-const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 
 function formatDate(date: Date) {
   return date.toLocaleDateString(lang === "tr" ? "tr-TR" : "en-US", {
@@ -20,21 +23,19 @@ function formatDate(date: Date) {
 
 <style>
   .blog-page {
-    max-width: 960px;
-    margin-inline: auto;
+    max-width: 100%;
+    width: 100%;
     padding: 64px 16px;
   }
 
-  .blog-hero { margin-bottom: 56px; }
-
-  .blog-path {
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.04em;
-    margin: 0 0 16px;
+  .blog-page-wrapper {
+    max-width: 1024px;
+    margin-inline: auto;
   }
-  .blog-path span { color: var(--color-accent); }
+
+  .blog-hero {
+    margin-bottom: 56px;
+  }
 
   .blog-hero-title {
     font-size: clamp(2.2rem, 5vw, 3rem);
@@ -44,7 +45,9 @@ function formatDate(date: Date) {
     margin: 0 0 12px;
     color: var(--color-text-primary);
   }
-  .blog-hero-title .dot { color: var(--color-accent); }
+  .blog-hero-title .dot {
+    color: var(--color-accent);
+  }
 
   .blog-hero-subtitle {
     font-family: ui-monospace, monospace;
@@ -70,8 +73,11 @@ function formatDate(date: Date) {
     border: 1px solid var(--color-glass-border);
     border-radius: 16px;
     text-decoration: none;
-    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.1));
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
+    animation: fadeUp 0.6s ease both;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
   }
   .post-card:hover {
     transform: translateY(-2px);
@@ -123,47 +129,68 @@ function formatDate(date: Date) {
     font-family: ui-monospace, monospace;
   }
 
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @media (max-width: 500px) {
-    .post-card { padding: 20px; }
+    .post-card {
+      padding: 20px;
+    }
   }
 </style>
 
 <Layout title={t("blog", "meta_title")} description={t("blog", "meta_desc")}>
   <div class="blog-page">
+    <div class="blog-page-wrapper">
+      <header class="blog-hero">
+        <PageCommand
+          pageTitle={t("blog", "hero_title")}
+          command="cat posts/*"
+        />
 
-    <header class="blog-hero">
-      <p class="blog-path" aria-hidden="true">
-        <span>{t("blog", "hero_label")}</span>
-        {" ❯ cat posts/*"}
-      </p>
-      <h1 class="blog-hero-title">
-        {t("blog", "hero_title")}<span class="dot" aria-hidden="true">.</span>
-      </h1>
-      <p class="blog-hero-subtitle">{">"} {t("blog", "hero_subtitle")}</p>
-    </header>
+        <h1 class="blog-hero-title">
+          {t("blog", "hero_title")}<span class="dot" aria-hidden="true">.</span>
+        </h1>
+        <p class="blog-hero-subtitle">{">"} {t("blog", "hero_subtitle")}</p>
+      </header>
 
-    {posts.length === 0 ? (
-      <div class="no-posts">{t("blog", "no_posts")}</div>
-    ) : (
-      <ul class="posts-list">
-        {posts.map((post) => (
-          <li>
-            <a href={`/blog/${post.slug}`} class="post-card">
-              <div class="post-meta">
-                <time class="post-date" datetime={post.data.pubDate.toISOString()}>
-                  {formatDate(post.data.pubDate)}
-                </time>
-                {post.data.tags.slice(0, 3).map((tag) => (
-                  <span class="post-tag">#{tag}</span>
-                ))}
-              </div>
-              <h2 class="post-title">{post.data.title}</h2>
-              <p class="post-desc">{post.data.description}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
-
+      {
+        posts.length === 0 ? (
+          <div class="no-posts">{t("blog", "no_posts")}</div>
+        ) : (
+          <ul class="posts-list">
+            {posts.map((post) => (
+              <li
+                style={`animation-delay: ${100 * posts.indexOf(post) + 1}ms;`}
+              >
+                <a href={`/blog/${post.slug}`} class="post-card">
+                  <div class="post-meta">
+                    <time
+                      class="post-date"
+                      datetime={post.data.pubDate.toISOString()}
+                    >
+                      {formatDate(post.data.pubDate)}
+                    </time>
+                    {post.data.tags.slice(0, 3).map((tag) => (
+                      <span class="post-tag">#{tag}</span>
+                    ))}
+                  </div>
+                  <h2 class="post-title">{post.data.title}</h2>
+                  <p class="post-desc">{post.data.description}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
   </div>
 </Layout>

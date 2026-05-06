@@ -1,4 +1,5 @@
 ---
+import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 import Button from "@ui/Button.astro";
@@ -27,21 +28,20 @@ const interests = [
 
 <style>
   .about-page {
-    max-width: 960px;
+    max-width: 100%;
+    width: 100%;
     margin-inline: auto;
     padding: 64px 16px;
   }
 
-  .about-hero { margin-bottom: 72px; }
-
-  .about-path {
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.04em;
-    margin: 0 0 16px;
+  .about-page-wrapper {
+    max-width: 1024px;
+    margin-inline: auto;
   }
-  .about-path span { color: var(--color-accent); }
+
+  .about-hero {
+    margin-bottom: 72px;
+  }
 
   .about-hero-title {
     font-size: clamp(2.2rem, 5vw, 3rem);
@@ -51,7 +51,9 @@ const interests = [
     margin: 0 0 12px;
     color: var(--color-text-primary);
   }
-  .about-hero-title .dot { color: var(--color-accent); }
+  .about-hero-title .dot {
+    color: var(--color-accent);
+  }
 
   .about-hero-subtitle {
     font-family: ui-monospace, monospace;
@@ -65,10 +67,18 @@ const interests = [
     margin-bottom: 64px;
     animation: fadeUp 0.5s ease both;
   }
-  .about-section:nth-child(2) { animation-delay: 0.05s; }
-  .about-section:nth-child(3) { animation-delay: 0.1s; }
-  .about-section:nth-child(4) { animation-delay: 0.15s; }
-  .about-section:nth-child(5) { animation-delay: 0.2s; }
+  .about-section:nth-child(2) {
+    animation-delay: 0.05s;
+  }
+  .about-section:nth-child(3) {
+    animation-delay: 0.1s;
+  }
+  .about-section:nth-child(4) {
+    animation-delay: 0.15s;
+  }
+  .about-section:nth-child(5) {
+    animation-delay: 0.2s;
+  }
 
   .section-label {
     display: inline-flex;
@@ -85,7 +95,11 @@ const interests = [
     border: 1px solid var(--color-border);
     border-radius: 20px;
   }
-  .section-label::before { content: "#"; color: var(--color-accent); font-weight: 600; }
+  .section-label::before {
+    content: "#";
+    color: var(--color-accent);
+    font-weight: 600;
+  }
 
   .bio-grid {
     display: grid;
@@ -97,7 +111,9 @@ const interests = [
     line-height: 1.75;
     margin-bottom: 16px;
   }
-  .bio-text p:last-child { margin-bottom: 0; }
+  .bio-text p:last-child {
+    margin-bottom: 0;
+  }
 
   .bio-card {
     background: var(--color-glass-bg);
@@ -109,7 +125,7 @@ const interests = [
     line-height: 1.7;
     color: var(--color-text-secondary);
     align-self: start;
-    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.15));
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
   }
   .bio-card-title {
     display: flex;
@@ -126,9 +142,17 @@ const interests = [
     padding: 6px 0;
     border-bottom: 1px solid var(--color-border);
   }
-  .bio-stat:last-child { border-bottom: none; }
-  .bio-stat-key { color: #89b4fa; }
-  .bio-stat-value { color: #a6e3a1; text-align: right; max-width: 55%; }
+  .bio-stat:last-child {
+    border-bottom: none;
+  }
+  .bio-stat-key {
+    color: #89b4fa;
+  }
+  .bio-stat-value {
+    color: #a6e3a1;
+    text-align: right;
+    max-width: 55%;
+  }
 
   .skills-grid {
     display: grid;
@@ -141,8 +165,10 @@ const interests = [
     border: 1px solid var(--color-glass-border);
     border-radius: 16px;
     padding: 20px 24px;
-    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.1));
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
   }
   .skill-card:hover {
     transform: translateY(-2px);
@@ -197,13 +223,19 @@ const interests = [
     border: 1px solid var(--color-glass-border);
     border-radius: 8px;
     color: var(--color-text-secondary);
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease;
   }
   .interest-tag:hover {
     border-color: rgba(var(--color-accent-rgb), 0.4);
     color: var(--color-text-primary);
   }
-  .interest-tag::before { content: "// "; color: var(--color-accent); opacity: 0.7; }
+  .interest-tag::before {
+    content: "// ";
+    color: var(--color-accent);
+    opacity: 0.7;
+  }
 
   .about-cta {
     display: flex;
@@ -213,10 +245,15 @@ const interests = [
     background: var(--color-glass-bg);
     border: 1px solid var(--color-glass-border);
     border-radius: 20px;
-    filter: drop-shadow(0 8px 32px rgba(0,0,0,0.15));
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.15));
   }
-  .about-cta-text { flex: 1; }
-  .about-cta-text p { margin: 0; font-size: 1rem; }
+  .about-cta-text {
+    flex: 1;
+  }
+  .about-cta-text p {
+    margin: 0;
+    font-size: 1rem;
+  }
 
   .about-status {
     display: inline-flex;
@@ -241,117 +278,169 @@ const interests = [
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 700px) {
-    .bio-grid { grid-template-columns: 1fr; }
-    .about-cta { flex-direction: column; align-items: flex-start; }
+    .bio-grid {
+      grid-template-columns: 1fr;
+    }
+    .about-cta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>
 
 <Layout title={t("about", "meta_title")} description={t("about", "meta_desc")}>
   <div class="about-page">
+    <div class="about-page-wrapper">
+      <header class="about-hero">
+        <PageCommand pageTitle={t("about", "hero_title")} command="whoami" />
 
-    <header class="about-hero">
-      <p class="about-path" aria-hidden="true">
-        <span>{t("about", "hero_label")}</span>
-        {" ❯ whoami"}
-      </p>
-      <h1 class="about-hero-title">
-        {t("about", "hero_title")}<span class="dot" aria-hidden="true">.</span>
-      </h1>
-      <p class="about-hero-subtitle">{">"} {t("about", "hero_subtitle")}</p>
-    </header>
+        <h1 class="about-hero-title">
+          {t("about", "hero_title")}<span class="dot" aria-hidden="true">.</span
+          >
+        </h1>
+        <p class="about-hero-subtitle">{">"} {t("about", "hero_subtitle")}</p>
+      </header>
 
-    <section class="about-section" aria-labelledby="whoami-label">
-      <div class="section-label" id="whoami-label" aria-hidden="true">{t("about", "section_whoami")}</div>
-      <div class="bio-grid">
-        <div class="bio-text">
-          <p>{t("about", "bio_1")}</p>
-          <p>{t("about", "bio_2")}</p>
-          <p>{t("about", "bio_3")}</p>
+      <section class="about-section" aria-labelledby="whoami-label">
+        <div class="section-label" id="whoami-label" aria-hidden="true">
+          {t("about", "section_whoami")}
         </div>
-        <div class="bio-card" lang="en" translate="no" aria-label="Personal stats">
-          <p class="bio-card-title">
-            <span>personal.json</span>
-            <span>156 B</span>
-          </p>
-          <div class="bio-stat">
-            <span class="bio-stat-key">"name"</span>
-            <span class="bio-stat-value">"Nazımcan İslam"</span>
+        <div class="bio-grid">
+          <div class="bio-text">
+            <p>{t("about", "bio_1")}</p>
+            <p>{t("about", "bio_2")}</p>
+            <p>{t("about", "bio_3")}</p>
           </div>
-          <div class="bio-stat">
-            <span class="bio-stat-key">"location"</span>
-            <span class="bio-stat-value">"Istanbul, 🇹🇷"</span>
+          <div
+            class="bio-card"
+            lang="en"
+            translate="no"
+            aria-label="Personal stats"
+          >
+            <p class="bio-card-title">
+              <span>personal.json</span>
+              <span>156 B</span>
+            </p>
+            <div class="bio-stat">
+              <span class="bio-stat-key">"name"</span>
+              <span class="bio-stat-value">"Nazımcan İslam"</span>
+            </div>
+            <div class="bio-stat">
+              <span class="bio-stat-key">"location"</span>
+              <span class="bio-stat-value">"Istanbul, 🇹🇷"</span>
+            </div>
+            <div class="bio-stat">
+              <span class="bio-stat-key">"role"</span>
+              <span class="bio-stat-value">"Software Dev"</span>
+            </div>
+            <div class="bio-stat">
+              <span class="bio-stat-key">"languages"</span>
+              <span class="bio-stat-value">["tr", "en"]</span>
+            </div>
+            <div class="bio-stat">
+              <span class="bio-stat-key">"open_to_work"</span>
+              <span class="bio-stat-value">true</span>
+            </div>
           </div>
-          <div class="bio-stat">
-            <span class="bio-stat-key">"role"</span>
-            <span class="bio-stat-value">"Software Dev"</span>
+        </div>
+      </section>
+
+      <section class="about-section" aria-labelledby="skills-label">
+        <div class="section-label" id="skills-label" aria-hidden="true">
+          {t("about", "section_skills")}
+        </div>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <p class="skill-card-label">{t("about", "skills_languages")}</p>
+            <ul class="skill-list">
+              {
+                skills.languages.map((s) => (
+                  <li class="skill-item" translate="no">
+                    {s}
+                  </li>
+                ))
+              }
+            </ul>
           </div>
-          <div class="bio-stat">
-            <span class="bio-stat-key">"languages"</span>
-            <span class="bio-stat-value">["tr", "en"]</span>
+          <div class="skill-card">
+            <p class="skill-card-label">{t("about", "skills_frameworks")}</p>
+            <ul class="skill-list">
+              {
+                skills.frameworks.map((s) => (
+                  <li class="skill-item" translate="no">
+                    {s}
+                  </li>
+                ))
+              }
+            </ul>
           </div>
-          <div class="bio-stat">
-            <span class="bio-stat-key">"open_to_work"</span>
-            <span class="bio-stat-value">true</span>
+          <div class="skill-card">
+            <p class="skill-card-label">{t("about", "skills_tools")}</p>
+            <ul class="skill-list">
+              {
+                skills.tools.map((s) => (
+                  <li class="skill-item" translate="no">
+                    {s}
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+          <div class="skill-card">
+            <p class="skill-card-label">{t("about", "skills_learning")}</p>
+            <ul class="skill-list">
+              <li class="skill-item learning" translate="no">
+                {skills.learning}
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="about-section" aria-labelledby="skills-label">
-      <div class="section-label" id="skills-label" aria-hidden="true">{t("about", "section_skills")}</div>
-      <div class="skills-grid">
-        <div class="skill-card">
-          <p class="skill-card-label">{t("about", "skills_languages")}</p>
-          <ul class="skill-list">
-            {skills.languages.map((s) => <li class="skill-item" translate="no">{s}</li>)}
-          </ul>
+      <section class="about-section" aria-labelledby="interests-label">
+        <div class="section-label" id="interests-label" aria-hidden="true">
+          {t("about", "section_interests")}
         </div>
-        <div class="skill-card">
-          <p class="skill-card-label">{t("about", "skills_frameworks")}</p>
-          <ul class="skill-list">
-            {skills.frameworks.map((s) => <li class="skill-item" translate="no">{s}</li>)}
-          </ul>
-        </div>
-        <div class="skill-card">
-          <p class="skill-card-label">{t("about", "skills_tools")}</p>
-          <ul class="skill-list">
-            {skills.tools.map((s) => <li class="skill-item" translate="no">{s}</li>)}
-          </ul>
-        </div>
-        <div class="skill-card">
-          <p class="skill-card-label">{t("about", "skills_learning")}</p>
-          <ul class="skill-list">
-            <li class="skill-item learning" translate="no">{skills.learning}</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+        <p class="lead" style="margin-bottom: 20px;">
+          {t("about", "interests_text")}
+        </p>
+        <ul class="interests-list">
+          {
+            interests.map((item) => (
+              <li class="interest-tag" translate="no">
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
 
-    <section class="about-section" aria-labelledby="interests-label">
-      <div class="section-label" id="interests-label" aria-hidden="true">{t("about", "section_interests")}</div>
-      <p class="lead" style="margin-bottom: 20px;">{t("about", "interests_text")}</p>
-      <ul class="interests-list">
-        {interests.map((item) => <li class="interest-tag" translate="no">{item}</li>)}
-      </ul>
-    </section>
-
-    <section class="about-section about-cta" aria-labelledby="contact-cta-label">
-      <div class="about-cta-text">
-        <div class="about-status" aria-label="Status: open to work">
-          <span class="about-status-dot" aria-hidden="true"></span>
-          {t("contact", "open_to")}
+      <section
+        class="about-section about-cta"
+        aria-labelledby="contact-cta-label"
+      >
+        <div class="about-cta-text">
+          <div class="about-status" aria-label="Status: open to work">
+            <span class="about-status-dot" aria-hidden="true"></span>
+            {t("contact", "open_to")}
+          </div>
+          <p id="contact-cta-label">{t("about", "contact_text")}</p>
         </div>
-        <p id="contact-cta-label">{t("about", "contact_text")}</p>
-      </div>
-      <Button href="/contact" variant="primary" size="lg">
-        {t("about", "contact_button")}
-      </Button>
-    </section>
-
+        <Button href="/contact" variant="primary" size="lg">
+          {t("about", "contact_button")}
+        </Button>
+      </section>
+    </div>
   </div>
 </Layout>

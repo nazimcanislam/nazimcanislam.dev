@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 import { SOCIAL_LINKS } from "@/components/constants/navigation";
 import { Icon } from "astro-icon/components";
+import PageCommand from "@/components/ui/PageCommand.astro";
 
 const lang = getLang(Astro.request);
 const t = useTranslations(lang);
@@ -45,21 +46,19 @@ const channels = [
 
 <style>
   .contact-page {
-    max-width: 720px;
-    margin-inline: auto;
+    max-width: 100%;
+    width: 100%;
     padding: 64px 16px;
   }
 
-  .contact-hero { margin-bottom: 56px; }
-
-  .contact-path {
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.04em;
-    margin: 0 0 16px;
+  .contact-page-wrapper {
+    max-width: 1024px;
+    margin-inline: auto;
   }
-  .contact-path span { color: var(--color-accent); }
+
+  .contact-hero {
+    margin-bottom: 56px;
+  }
 
   .contact-hero-title {
     font-size: clamp(2.2rem, 5vw, 3rem);
@@ -69,7 +68,9 @@ const channels = [
     margin: 0 0 12px;
     color: var(--color-text-primary);
   }
-  .contact-hero-title .dot { color: var(--color-accent); }
+  .contact-hero-title .dot {
+    color: var(--color-accent);
+  }
 
   .contact-hero-subtitle {
     font-family: ui-monospace, monospace;
@@ -116,7 +117,11 @@ const channels = [
     border: 1px solid var(--color-border);
     border-radius: 20px;
   }
-  .section-label::before { content: "# "; color: var(--color-accent); font-weight: 600; }
+  .section-label::before {
+    content: "# ";
+    color: var(--color-accent);
+    font-weight: 600;
+  }
 
   .channels-list {
     display: flex;
@@ -136,8 +141,10 @@ const channels = [
     border: 1px solid var(--color-glass-border);
     border-radius: 16px;
     text-decoration: none;
-    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.1));
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
   }
   .channel-card:hover {
     transform: translateX(4px);
@@ -162,7 +169,10 @@ const channels = [
     font-size: 1.4rem;
   }
 
-  .channel-info { flex: 1; min-width: 0; }
+  .channel-info {
+    flex: 1;
+    min-width: 0;
+  }
   .channel-label {
     font-size: 0.75rem;
     font-family: ui-monospace, monospace;
@@ -190,7 +200,9 @@ const channels = [
     color: var(--color-text-secondary);
     opacity: 0.5;
     flex-shrink: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
   }
   .channel-card:hover .channel-arrow {
     opacity: 1;
@@ -198,59 +210,108 @@ const channels = [
     color: var(--color-accent);
   }
 
+  .contact-body {
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @media (max-width: 500px) {
-    .channel-card { padding: 16px; }
-    .contact-page { padding: 40px 16px; }
+    .channel-card {
+      padding: 16px;
+    }
+    .contact-page {
+      padding: 40px 16px;
+    }
   }
 </style>
 
-<Layout title={t("contact", "meta_title")} description={t("contact", "meta_desc")}>
+<Layout
+  title={t("contact", "meta_title")}
+  description={t("contact", "meta_desc")}
+>
   <div class="contact-page">
+    <div class="contact-page-wrapper">
+      <header class="contact-hero">
+        <PageCommand pageTitle={t("contact", "hero_title")} command="ping" />
 
-    <header class="contact-hero">
-      <p class="contact-path" aria-hidden="true">
-        <span>{t("contact", "hero_label")}</span>
-        {" ❯ ping"}
-      </p>
+        <div class="contact-status" aria-label="Status: open to work">
+          <span class="contact-status-dot" aria-hidden="true"></span>
+          {t("contact", "open_to")} — {t("contact", "open_to_note")}
+        </div>
 
-      <div class="contact-status" aria-label="Status: open to work">
-        <span class="contact-status-dot" aria-hidden="true"></span>
-        {t("contact", "open_to")} — {t("contact", "open_to_note")}
-      </div>
-
-      <h1 class="contact-hero-title">
-        {t("contact", "hero_title")}<span class="dot" aria-hidden="true">.</span>
-      </h1>
-      <p class="contact-hero-subtitle">{">"} {t("contact", "hero_subtitle")}</p>
-    </header>
-
-    <div class="section-label" aria-hidden="true">{t("contact", "section_channels")}</div>
-
-    <ul class="channels-list">
-      {channels.map((ch) => (
-        <li>
-          <a
-            href={ch.href}
-            class="channel-card"
-            target={ch.href.startsWith("mailto") ? undefined : "_blank"}
-            rel={ch.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-            aria-label={`${ch.label}: ${ch.value}`}
+        <h1 class="contact-hero-title">
+          {t("contact", "hero_title")}<span class="dot" aria-hidden="true"
+            >.</span
           >
-            <div class="channel-icon-wrap" aria-hidden="true">
-              <Icon name={ch.icon} />
-            </div>
-            <div class="channel-info">
-              <p class="channel-label">{ch.label}</p>
-              <p class="channel-value" translate="no">{ch.value}</p>
-              <p class="channel-note">{ch.note}</p>
-            </div>
-            <svg class="channel-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        </li>
-      ))}
-    </ul>
+        </h1>
+        <p class="contact-hero-subtitle">
+          {">"}
+          {t("contact", "hero_subtitle")}
+        </p>
+      </header>
 
+      <div class="contact-body">
+        <div class="section-label" aria-hidden="true">
+          {t("contact", "section_channels")}
+        </div>
+
+        <ul class="channels-list">
+          {
+            channels.map((ch) => (
+              <li>
+                <a
+                  href={ch.href}
+                  class="channel-card"
+                  target={ch.href.startsWith("mailto") ? undefined : "_blank"}
+                  rel={
+                    ch.href.startsWith("mailto")
+                      ? undefined
+                      : "noopener noreferrer"
+                  }
+                  aria-label={`${ch.label}: ${ch.value}`}
+                >
+                  <div class="channel-icon-wrap" aria-hidden="true">
+                    <Icon name={ch.icon} />
+                  </div>
+                  <div class="channel-info">
+                    <p class="channel-label">{ch.label}</p>
+                    <p class="channel-value" translate="no">
+                      {ch.value}
+                    </p>
+                    <p class="channel-note">{ch.note}</p>
+                  </div>
+                  <svg
+                    class="channel-arrow"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 8h10M9 4l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
   </div>
 </Layout>

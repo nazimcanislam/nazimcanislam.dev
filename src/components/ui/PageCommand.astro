@@ -1,0 +1,120 @@
+---
+interface Props {
+  pageTitle: string;
+  command: string;
+  largeText?: boolean;
+}
+
+const { pageTitle, command, largeText } = Astro.props;
+---
+
+<style>
+  .page-command-title {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    margin: 0 0 16px;
+  }
+  .page-command-title.large {
+    font-size: clamp(1rem, 2vw, 1.1rem);;
+  }
+
+  .page-command-separator {
+    color: var(--color-code-green-text);
+  }
+
+  .page-name {
+    text-transform: lowercase;
+    color: var(--color-accent);
+  }
+
+  .page-command {
+    color: var(--color-text-secondary);
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    width: 0.4em;
+    height: 0.85em;
+    background-color: var(--color-text-secondary);
+    margin-left: 0.1em;
+    vertical-align: middle;
+    animation: cursor-blink 0.7s step-end infinite;
+  }
+
+  .typewriter-cursor.hidden {
+    animation: none;
+    opacity: 0;
+  }
+
+  @keyframes cursor-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+</style>
+
+<div
+  class:list={["page-command-title", largeText && "large"]}
+  aria-hidden="true"
+>
+  <p>
+    <span class="page-name">~/{pageTitle}</span>
+    <span class="page-command-separator">❯</span>
+    <span class="page-command" data-command={command}></span>
+    <span class="typewriter-cursor"></span>
+  </p>
+</div>
+
+<script>
+  // If there are multiple instances on the page, each will find itself
+  document
+    .querySelectorAll<HTMLElement>(".page-command-title")
+    .forEach((root) => {
+      const commandEl = root.querySelector<HTMLElement>(
+        ".page-command[data-command]",
+      );
+      const cursorEl = root.querySelector<HTMLElement>(".typewriter-cursor");
+      if (!commandEl || !cursorEl) return;
+
+      const text = commandEl.dataset.command ?? ""; // Fallback to empty string if data-command is missing
+      const speed = 175; // ms per character
+      const cursorTTL = 2000; // ms to keep cursor blinking after typing is done
+      const initialDelay = 1000; // ms before starting to type once in view
+
+      let started = false;
+      const startTyping = () => {
+        if (started) return;
+        started = true;
+
+        let i = 0;
+        const type = () => {
+          if (i < text.length) {
+            commandEl.textContent += text[i++];
+            setTimeout(type, speed);
+          } else {
+            setTimeout(() => cursorEl.classList.add("hidden"), cursorTTL);
+          }
+        };
+        type();
+      };
+
+      // Start typing when the element is in view, instead of a fixed delay
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setTimeout(() => {
+            if (entry.isIntersecting) {
+              startTyping();
+            }
+          }, initialDelay);
+        },
+        { threshold: 0.1 },
+      );
+
+      observer.observe(root);
+    });
+</script>
