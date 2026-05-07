@@ -1,0 +1,39 @@
+---
+import { getLang, useTranslations } from "@/i18n/utils";
+
+const t = useTranslations(getLang(Astro.request));
+---
+
+<style>
+  .noscript-warning {
+    border: 1px solid var(--color-warning);
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: monospace, sans-serif;
+  }
+
+  .noscript-warning p {
+    margin: 0;
+    max-width: 1024px;
+    margin-inline: auto;
+    color: var(--color-warning);
+  }
+
+  .noscript-warning .noscript-icon {
+    font-size: 18px;
+    margin-right: 8px;
+    color: var(--color-accent);
+  }
+</style>
+
+<noscript>
+  <div class="noscript-warning">
+    <p style="margin: 0; max-width: 1024px; margin-inline: auto;">
+      <span class="noscript-icon">>_</span>
+      {t("shared", "noscript_message")}
+      <span>⚠️</span>
+    </p>
+  </div>
+</noscript>

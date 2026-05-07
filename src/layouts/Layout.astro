@@ -2,6 +2,7 @@
 import Header from "@layout/Header.astro";
 import Footer from "@layout/Footer.astro";
 import BubbleBackgroundCanvas from "@/components/sections/BubbleBackgroundCanvas.astro";
+import NoScript from "@/components/layout/NoScript.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 import "@styles/base.css";
 import "@styles/typography.css";
@@ -92,6 +93,7 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
       >{t("shared", "skip_to_main_content")}</a
     >
     <Header />
+    <NoScript />
     <main id="main-content">
       <BubbleBackgroundCanvas />
       <slot />

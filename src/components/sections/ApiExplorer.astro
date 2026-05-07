@@ -236,6 +236,10 @@ const endpoints: Endpoint[] = [
     transition: opacity 0.3s ease;
   }
 
+  .api-status-badge.no-js {
+    display: none;
+  }
+
   .api-status-badge.visible {
     opacity: 1;
   }
@@ -319,6 +323,46 @@ const endpoints: Endpoint[] = [
   :global(.json-punct) {
     color: var(--color-json-punct);
   }
+
+  .api-empty.no-js {
+    display: none;
+  }
+
+  @media (scripting: none) {
+    .api-endpoint-btn {
+      cursor: default;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .api-empty {
+      display: none;
+    }
+
+    .api-empty.no-js {
+      font-size: 1rem;
+      display: flex;
+      color: var(--color-warning);
+    }
+
+    .api-base-url-dot {
+      background: #ee4b5e;
+      box-shadow: 0 0 8px #ee4b5e;
+    }
+
+    .api-status-badge.no-js {
+      display: inline-flex;
+    }
+
+    .api-status-badge,
+    .api-method-badge {
+      color: var(--color-code-red-text) !important;
+      background: var(--color-code-red-background) !important;
+
+      opacity: 1;
+      color: white;
+    }
+  }
 </style>
 
 <div class="wrapper">
@@ -327,6 +371,7 @@ const endpoints: Endpoint[] = [
     <div class="api-base-url-badge">
       <span class="api-base-url-dot" role="img" aria-label="Online"></span>
       <span class="api-base-url-text">nazimcanislam.dev</span>
+      <span class="api-status-badge no-js">412 Precondition Failed</span>
     </div>
 
     <div class="api-panel">
@@ -374,6 +419,9 @@ const endpoints: Endpoint[] = [
         }
 
         <div class="api-empty" id="api-empty-state">← select an endpoint</div>
+        <div class="api-empty no-js">
+          Please enable JavaScript to use the API explorer.
+        </div>
       </div>
     </div>
 

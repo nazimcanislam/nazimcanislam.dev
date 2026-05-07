@@ -86,6 +86,13 @@ const t = useTranslations(getLang(Astro.request));
   #about-copy-button.copied .about-copy-button-onclick-icon {
     display: block;
   }
+
+  @media (scripting: none) {
+    #about-copy-button {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
 </style>
 
 <section

@@ -3,6 +3,7 @@ export const translations = {
     shared: {
       "skip_to_main_content": "Skip to main content",
       "logo_title": "Nazımcan İslam logo",
+      "noscript_message": "Please enable JavaScript to experience the site's interactive features (API demo, dynamic backgrounds).",
     },
     meta: {
       title: "Nazımcan İslam | Frontend & Android Developer — Portfolio",
@@ -133,6 +134,7 @@ export const translations = {
     shared: {
       "skip_to_main_content": "Ana içeriğe atla",
       "logo_title": "Nazımcan İslam logo",
+      "noscript_message": "Sitenin interaktif özelliklerini (API demosu, dinamik arka planlar) deneyimlemek için lütfen JavaScript'i etkinleştirin.",
     },
     meta: {
       title: "Nazımcan İslam | Frontend & Android Geliştirici — Portföy",

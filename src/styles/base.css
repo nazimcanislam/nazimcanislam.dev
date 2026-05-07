@@ -32,6 +32,12 @@ html {
   --color-code-green-background: rgba(22, 101, 52, 0.08);
   --color-code-green-border: rgba(22, 101, 52, 0.2);
 
+  --color-code-red-text: #991b1b;
+  --color-code-red-background: rgba(153, 27, 27, 0.08);
+  --color-code-red-border: rgba(153, 27, 27, 0.2);
+
+  --color-warning: #854d0e;
+
   --border-radius-for-section: 24px;
   --border-radius-for-button: 8px;
 
@@ -131,6 +137,10 @@ body {
     --color-code-green-background: rgba(166, 227, 161, 0.1);
     --color-code-green-border: rgba(166, 227, 161, 0.2);
 
+    --color-code-red-text: #f38ba8;
+    --color-code-red-background: rgba(243, 139, 168, 0.1);
+    --color-code-red-border: rgba(243, 139, 168, 0.2);
+
     /* JSON Syntax Highlighting */
     --color-json-background: rgba(0, 0, 0, 0.2);
     --color-json-key: #89b4fa;
@@ -138,11 +148,15 @@ body {
     --color-json-num: #f9e2af;
     --color-json-bool: #fab387;
     --color-json-punct: #585b70;
+
+    --color-warning: #fde047;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
