@@ -10,7 +10,9 @@ export default defineConfig({
   site: "https://nazimcanislam-dev.vercel.app",
   integrations: [icon(), sitemap()],
   output: "server",
-  adapter: vercel(),
+  adapter: vercel({
+    imageService: true,
+  }),
   markdown: {
     shikiConfig: {
       theme: "catppuccin-macchiato",
