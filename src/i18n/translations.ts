@@ -5,7 +5,7 @@ export const translations = {
       "logo_title": "Nazımcan İslam logo",
     },
     meta: {
-      title: "Nazımcan İslam — Frontend & Android Developer",
+      title: "Nazımcan İslam | Frontend & Android Developer — Portfolio",
       description:
         "Personal portfolio of Nazımcan İslam, a software developer focused on turning ideas into working systems through clean, sustainable, and elegant solutions.",
     },
@@ -135,7 +135,7 @@ export const translations = {
       "logo_title": "Nazımcan İslam logo",
     },
     meta: {
-      title: "Nazımcan İslam — Frontend & Android Geliştirici",
+      title: "Nazımcan İslam | Frontend & Android Geliştirici — Portföy",
       description:
         "Nazımcan İslam’ın kişisel portföyü. Fikirleri temiz, sürdürülebilir ve zarif çözümlerle çalışan sistemlere dönüştürmeye odaklanan bir yazılım geliştirici.",
     },

@@ -22,11 +22,49 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
 <!doctype html>
 <html lang={lang}>
   <head>
+    <!-- Meta tags -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
 
+    <title>{title}</title>
+
+    <!-- Theme color -->
+    <meta
+      name="theme-color"
+      content="#2563eb"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#3b82f6"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <!-- Open Graph  -->
+    <meta
+      property="og:url"
+      content={new URL(Astro.url.pathname, Astro.site).href}
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="nazimcanislam-dev.vercel.app" />
+    <meta
+      property="twitter:url"
+      content={new URL(Astro.url.pathname, Astro.site).href}
+    />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+
+    <!-- Favicon and web manifest -->
     <link
       rel="icon"
       type="image/png"
@@ -40,31 +78,8 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
       sizes="180x180"
       href="/favicon/apple-touch-icon.png"
     />
-    <meta name="apple-mobile-web-app-title" content="nazimcan.dev" />
+    <meta name="apple-mobile-web-app-title" content="ni.dev" />
     <link rel="manifest" href="/site.webmanifest" />
-
-    <meta
-      name="theme-color"
-      content="#2563eb"
-      media="(prefers-color-scheme: light)"
-    />
-    <meta
-      name="theme-color"
-      content="#3b82f6"
-      media="(prefers-color-scheme: dark)"
-    />
-
-    <title>{title}</title>
-
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:url"
-      content={new URL(Astro.url.pathname, Astro.site).href}
-    />
-
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
   </head>
   <body>
     <a href="#main-content" class="skip-link"
