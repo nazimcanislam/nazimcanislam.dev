@@ -62,6 +62,11 @@ const interests = [
     margin: 0;
     opacity: 0.9;
   }
+  
+  /* Decorative terminal prompt — CSS only so reader mode ignores it */
+  .about-hero-subtitle::before {
+    content: "> ";
+  }
 
   .about-section {
     margin-bottom: 64px;
@@ -80,6 +85,11 @@ const interests = [
     animation-delay: 0.2s;
   }
 
+  /*
+   * section-label is now an <h2> for proper heading hierarchy.
+   * Reader mode picks it up as a section title; the decorative "#" prefix
+   * stays CSS-only so it is stripped in reader mode.
+   */
   .section-label {
     display: inline-flex;
     align-items: center;
@@ -94,6 +104,8 @@ const interests = [
     background: var(--color-card);
     border: 1px solid var(--color-border);
     border-radius: 20px;
+    /* Reset <h2> browser defaults */
+    font-weight: normal;
   }
   .section-label::before {
     content: "#";
@@ -115,6 +127,11 @@ const interests = [
     margin-bottom: 0;
   }
 
+  /*
+   * bio-card is now a <dl> for semantic key/value pairs.
+   * Reader mode renders <dl>/<dt>/<dd> as structured text;
+   * visually it looks identical to before.
+   */
   .bio-card {
     background: var(--color-glass-bg);
     border: 1px solid var(--color-glass-border);
@@ -126,6 +143,8 @@ const interests = [
     color: var(--color-text-secondary);
     align-self: start;
     filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+    /* Reset <dl> browser defaults */
+    margin: 0;
   }
   .bio-card-title {
     display: flex;
@@ -141,17 +160,23 @@ const interests = [
     justify-content: space-between;
     padding: 6px 0;
     border-bottom: 1px solid var(--color-border);
+    /* Reset <div> wrapper inside <dl> */
+    margin: 0;
   }
   .bio-stat:last-child {
     border-bottom: none;
   }
   .bio-stat-key {
     color: #89b4fa;
+    /* Reset <dt> browser defaults */
+    font-weight: normal;
   }
   .bio-stat-value {
     color: #a6e3a1;
     text-align: right;
     max-width: 55%;
+    /* Reset <dd> browser defaults */
+    margin: 0;
   }
 
   .skills-grid {
@@ -231,6 +256,7 @@ const interests = [
     border-color: rgba(var(--color-accent-rgb), 0.4);
     color: var(--color-text-primary);
   }
+  /* Decorative comment prefix — CSS only so reader mode ignores it */
   .interest-tag::before {
     content: "// ";
     color: var(--color-accent);
@@ -301,65 +327,91 @@ const interests = [
 
 <Layout title={t("about", "meta_title")} description={t("about", "meta_desc")}>
   <div class="about-page">
-    <div class="about-page-wrapper">
+    <!--
+      <article> signals to reader mode parsers (Firefox, Safari, etc.)
+      that this is the primary readable content of the page.
+    -->
+    <article class="about-page-wrapper">
       <header class="about-hero">
-        <PageCommand pageTitle={t("about", "hero_title")} command="whoami" />
+        <!-- PageCommand is a decorative UI element; aria-hidden keeps it out of the a11y tree -->
+        <PageCommand
+          pageTitle={t("about", "hero_title")}
+          command="whoami"
+          aria-hidden="true"
+        />
 
         <h1 class="about-hero-title">
           {t("about", "hero_title")}<span class="dot" aria-hidden="true">.</span
           >
         </h1>
-        <p class="about-hero-subtitle">{">"} {t("about", "hero_subtitle")}</p>
+        <!--
+          The "> " prompt is now a CSS ::before — reader mode strips CSS,
+          so it shows only the meaningful subtitle text.
+        -->
+        <p class="about-hero-subtitle">{t("about", "hero_subtitle")}</p>
       </header>
 
+      <!--
+        section-label is now an <h2> instead of an aria-hidden div.
+        Previously: aria-labelledby pointed to an aria-hidden element (invalid).
+        Now: the <h2> is visible to both the a11y tree and reader mode,
+        giving each section a proper title.
+      -->
       <section class="about-section" aria-labelledby="whoami-label">
-        <div class="section-label" id="whoami-label" aria-hidden="true">
+        <h2 class="section-label" id="whoami-label">
           {t("about", "section_whoami")}
-        </div>
+        </h2>
         <div class="bio-grid">
           <div class="bio-text">
             <p>{t("about", "bio_1")}</p>
             <p>{t("about", "bio_2")}</p>
             <p>{t("about", "bio_3")}</p>
           </div>
-          <div
+          <!--
+            bio-card is now a <dl> (description list) — the correct semantic
+            element for key/value pairs. Reader mode renders <dt>/<dd> as
+            structured text instead of a blob of colored spans.
+            The decorative "personal.json" header is aria-hidden since it
+            adds no real information.
+          -->
+          <dl
             class="bio-card"
             lang="en"
             translate="no"
             aria-label="Personal stats"
           >
-            <p class="bio-card-title">
+            <div class="bio-card-title" aria-hidden="true">
               <span>personal.json</span>
               <span>156 B</span>
-            </p>
-            <div class="bio-stat">
-              <span class="bio-stat-key">"name"</span>
-              <span class="bio-stat-value">"Nazımcan İslam"</span>
             </div>
             <div class="bio-stat">
-              <span class="bio-stat-key">"location"</span>
-              <span class="bio-stat-value">"Istanbul, 🇹🇷"</span>
+              <dt class="bio-stat-key">"name"</dt>
+              <dd class="bio-stat-value">"Nazımcan İslam"</dd>
             </div>
             <div class="bio-stat">
-              <span class="bio-stat-key">"role"</span>
-              <span class="bio-stat-value">"Software Dev"</span>
+              <dt class="bio-stat-key">"location"</dt>
+              <dd class="bio-stat-value">"Istanbul, 🇹🇷"</dd>
             </div>
             <div class="bio-stat">
-              <span class="bio-stat-key">"languages"</span>
-              <span class="bio-stat-value">["tr", "en"]</span>
+              <dt class="bio-stat-key">"role"</dt>
+              <dd class="bio-stat-value">"Software Dev"</dd>
             </div>
             <div class="bio-stat">
-              <span class="bio-stat-key">"open_to_work"</span>
-              <span class="bio-stat-value">true</span>
+              <dt class="bio-stat-key">"languages"</dt>
+              <dd class="bio-stat-value">["tr", "en"]</dd>
             </div>
-          </div>
+            <div class="bio-stat">
+              <dt class="bio-stat-key">"open_to_work"</dt>
+              <dd class="bio-stat-value">true</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
       <section class="about-section" aria-labelledby="skills-label">
-        <div class="section-label" id="skills-label" aria-hidden="true">
+        <h2 class="section-label" id="skills-label">
           {t("about", "section_skills")}
-        </div>
+        </h2>
         <div class="skills-grid">
           <div class="skill-card">
             <p class="skill-card-label">{t("about", "skills_languages")}</p>
@@ -409,9 +461,9 @@ const interests = [
       </section>
 
       <section class="about-section" aria-labelledby="interests-label">
-        <div class="section-label" id="interests-label" aria-hidden="true">
+        <h2 class="section-label" id="interests-label">
           {t("about", "section_interests")}
-        </div>
+        </h2>
         <p class="lead" style="margin-bottom: 20px;">
           {t("about", "interests_text")}
         </p>
@@ -446,6 +498,6 @@ const interests = [
           {t("about", "contact_button")}
         </Button>
       </section>
-    </div>
+    </article>
   </div>
 </Layout>
