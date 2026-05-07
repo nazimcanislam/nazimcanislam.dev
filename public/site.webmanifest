@@ -1,21 +1,67 @@
 {
+  "id": "/", 
+  "start_url": "/",
   "name": "nazimcanislam.dev",
   "short_name": "ni.dev",
+  "description": "Personal portfolio of Nazımcan İslam, a software developer focused on turning ideas into working systems through clean, sustainable, and elegant solutions.",
   "icons": [
     {
       "src": "/favicon/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "/favicon/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "theme_color": "#3b82f6",
   "background_color": "#020617",
-  "display": "standalone"
+  "display": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "categories": ["personal", "portfolio", "developer", "education", "technology"],
+  "shortcuts": [
+    {
+      "name": "About — Nazımcan İslam",
+      "short_name": "About",
+      "description": "Learn more about me and my background.",
+      "url": "/about",
+      "icons": [
+        {
+          "src": "/favicon/web-app-manifest-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Projects — Nazımcan İslam",
+      "short_name": "Projects",
+      "description": "Explore my projects and contributions.",
+      "url": "/projects",
+      "icons": [
+        {
+          "src": "/favicon/web-app-manifest-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Contact — Nazımcan İslam",
+      "short_name": "Contact",
+      "description": "Get in touch with me for collaborations or inquiries.",
+      "url": "/contact",
+      "icons": [
+        {
+          "src": "/favicon/web-app-manifest-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
 }
