@@ -1,9 +1,9 @@
 ---
 import me from "@assets/pictures/me.jpg";
 import Button from "@ui/Button.astro";
-import BubbleBackgroundCanvas from "@sections/BubbleBackgroundCanvas.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 import PageCommand from "../ui/PageCommand.astro";
+import { Picture } from "astro:assets";
 
 const lang = getLang(Astro.request);
 const t = useTranslations(lang);
@@ -30,6 +30,7 @@ const t = useTranslations(lang);
   .hero-image-col {
     animation: float 6s ease-in-out infinite;
     position: relative;
+    will-change: transform;
   }
 
   .hero-image-glow {
@@ -202,14 +203,14 @@ const t = useTranslations(lang);
       <div class="hero-image-glow" aria-hidden="true"></div>
 
       <div class="hero-image-frame">
-        <img
-          src={me.src}
+        <Picture
+          src={me}
           alt="Nazımcan İslam"
-          loading="eager"
-          fetchpriority="high"
+          loading="lazy"
           width={320}
           height={427}
           title={t("home", "portrait_title")}
+          formats={["avif", "webp"]}
         />
         <div class="hero-scanlines" aria-hidden="true"></div>
         <div class="hero-status-dot" aria-hidden="true"></div>

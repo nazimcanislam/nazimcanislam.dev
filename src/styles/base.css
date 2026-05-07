@@ -24,8 +24,8 @@ html {
   --color-background: #ffffff;
   --color-card: #dce3ea;
   --color-border: #e5e7eb;
-  --color-glass-bg: rgba(255, 255, 255, 0.6);
-  --color-glass-border: rgba(255, 255, 255, 0.3);
+  --color-glass-bg: rgba(255, 255, 255, 0.65);
+  --color-glass-border: rgba(15, 23, 42, 0.1);
 
   --color-code-background: rgba(15, 23, 42, 1);
   --color-code-green-text: #166534;
@@ -142,7 +142,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, ::before, ::after {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
