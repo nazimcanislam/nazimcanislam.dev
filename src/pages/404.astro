@@ -1,0 +1,37 @@
+---
+// src/pages/404.astro
+import Button from "@/components/ui/Button.astro";
+import Layout from "@/layouts/Layout.astro";
+import VoidSvg from "@assets/svg/undraw_void_wez2.svg";
+import { getLang, useTranslations } from "@/i18n/utils";
+
+const lang = getLang(Astro.request);
+const t = useTranslations(lang);
+---
+
+<style>
+  .error-404-page {
+    max-width: 100%;
+    width: 100%;
+    padding: 64px 16px;
+  }
+
+  .error-404-page-inner {
+    max-width: 1024px;
+    width: 100%;
+    margin-inline: auto;
+  }
+</style>
+
+<Layout title={t("404", "title")}>
+  <main class="error-404-page">
+    <div class="error-404-page-inner text-center">
+      <VoidSvg width={300} height={200} />
+      <h1 class="h1 mt-lg mb-lg">{t("404", "title")}</h1>
+      <p class="lead mb-lg">
+        {t("404", "desc")}
+      </p>
+      <Button href="/">{t("404", "return_home")}</Button>
+    </div>
+  </main>
+</Layout>

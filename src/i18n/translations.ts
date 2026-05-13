@@ -1,9 +1,15 @@
 export const translations = {
   en: {
     shared: {
-      "skip_to_main_content": "Skip to main content",
-      "logo_title": "Nazımcan İslam logo",
-      "noscript_message": "Please enable JavaScript to experience the site's interactive features (API demo, dynamic backgrounds).",
+      skip_to_main_content: "Skip to main content",
+      logo_title: "Nazımcan İslam logo",
+      noscript_message:
+        "Please enable JavaScript to experience the site's interactive features (API demo, dynamic backgrounds).",
+    },
+    "404": {
+      title: "404 — Page Not Found",
+      desc: "The page you're looking for may have been moved, deleted, or may never have existed.",
+      return_home: "Return Home",
     },
     meta: {
       title: "Nazımcan İslam | Frontend & Android Developer — Portfolio",
@@ -132,9 +138,15 @@ export const translations = {
   },
   tr: {
     shared: {
-      "skip_to_main_content": "Ana içeriğe atla",
-      "logo_title": "Nazımcan İslam logo",
-      "noscript_message": "Sitenin interaktif özelliklerini (API demosu, dinamik arka planlar) deneyimlemek için lütfen JavaScript'i etkinleştirin.",
+      skip_to_main_content: "Ana içeriğe atla",
+      logo_title: "Nazımcan İslam logo",
+      noscript_message:
+        "Sitenin interaktif özelliklerini (API demosu, dinamik arka planlar) deneyimlemek için lütfen JavaScript'i etkinleştirin.",
+    },
+    "404": {
+      title: "404 — Sayfa Bulunamadı",
+      desc: "Aradığın sayfa taşınmış, silinmiş ya da hiç var olmamış olabilir.",
+      return_home: "Ana Sayfaya Dön",
     },
     meta: {
       title: "Nazımcan İslam | Frontend & Android Geliştirici — Portföy",
