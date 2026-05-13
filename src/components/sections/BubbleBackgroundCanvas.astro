@@ -57,6 +57,9 @@
 
     function startWorker() {
       if (workerStarted) return;
+
+      if (window.location.href.includes("/blog/")) return;
+
       workerStarted = true;
 
       const offscreen = canvas.transferControlToOffscreen();

@@ -23,7 +23,7 @@ function formatDate(date: Date) {
 }
 ---
 
-<style>
+<style is:global>
   .post-page {
     max-width: 720px;
     margin-inline: auto;
@@ -131,6 +131,7 @@ function formatDate(date: Date) {
     margin: 24px 0;
     border: 1px solid var(--color-border);
     overflow-x: auto;
+    padding: 10px;
   }
   .post-content code:not(pre code) {
     font-family: ui-monospace, monospace;
