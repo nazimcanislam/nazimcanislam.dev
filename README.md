@@ -27,6 +27,7 @@ Live at → **[nazimcanislam.dev](https://nazimcanislam.dev)**
 |---|---|---|
 | Framework | Astro (SSR) | Zero-JS by default, island architecture |
 | Language | TypeScript | Type safety without the boilerplate |
+| Package Manager | Bun | Fast installs, drop-in npm replacement |
 | Deployment | Vercel | Free tier, edge network, painless CI/CD |
 | Styling | Vanilla CSS + CSS Variables | No build step, full control |
 | Icons | astro-icon + MDI | Tree-shakeable, accessible |
@@ -57,16 +58,16 @@ src/
 
 ```sh
 # Install dependencies
-npm install
+bun install
 
 # Start dev server (localhost:4321)
-npm run dev
+bun dev
 
 # Build for production
-npm run build
+bun build
 
 # Preview production build locally
-npm run preview
+bun preview
 ```
 
 ---
@@ -77,11 +78,10 @@ This project runs on **Vercel** with the `@astrojs/vercel` adapter.
 
 ```sh
 # One-time setup
-npm i -g vercel
-vercel login
+bunx vercel login
 
 # Deploy
-vercel
+bunx vercel
 ```
 
 Or connect the repo to [vercel.com](https://vercel.com) for automatic deployments on every push — no configuration needed, it picks up `astro.config.mjs` automatically.
