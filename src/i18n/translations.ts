@@ -82,6 +82,8 @@ export const translations = {
       contact_text:
         "I'm open to interesting conversations, collaborations, and opportunities. Feel free to reach out.",
       contact_button: "Get in Touch",
+      open_source: "open_source",
+      sponsor_text: "If my work has saved you time, consider buying me a coffee. Every bit helps keep these projects alive.",
     },
     projects: {
       meta_title: "Projects — Nazımcan İslam",
@@ -220,6 +222,8 @@ export const translations = {
       contact_text:
         "İlginç konuşmalara, iş birliklerine ve fırsatlara açığım. İletişime geçmekten çekinme.",
       contact_button: "İletişime Geç",
+      open_source: "açık_kaynak",
+      sponsor_text: "Eğer çalışmalarım size zaman kazandırdıysa, bana bir kahve ısmarlamayı düşünebilirsiniz. Her küçük katkı bu projelerin devam etmesine yardımcı oluyor.",
     },
     projects: {
       meta_title: "Projeler — Nazımcan İslam",

@@ -62,7 +62,7 @@ const interests = [
     margin: 0;
     opacity: 0.9;
   }
-  
+
   /* Decorative terminal prompt — CSS only so reader mode ignores it */
   .about-hero-subtitle::before {
     content: "> ";
@@ -83,6 +83,24 @@ const interests = [
   }
   .about-section:nth-child(5) {
     animation-delay: 0.2s;
+  }
+  .about-section:nth-child(6) {
+    animation-delay: 0.25s;
+  }
+
+  .sponsor-section {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 64px;
+    animation: fadeUp 0.5s ease both;
+    padding: 32px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 20px;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.15));
   }
 
   /*
@@ -496,6 +514,37 @@ const interests = [
           title={t("about", "contact_button_title")}
         >
           {t("about", "contact_button")}
+        </Button>
+      </section>
+
+      <section
+        class="about-section sponsor-section"
+        aria-labelledby="sponsor-label"
+      >
+        <div class="about-cta-text">
+          <div
+            class="about-status"
+            style="color: var(--color-accent); background: rgba(var(--color-accent-rgb), 0.08); border-color: rgba(var(--color-accent-rgb), 0.3);"
+          >
+            <span
+              class="about-status-dot"
+              aria-hidden="true"
+              style="background: var(--color-accent); box-shadow: 0 0 6px var(--color-accent);"
+            ></span>
+            {t("about", "open_source")}
+          </div>
+          <p id="sponsor-label" style="margin: 0; font-size: 1rem;">
+            {t("about", "sponsor_text")}
+          </p>
+        </div>
+        <Button
+          href="https://github.com/sponsors/nazimcanislam"
+          variant="primary"
+          size="lg"
+          title="Sponsor on GitHub"
+          target="_blank"
+        >
+          ❤️ Sponsor
         </Button>
       </section>
     </article>
