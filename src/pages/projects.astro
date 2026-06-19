@@ -3,7 +3,7 @@ import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
 
 // Build-time fetch from GitHub API

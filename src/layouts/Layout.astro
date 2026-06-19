@@ -3,7 +3,12 @@ import Header from "@layout/Header.astro";
 import Footer from "@layout/Footer.astro";
 import BubbleBackgroundCanvas from "@/components/sections/BubbleBackgroundCanvas.astro";
 import NoScript from "@/components/layout/NoScript.astro";
-import { getLang, useTranslations } from "@/i18n/utils";
+import {
+  getLang,
+  useTranslations,
+  localizePath,
+  stripLocale,
+} from "@/i18n/utils";
 import "@styles/base.css";
 import "@styles/typography.css";
 import "@styles/utilities.css";
@@ -13,8 +18,13 @@ interface Props {
   description?: string;
 }
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
+
+// hreflang alternatifleri için bu sayfanın her iki dildeki URL'si.
+const basePath = stripLocale(Astro.url.pathname);
+const enUrl = new URL(localizePath(basePath, "en"), Astro.site).href;
+const trUrl = new URL(localizePath(basePath, "tr"), Astro.site).href;
 
 const { title = t("meta", "title"), description = t("meta", "description") } =
   Astro.props;
@@ -23,6 +33,34 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
 <!doctype html>
 <html lang={lang}>
   <head>
+    <!--
+      Dil otomatik tespiti (cold-start YOK; bu istemci tarafında çalışır).
+      İlk ziyarette tarayıcı diline göre, sonraki ziyaretlerde kaydedilmiş
+      tercihe göre doğru dile yönlendirir. Boyama öncesi çalışsın diye en üstte.
+    -->
+    <script is:inline>
+      (function () {
+        try {
+          var path = location.pathname;
+          var stored = null;
+          try {
+            stored = localStorage.getItem("preferred-lang");
+          } catch (e) {}
+          var nav = (navigator.language || "en").slice(0, 2).toLowerCase();
+          var want = stored || (nav === "tr" ? "tr" : "en");
+          if (want !== "tr" && want !== "en") want = "en";
+          var isTr = path === "/tr" || path.indexOf("/tr/") === 0;
+          var curr = isTr ? "tr" : "en";
+          if (want === curr) return;
+          var base = isTr ? (path === "/tr" ? "/" : path.slice(3)) : path;
+          var target =
+            want === "tr" ? (base === "/" ? "/tr" : "/tr" + base) : base;
+          if (target !== path)
+            location.replace(target + location.search + location.hash);
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Meta tags -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -70,6 +108,11 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
 
     <!-- Canonical URL -->
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+
+    <!-- hreflang alternates (çok dilli SEO) -->
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="tr" href={trUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
 
     <!-- Favicon and web manifest -->
     <link

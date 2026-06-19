@@ -1,29 +1,17 @@
 ---
 import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
-import { getLang, useTranslations } from "@/i18n/utils";
+import { getLang, useTranslations, localizePath } from "@/i18n/utils";
+import { profile } from "@/data/profile";
 import Button from "@ui/Button.astro";
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
 
-const skills = {
-  languages: ["TypeScript", "JavaScript", "CSS", "Python", "C"],
-  frameworks: ["React", "Astro", "Node.js", "Django"],
-  tools: ["Git", "Docker", "Linux", "Vercel"],
-  learning: "Godot Engine",
-};
-
-const interests = [
-  "compilers",
-  "systems programming",
-  "open-source",
-  "AI/ML",
-  "linux",
-  "game dev concepts",
-  "Jungian psychology",
-  "competitive gaming",
-];
+// Yetenekler ve ilgi alanları TEK KAYNAK'tan (profile.ts) gelir.
+const skills = profile.skills;
+const interests = profile.interests;
+const work = profile.work;
 ---
 
 <style>
@@ -404,7 +392,7 @@ const interests = [
             </div>
             <div class="bio-stat">
               <dt class="bio-stat-key">"name"</dt>
-              <dd class="bio-stat-value">"Nazımcan İslam"</dd>
+              <dd class="bio-stat-value">"{profile.name}"</dd>
             </div>
             <div class="bio-stat">
               <dt class="bio-stat-key">"location"</dt>
@@ -412,16 +400,25 @@ const interests = [
             </div>
             <div class="bio-stat">
               <dt class="bio-stat-key">"role"</dt>
-              <dd class="bio-stat-value">"Software Dev"</dd>
+              <dd class="bio-stat-value">"Dev & Designer"</dd>
             </div>
             <div class="bio-stat">
               <dt class="bio-stat-key">"languages"</dt>
               <dd class="bio-stat-value">["tr", "en"]</dd>
             </div>
-            <div class="bio-stat">
-              <dt class="bio-stat-key">"open_to_work"</dt>
-              <dd class="bio-stat-value">true</dd>
-            </div>
+            {
+              work.isEmployed ? (
+                <div class="bio-stat">
+                  <dt class="bio-stat-key">"works_at"</dt>
+                  <dd class="bio-stat-value">"{work.employer}"</dd>
+                </div>
+              ) : (
+                <div class="bio-stat">
+                  <dt class="bio-stat-key">"open_to_work"</dt>
+                  <dd class="bio-stat-value">true</dd>
+                </div>
+              )
+            }
           </dl>
         </div>
       </section>
@@ -470,9 +467,13 @@ const interests = [
           <div class="skill-card">
             <p class="skill-card-label">{t("about", "skills_learning")}</p>
             <ul class="skill-list">
-              <li class="skill-item learning" translate="no">
-                {skills.learning}
-              </li>
+              {
+                skills.learning.map((s) => (
+                  <li class="skill-item learning" translate="no">
+                    {s}
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>
@@ -501,14 +502,19 @@ const interests = [
         aria-labelledby="contact-cta-label"
       >
         <div class="about-cta-text">
-          <div class="about-status" aria-label="Status: open to work">
+          <div
+            class="about-status"
+            aria-label={work.isEmployed
+              ? work.statusLabel[lang]
+              : "Status: open to work"}
+          >
             <span class="about-status-dot" aria-hidden="true"></span>
-            {t("contact", "open_to")}
+            {work.isEmployed ? work.statusKey : t("contact", "open_to")}
           </div>
           <p id="contact-cta-label">{t("about", "contact_text")}</p>
         </div>
         <Button
-          href="/contact"
+          href={localizePath("/contact", lang)}
           variant="primary"
           size="lg"
           title={t("about", "contact_button_title")}

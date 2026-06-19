@@ -1,30 +1,23 @@
 ---
 import { getLang, useTranslations } from "@/i18n/utils";
+import { profile, getAge } from "@/data/profile";
 import { Icon } from "astro-icon/components";
 import { Code } from "astro:components";
 import Button from "@ui/Button.astro";
 
-function calculateAge(birthYear: number, birthMonth = 1, birthDay = 1): number {
-  const today = new Date();
-  const age = today.getFullYear() - birthYear;
-  const hasBirthdayPassed =
-    today.getMonth() + 1 > birthMonth ||
-    (today.getMonth() + 1 === birthMonth && today.getDate() >= birthDay);
-  return hasBirthdayPassed ? age : age - 1;
-}
+const lang = getLang(Astro);
+const t = useTranslations(lang);
 
-const currentAge = calculateAge(2002, 7, 28);
+const currentAge = getAge();
 const brieflyAbout = `{
   "personal": {
-    "name": "Nazımcan İslam",
-    "birth_year": 2002, // ${currentAge} years old
-    "region": "🇹🇷 Türkiye",
-    "language": ["tr", "en"],
-    "role": "Software Developer"
+    "name": "${profile.name}",
+    "birth_year": ${profile.birth.year}, // ${currentAge} years old
+    "region": "${profile.region}",
+    "language": ${JSON.stringify(profile.spokenLanguages)},
+    "role": "${profile.roleShort.en}"
   }
 }`;
-
-const t = useTranslations(getLang(Astro.request));
 ---
 
 <style>

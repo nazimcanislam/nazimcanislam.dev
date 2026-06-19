@@ -1,29 +1,27 @@
 <svg
-  viewBox="0 0 148 64"
+  viewBox="0 0 172 64"
   xmlns="http://www.w3.org/2000/svg"
   role="img"
   aria-label="ni.dev logo"
   preserveAspectRatio="xMinYMid meet"
 >
-
   <style>
     .text {
-      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
       font-size: 32px;
       font-weight: 600;
-      fill: currentColor;
       letter-spacing: -0.5px;
+      fill: currentColor;
       color: var(--color-text-primary);
     }
-
     .accent {
       fill: #2563eb;
     }
   </style>
 
-  <text x="0" y="42" class="text">&lt;</text>
-  <text x="20" y="42" class="text">ni</text>
-  <text x="58" y="42" class="text accent">.dev</text>
-  <text x="110" y="42" class="text">/&gt;</text>
-
+  <!--
+    Tek bir <text>; parçalar <tspan> ile akıyor. Artık her segmente elle x
+    vermiyoruz, dolayısıyla "/" karakteri "v" üstüne binemez.
+  -->
+  <text x="2" y="42" class="text">&lt;ni<tspan class="accent">.dev</tspan>/&gt;</text>
 </svg>

@@ -1,10 +1,10 @@
 ---
 import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
-import { getLang, useTranslations } from "@/i18n/utils";
+import { getLang, useTranslations, localizePath } from "@/i18n/utils";
 import { getCollection } from "astro:content";
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
 
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
@@ -171,7 +171,7 @@ function formatDate(date: Date) {
               <li
                 style={`animation-delay: ${100 * posts.indexOf(post) + 1}ms;`}
               >
-                <a href={`/blog/${post.slug}`} class="post-card">
+                <a href={localizePath(`/blog/${post.slug}`, lang)} class="post-card">
                   <div class="post-meta">
                     <time
                       class="post-date"

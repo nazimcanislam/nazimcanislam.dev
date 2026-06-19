@@ -1,12 +1,19 @@
 ---
 import me from "@assets/pictures/me.jpg";
 import Button from "@ui/Button.astro";
-import { getLang, useTranslations } from "@/i18n/utils";
+import { getLang, useTranslations, localizePath } from "@/i18n/utils";
+import { profile } from "@/data/profile";
 import PageCommand from "../ui/PageCommand.astro";
 import { Picture } from "astro:assets";
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
+
+// Rol ve çalışma durumu TEK KAYNAK'tan (profile.ts) gelir.
+const role = profile.role[lang];
+const statusValue = profile.work.isEmployed
+  ? `working @ ${profile.work.employer}`
+  : "open_to_work";
 ---
 
 <style>
@@ -207,6 +214,7 @@ const t = useTranslations(lang);
           src={me}
           alt="Nazımcan İslam"
           fetchpriority={"high"}
+          loading={"eager"}
           width={320}
           height={427}
           title={t("home", "portrait_title")}
@@ -217,7 +225,7 @@ const t = useTranslations(lang);
       </div>
 
       <div class="hero-status-tag" aria-hidden="true">
-        status: <span class="hero-status-tag-value">open_to_work</span>
+        status: <span class="hero-status-tag-value">{statusValue}</span>
       </div>
     </div>
 
@@ -230,14 +238,14 @@ const t = useTranslations(lang);
       </h1>
 
       <p class="hero-role">
-        <span aria-hidden="true">{">"} </span>{t("home", "role")}
+        <span aria-hidden="true">{">"} </span>{role}
       </p>
 
       <p>{t("home", "bio")}</p>
 
       <div class="hero-buttons-group">
         <Button
-          href="/projects"
+          href={localizePath("/projects", lang)}
           size="lg"
           variant="primary"
           title={t("home", "btn_projects_title")}
@@ -245,7 +253,7 @@ const t = useTranslations(lang);
           {t("home", "btn_projects")}
         </Button>
         <Button
-          href="/about"
+          href={localizePath("/about", lang)}
           size="lg"
           variant="ghost"
           title={t("home", "btn_about_title")}

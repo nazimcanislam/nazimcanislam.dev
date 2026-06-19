@@ -2,12 +2,24 @@
 import Logo from "@assets/logo.svg";
 import Button from "@ui/Button.astro";
 import { Icon } from "astro-icon/components";
-import { getLang, useTranslations } from "@/i18n/utils";
+import {
+  getLang,
+  useTranslations,
+  localizePath,
+  stripLocale,
+} from "@/i18n/utils";
 import { NAV_LINKS } from "../constants/navigation";
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
 const { pathname } = Astro.url;
+
+// Aktif-link tespiti dil ön ekinden bağımsız olsun diye yolu sadeleştiriyoruz.
+const currentPath = stripLocale(pathname);
+// Dil değiştirici: aynı sayfanın diğer dildeki sürümü.
+const otherLang = lang === "tr" ? "en" : "tr";
+const switchHref = localizePath(currentPath, otherLang);
+const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
 ---
 
 <style>
@@ -75,6 +87,18 @@ const { pathname } = Astro.url;
   .navbar-navs a.active::before {
     content: "> ";
     opacity: 0.6;
+  }
+
+  /* Dil değiştirici (pill görünümü) */
+  .lang-switch {
+    font-family: ui-monospace, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--color-border);
+    margin-left: 6px;
+  }
+  .lang-switch::before {
+    content: none !important;
   }
 
   /* Mobile toggle button */
@@ -197,7 +221,7 @@ const { pathname } = Astro.url;
 <header class="glass">
   <nav aria-label="Main navigation">
     <a
-      href="/"
+      href={localizePath("/", lang)}
       class="navbar-brand"
       aria-label={t("shared", "logo_title")}
       title={t("shared", "logo_title")}
@@ -210,11 +234,12 @@ const { pathname } = Astro.url;
       {
         NAV_LINKS.map((link) => {
           const isActive =
-            pathname === link.href || pathname.startsWith(link.href + "/");
+            currentPath === link.href ||
+            currentPath.startsWith(link.href + "/");
           return (
             <li>
               <a
-                href={link.href}
+                href={localizePath(link.href, lang)}
                 class={isActive ? "active" : ""}
                 aria-current={isActive ? "page" : null}
               >
@@ -224,6 +249,18 @@ const { pathname } = Astro.url;
           );
         })
       }
+      <li>
+        <a
+          href={switchHref}
+          class="lang-switch"
+          data-set-lang={otherLang}
+          hreflang={otherLang}
+          aria-label={`${switchLabel} (${otherLang.toUpperCase()})`}
+          title={switchLabel}
+        >
+          {otherLang.toUpperCase()}
+        </a>
+      </li>
     </ul>
 
     <!-- Mobile toggle -->
@@ -254,10 +291,11 @@ const { pathname } = Astro.url;
       {
         NAV_LINKS.map((link) => {
           const isActive =
-            pathname === link.href || pathname.startsWith(link.href + "/");
+            currentPath === link.href ||
+            currentPath.startsWith(link.href + "/");
           return (
             <a
-              href={link.href}
+              href={localizePath(link.href, lang)}
               class={isActive ? "active" : ""}
               aria-current={isActive ? "page" : null}
             >
@@ -266,6 +304,15 @@ const { pathname } = Astro.url;
           );
         })
       }
+      <a
+        href={switchHref}
+        class="lang-switch"
+        data-set-lang={otherLang}
+        hreflang={otherLang}
+        aria-label={`${switchLabel} (${otherLang.toUpperCase()})`}
+      >
+        {switchLabel} ({otherLang.toUpperCase()})
+      </a>
     </div>
   </div>
 </header>
@@ -291,6 +338,18 @@ const { pathname } = Astro.url;
       menu.classList.remove("open");
       toggle?.setAttribute("aria-expanded", "false");
       menu.setAttribute("aria-hidden", "true");
+    });
+  });
+
+  // Dil değiştiriciye tıklanınca seçimi hatırla; otomatik yönlendirme bunu ezmez.
+  document.querySelectorAll("a.lang-switch").forEach((el) => {
+    el.addEventListener("click", () => {
+      const l = el.getAttribute("data-set-lang");
+      if (l) {
+        try {
+          localStorage.setItem("preferred-lang", l);
+        } catch {}
+      }
     });
   });
 </script>

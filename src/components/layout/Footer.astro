@@ -1,11 +1,17 @@
 ---
 import Logo from "@assets/logo.svg";
-import { getLang, useTranslations } from "@/i18n/utils";
+import {
+  getLang,
+  useTranslations,
+  localizePath,
+  stripLocale,
+} from "@/i18n/utils";
 import { NAV_LINKS, SOCIAL_LINKS } from "../constants/navigation";
 import { Icon } from "astro-icon/components";
 
-const { pathname } = Astro.url;
-const t = useTranslations(getLang(Astro.request));
+const lang = getLang(Astro);
+const t = useTranslations(lang);
+const currentPath = stripLocale(Astro.url.pathname);
 const currentYear = new Date().getFullYear();
 ---
 
@@ -96,7 +102,7 @@ const currentYear = new Date().getFullYear();
     <div class="footer-content">
       <div>
         <a
-          href="/"
+          href={localizePath("/", lang)}
           class="footer-brand"
           aria-label={t("shared", "logo_title")}
           title={t("shared", "logo_title")}
@@ -114,12 +120,13 @@ const currentYear = new Date().getFullYear();
           {
             NAV_LINKS.map((link) => {
               const isActive =
-                pathname === link.href || pathname.startsWith(`${link.href}/`);
+                currentPath === link.href ||
+                currentPath.startsWith(`${link.href}/`);
 
               return (
                 <li>
                   <a
-                    href={link.href}
+                    href={localizePath(link.href, lang)}
                     class:list={["footer-link", { active: isActive }]}
                     aria-current={isActive ? "page" : null}
                   >

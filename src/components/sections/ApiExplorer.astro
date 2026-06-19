@@ -1,9 +1,10 @@
 ---
 // src/sections/ApiExplorer.astro
-import { getLang, useTranslations } from "@/i18n/utils";
+import { getLang, useTranslations, localizePath } from "@/i18n/utils";
+import { profile, getAge } from "@/data/profile";
 import Button from "@ui/Button.astro";
 
-const t = useTranslations(getLang(Astro.request));
+const t = useTranslations(getLang(Astro));
 
 interface Endpoint {
   method: string;
@@ -12,29 +13,21 @@ interface Endpoint {
   response: Record<string, unknown>;
 }
 
-function calculateAge(birthYear: number, birthMonth = 1, birthDay = 1): number {
-  const today = new Date();
-  const age = today.getFullYear() - birthYear;
-  const hasBirthdayPassed =
-    today.getMonth() + 1 > birthMonth ||
-    (today.getMonth() + 1 === birthMonth && today.getDate() >= birthDay);
-  return hasBirthdayPassed ? age : age - 1;
-}
-
+// Tüm veriler TEK KAYNAK'tan (profile.ts) gelir.
 const endpoints: Endpoint[] = [
   {
     method: "GET",
     path: "/api/me/personal",
     key: "personal",
     response: {
-      name: "Nazımcan İslam",
-      birth_year: 2002,
-      age: calculateAge(2002, 7, 28),
+      name: profile.name,
+      birth_year: profile.birth.year,
+      age: getAge(),
       gender: "he/him",
-      region: "🇹🇷 Türkiye",
-      languages: ["tr", "en"],
-      role: "Software Developer",
-      interests: ["games", "linux", "anime", "phones", "ai", "basically tech"],
+      region: profile.region,
+      languages: profile.spokenLanguages,
+      role: profile.roleShort.en,
+      interests: profile.casualInterests,
     },
   },
   {
@@ -42,10 +35,10 @@ const endpoints: Endpoint[] = [
     path: "/api/me/skills",
     key: "skills",
     response: {
-      languages: ["TypeScript", "JavaScript", "CSS", "Python", "C"],
-      frameworks: ["React", "Astro", "Django"],
-      tools: ["Git", "Docker", "Linux"],
-      currently_learning: "Godot Engine",
+      languages: profile.skills.languages,
+      frameworks: profile.skills.frameworks,
+      tools: profile.skills.tools,
+      currently_learning: profile.skills.learning,
       interested_in: ["compilers", "systems", "open-source"],
     },
   },
@@ -54,9 +47,9 @@ const endpoints: Endpoint[] = [
     path: "/api/me/contact",
     key: "contact",
     response: {
-      email: "nazimcanislam@gmail.com",
-      github: "github.com/nazimcanislam",
-      linkedin: "linkedin.com/in/nazimcanislam",
+      email: profile.social.email,
+      github: profile.social.github,
+      linkedin: profile.social.linkedin,
       open_to_dm: true,
     },
   },
@@ -430,7 +423,7 @@ const endpoints: Endpoint[] = [
       <Button
         variant="primary"
         size="lg"
-        href="/about"
+        href={localizePath("/about", getLang(Astro))}
         title={t("home_about", "about_button")}
       >
         {t("home_about", "about_button")}

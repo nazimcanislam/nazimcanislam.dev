@@ -1,5 +1,5 @@
 ---
-import { getLang, useTranslations } from "@/i18n/utils";
+import { getLang, useTranslations, localizePath } from "@/i18n/utils";
 import type { Badge } from "@ui/Badges.astro";
 import Badges from "@ui/Badges.astro";
 import Button from "@ui/Button.astro";
@@ -11,7 +11,8 @@ export interface Project {
   tech: Badge[];
 }
 
-const t = useTranslations(getLang(Astro.request));
+const lang = getLang(Astro);
+const t = useTranslations(lang);
 
 const projects: Project[] = [
   {
@@ -192,7 +193,7 @@ const projects: Project[] = [
         <Button
           variant="primary"
           size="lg"
-          href="/projects"
+          href={localizePath("/projects", lang)}
           title={t("featured_projects", "want_learn_projects_button")}
         >
           {t("featured_projects", "want_learn_projects_button")}

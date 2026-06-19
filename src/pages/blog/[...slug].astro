@@ -1,17 +1,24 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getLang, useTranslations } from "@/i18n/utils";
-import { getCollection, getEntry } from "astro:content";
+import { getLang, useTranslations, localizePath } from "@/i18n/utils";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 
-const lang = getLang(Astro.request);
+// Statik build: tüm blog yazıları için yolları önceden üret.
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+type Props = { post: CollectionEntry<"blog"> };
+
+const lang = getLang(Astro);
 const t = useTranslations(lang);
 
-const { slug } = Astro.params;
-if (!slug) return Astro.redirect("/blog");
-
-const post = await getEntry("blog", slug);
-if (!post) return Astro.redirect("/blog");
-
+const { post } = Astro.props;
 const { Content } = await post.render();
 
 function formatDate(date: Date) {
@@ -154,7 +161,7 @@ function formatDate(date: Date) {
 <Layout title={`${post.data.title} — Nazımcan İslam`} description={post.data.description}>
   <article class="post-page">
 
-    <a href="/blog" class="post-back">
+    <a href={localizePath("/blog", lang)} class="post-back">
       {t("blog", "back_to_blog")}
     </a>
 

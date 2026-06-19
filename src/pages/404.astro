@@ -3,9 +3,9 @@
 import Button from "@/components/ui/Button.astro";
 import Layout from "@/layouts/Layout.astro";
 import VoidSvg from "@assets/svg/undraw_void_wez2.svg";
-import { getLang, useTranslations } from "@/i18n/utils";
+import { getLang, useTranslations, localizePath } from "@/i18n/utils";
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
 ---
 
@@ -31,7 +31,7 @@ const t = useTranslations(lang);
       <p class="lead mb-lg">
         {t("404", "desc")}
       </p>
-      <Button href="/">{t("404", "return_home")}</Button>
+      <Button href={localizePath("/", lang)}>{t("404", "return_home")}</Button>
     </div>
   </main>
 </Layout>

@@ -1,11 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
+import { profile } from "@/data/profile";
 import { SOCIAL_LINKS } from "@/components/constants/navigation";
 import { Icon } from "astro-icon/components";
 import PageCommand from "@/components/ui/PageCommand.astro";
 
-const lang = getLang(Astro.request);
+const lang = getLang(Astro);
 const t = useTranslations(lang);
 
 const channels = [
@@ -244,9 +245,18 @@ const channels = [
       <header class="contact-hero">
         <PageCommand pageTitle={t("contact", "hero_title")} command="ping" />
 
-        <div class="contact-status" aria-label="Status: open to work">
+        <div
+          class="contact-status"
+          aria-label={profile.work.isEmployed
+            ? profile.work.statusLabel[lang]
+            : "Status: open to work"}
+        >
           <span class="contact-status-dot" aria-hidden="true"></span>
-          {t("contact", "open_to")} — {t("contact", "open_to_note")}
+          {
+            profile.work.isEmployed
+              ? `${profile.work.statusLabel[lang]} — ${profile.work.statusNote[lang]}`
+              : `${t("contact", "open_to")} — ${t("contact", "open_to_note")}`
+          }
         </div>
 
         <h1 class="contact-hero-title">
