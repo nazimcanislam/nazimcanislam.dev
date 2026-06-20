@@ -32,6 +32,9 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
 
 <!doctype html>
 <html lang={lang}>
+  <!-- Charset meta tag -->  
+  <meta charset="UTF-8" />
+
   <head>
     <!--
       Dil otomatik tespiti (cold-start YOK; bu istemci tarafında çalışır).
@@ -62,7 +65,6 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
     </script>
 
     <!-- Meta tags -->
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
