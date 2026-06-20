@@ -111,14 +111,23 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
     display: none; /* Will be 'grid' on mobile */
     grid-template-rows: 0fr;
     opacity: 0;
+    /* Kapalıyken linkler tab sırasından çıksın (aria-hidden + odaklanılabilir
+       çelişkisini önler). Görünürlük, katlanma bitince gizlenir. */
+    visibility: hidden;
     transition:
       grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.3s ease;
+      opacity 0.3s ease,
+      visibility 0s linear 0.3s;
   }
 
   .navbar-mobile.open {
     grid-template-rows: 1fr;
     opacity: 1;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.3s ease,
+      visibility 0s linear 0s;
   }
 
   .navbar-mobile.open .navbar-mobile-inner {
@@ -203,6 +212,7 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       display: grid;
       grid-template-rows: 1fr;
       opacity: 1;
+      visibility: visible;
     }
 
     .navbar-mobile .navbar-mobile-inner {
