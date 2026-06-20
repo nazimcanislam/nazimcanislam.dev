@@ -191,3 +191,17 @@ body {
     --color-code-background: rgba(15, 23, 42, 1);
   }
 }
+
+/*
+ * Koyu temada balon gradient'ini CSS ile HEMEN boya: böylece düz body rengi
+ * ile canvas gradient'i arasındaki "flash" kaybolur. Worker birebir aynı
+ * gradient'i üstüne çizdiği için geçiş dikişsiz olur. background-attachment:
+ * fixed → gradient kaydırmada sabit kalır (canvas'ın fixed davranışıyla uyumlu).
+ */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #020617;
+    background-image: linear-gradient(to bottom right, #0f172a, #020617);
+    background-attachment: fixed;
+  }
+}

@@ -5,6 +5,11 @@ const BUBBLE_SPEED = 0.05;
 const BUBBLE_WOBBLE = 0.12;
 const BUBBLE_PHASE_SPEED = 0.01;
 
+// ─── Intro (ilk belirme) animasyonu ─────────────────────────────────────────
+// Balonlar "pat" diye çıkmak yerine küçükten büyüye + fade-in ile yerleşir.
+const INTRO_MS = 900; // belirme süresi
+const INTRO_START_SCALE = 0.6; // %60'tan %100'e büyür
+
 // ─── Interactive bubble ─────────────────────────────────────────────────────
 const INTERACTIVE_LERP = 0.08;
 const SCALE_LERP = 0.12;
@@ -81,9 +86,10 @@ class Bubble {
     if (this.y < -MAX_OVERFLOW || this.y > h + MAX_OVERFLOW) this.vy *= -1;
   }
 
-  draw(ctx) {
-    const offset = this.sprite.width / 2;
-    ctx.drawImage(this.sprite, this.x - offset, this.y - offset);
+  draw(ctx, scale = 1) {
+    const w = this.sprite.width * scale;
+    const h = this.sprite.height * scale;
+    ctx.drawImage(this.sprite, this.x - w / 2, this.y - h / 2, w, h);
   }
 }
 
@@ -98,6 +104,7 @@ let targetX = 0,
 let targetScale = 1,
   currentScale = 1;
 let cachedBaseRadius = 0; // cached on resize, avoids recalc every frame
+let introStart = 0; // intro animasyonunun başlangıç zamanı (performance.now)
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function buildBackgroundGradient(w, h) {
@@ -156,12 +163,21 @@ function drawFrame() {
     ctx.fillRect(0, 0, w, h);
   }
 
+  // Intro ilerlemesi (easeOutCubic): gradient HER ZAMAN tam opak kalır,
+  // yalnızca balonlar küçükten büyüye + fade-in ile belirir.
+  const intro = introStart
+    ? Math.min((performance.now() - introStart) / INTRO_MS, 1)
+    : 1;
+  const introE = 1 - Math.pow(1 - intro, 3);
+  const introScale = INTRO_START_SCALE + (1 - INTRO_START_SCALE) * introE;
+
   // Single composite pass for all bubbles (including interactive)
   ctx.globalCompositeOperation = "screen";
+  ctx.globalAlpha = introE;
 
   for (const bubble of bubbles) {
     bubble.update(w, h);
-    bubble.draw(ctx);
+    bubble.draw(ctx, introScale);
   }
 
   if (interactiveBubble) {
@@ -184,9 +200,10 @@ function drawFrame() {
       );
     }
 
-    interactiveBubble.draw(ctx);
+    interactiveBubble.draw(ctx, introScale);
   }
 
+  ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = "source-over";
 
   animationId = requestAnimationFrame(drawFrame);
@@ -202,6 +219,7 @@ self.onmessage = ({ data }) => {
       isTouchDevice = data.isTouchDevice;
       ctx = canvas.getContext("2d", { alpha: true });
       applyResize(data.w, data.h);
+      introStart = performance.now();
       animationId = requestAnimationFrame(drawFrame);
       break;
 
