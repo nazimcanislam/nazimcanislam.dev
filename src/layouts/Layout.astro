@@ -3,12 +3,7 @@ import Header from "@layout/Header.astro";
 import Footer from "@layout/Footer.astro";
 import BubbleBackgroundCanvas from "@/components/sections/BubbleBackgroundCanvas.astro";
 import NoScript from "@/components/layout/NoScript.astro";
-import {
-  getLang,
-  useTranslations,
-  localizePath,
-  stripLocale,
-} from "@/i18n/utils";
+import { getLang, useTranslations, localizePath, stripLocale } from "@/i18n/utils";
 import "@styles/base.css";
 import "@styles/typography.css";
 import "@styles/utilities.css";
@@ -16,6 +11,7 @@ import "@styles/utilities.css";
 interface Props {
   title?: string;
   description?: string;
+  heroPreload?: string;
 }
 
 const lang = getLang(Astro);
@@ -26,13 +22,20 @@ const basePath = stripLocale(Astro.url.pathname);
 const enUrl = new URL(localizePath(basePath, "en"), Astro.site).href;
 const trUrl = new URL(localizePath(basePath, "tr"), Astro.site).href;
 
-const { title = t("meta", "title"), description = t("meta", "description") } =
+// fallbackType: "rewrite" altında Astro.url.pathname /tr sayfalarında bile
+// İngilizce yolu döndürür. Bu yüzden canonical/og:url'yi dile göre doğru
+// URL'den türetiyoruz (yoksa tüm /tr sayfaları İngilizce'yi kanonik gösterir).
+const canonicalUrl = lang === "tr" ? trUrl : enUrl;
+// og görseli kökte; yola eklemek yerine mutlak URL ver (alt sayfalarda kırılmasın).
+const ogImage = new URL("/og-image.jpg", Astro.site).href;
+
+const { title = t("meta", "title"), description = t("meta", "description"), heroPreload } =
   Astro.props;
 ---
 
 <!doctype html>
 <html lang={lang}>
-  <!-- Charset meta tag -->  
+  <!-- Charset meta tag -->
   <meta charset="UTF-8" />
 
   <head>
@@ -66,6 +69,17 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
 
     <!-- Meta tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {
+      heroPreload && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroPreload}
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
 
@@ -84,32 +98,20 @@ const { title = t("meta", "title"), description = t("meta", "description") } =
     />
 
     <!-- Open Graph  -->
-    <meta
-      property="og:url"
-      content={new URL(Astro.url.pathname, Astro.site).href}
-    />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta
-      property="og:image"
-      content={new URL(Astro.url.pathname, Astro.site).href + "og-image.jpg"}
-    />
+    <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content="nazimcanislam-dev.vercel.app" />
-    <meta
-      property="twitter:url"
-      content={new URL(Astro.url.pathname, Astro.site).href}
-    />
+    <meta property="twitter:url" content={canonicalUrl} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta
-      name="twitter:image"
-      content={new URL(Astro.url.pathname, Astro.site).href + "og-image.jpg"}
-    />
+    <meta name="twitter:image" content={ogImage} />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- hreflang alternates (çok dilli SEO) -->
     <link rel="alternate" hreflang="en" href={enUrl} />
