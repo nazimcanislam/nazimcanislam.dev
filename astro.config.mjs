@@ -27,6 +27,11 @@ export default defineConfig({
 
   integrations: [icon(), sitemap()],
 
+  // Tüm CSS'i HTML <head> içine gömer → render'ı bloklayan ayrı stylesheet
+  // istekleri ortadan kalkar, kritik istek zinciri kısalır. Site küçük
+  // olduğu için inline boyutu mütevazı; net kazanç.
+  build: { inlineStylesheets: "always" },
+
   // Adapter'ı tutuyoruz ama imageService'i KAPATIYORUZ: görseller build
   // sırasında (sharp ile) optimize edilip statik servis edilsin; böylece
   // runtime'da görsel için çalışan bir fonksiyon da kalmaz.
