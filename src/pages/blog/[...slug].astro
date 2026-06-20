@@ -30,7 +30,7 @@ function formatDate(date: Date) {
 }
 ---
 
-<style is:global>
+<style>
   .post-page {
     max-width: 720px;
     margin-inline: auto;
@@ -50,14 +50,18 @@ function formatDate(date: Date) {
     background: var(--color-card);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
   }
   .post-back:hover {
     color: var(--color-accent);
     border-color: rgba(var(--color-accent-rgb), 0.4);
   }
 
-  .post-header { margin-bottom: 48px; }
+  .post-header {
+    margin-bottom: 48px;
+  }
 
   .post-meta {
     display: flex;
@@ -108,39 +112,45 @@ function formatDate(date: Date) {
     line-height: 1.8;
     color: var(--color-text-primary);
   }
-  .post-content h2 {
+  .post-content :global(h2) {
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.01em;
     margin: 48px 0 16px;
     color: var(--color-text-primary);
   }
-  .post-content h3 {
+  .post-content :global(h3) {
     font-size: 1.2rem;
     font-weight: 600;
     margin: 32px 0 12px;
     color: var(--color-text-primary);
   }
-  .post-content p {
+  .post-content :global(p) {
     margin-bottom: 20px;
     color: var(--color-text-secondary);
     font-size: 1.05rem;
     line-height: 1.8;
   }
-  .post-content a { color: var(--color-accent); }
-  .post-content ul, .post-content ol {
+  .post-content :global(a) {
+    color: var(--color-accent);
+  }
+  .post-content :global(ul),
+  .post-content :global(ol) {
     margin: 0 0 20px 24px;
     color: var(--color-text-secondary);
   }
-  .post-content li { margin-bottom: 6px; line-height: 1.7; }
-  .post-content pre {
+  .post-content :global(li) {
+    margin-bottom: 6px;
+    line-height: 1.7;
+  }
+  .post-content :global(pre) {
     border-radius: 12px;
     margin: 24px 0;
     border: 1px solid var(--color-border);
     overflow-x: auto;
     padding: 10px;
   }
-  .post-content code:not(pre code) {
+  .post-content :global(code:not(pre code)) {
     font-family: ui-monospace, monospace;
     background: var(--color-card);
     border: 1px solid var(--color-border);
@@ -149,7 +159,7 @@ function formatDate(date: Date) {
     font-size: 0.9em;
     color: var(--color-accent);
   }
-  .post-content blockquote {
+  .post-content :global(blockquote) {
     border-left: 3px solid var(--color-accent);
     margin: 24px 0;
     padding: 0 0 0 20px;
@@ -158,9 +168,11 @@ function formatDate(date: Date) {
   }
 </style>
 
-<Layout title={`${post.data.title} — Nazımcan İslam`} description={post.data.description}>
+<Layout
+  title={`${post.data.title} — Nazımcan İslam`}
+  description={post.data.description}
+>
   <article class="post-page">
-
     <a href={localizePath("/blog", lang)} class="post-back">
       {t("blog", "back_to_blog")}
     </a>
@@ -170,9 +182,7 @@ function formatDate(date: Date) {
         <time class="post-date" datetime={post.data.pubDate.toISOString()}>
           {formatDate(post.data.pubDate)}
         </time>
-        {post.data.tags.map((tag) => (
-          <span class="post-tag">#{tag}</span>
-        ))}
+        {post.data.tags.map((tag) => <span class="post-tag">#{tag}</span>)}
       </div>
       <h1 class="post-title">{post.data.title}</h1>
       <p class="post-desc">{post.data.description}</p>
@@ -183,6 +193,5 @@ function formatDate(date: Date) {
     <div class="post-content">
       <Content />
     </div>
-
   </article>
 </Layout>

@@ -68,19 +68,23 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       background-color 0.2s ease;
   }
 
-  .navbar-navs a.active {
+  .navbar-navs a.active,
+  .navbar-navs a:active,
+  .navbar-navs a:hover,
+  .navbar-navs a:focus-visible {
     color: var(--color-accent);
+  }
+
+  .navbar-navs a.active {
     background-color: color-mix(in srgb, var(--color-card) 50%, transparent);
   }
 
   .navbar-navs a:active {
-    color: var(--color-accent);
     background-color: color-mix(in srgb, var(--color-card) 100%, transparent);
   }
 
   .navbar-navs a:hover,
   .navbar-navs a:focus-visible {
-    color: var(--color-accent);
     background-color: color-mix(in srgb, var(--color-card) 70%, transparent);
   }
 

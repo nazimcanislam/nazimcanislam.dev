@@ -4,6 +4,7 @@ import icon from "astro-icon";
 import vercel from "@astrojs/vercel";
 
 import sitemap from "@astrojs/sitemap";
+import compress from "astro-compress";
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,7 +26,7 @@ export default defineConfig({
     fallback: { tr: "en" },
   },
 
-  integrations: [icon(), sitemap()],
+  integrations: [icon(), sitemap(), compress()],
 
   build: { inlineStylesheets: "auto" },
 
