@@ -26,14 +26,20 @@ export default defineConfig({
     fallback: { tr: "en" },
   },
 
-  integrations: [icon(), sitemap(), compress()],
+  // NOT: astro-compress'in CSS motoru (csso), Astro 7'nin yerel minify'ının
+  // ürettiği modern aralık sözdizimini -- ör. @media (width<=640px) -- tanımıyor
+  // ve bu media bloklarını sessizce SİLİYOR. Sonuç: build/preview'da genişlik
+  // tabanlı media query'ler kaybolup mobil düzen bozuluyor (dev'de sorun yok,
+  // çünkü compress yalnızca build'de çalışır). Astro 7 zaten CSS'i kendisi
+  // minify ettiği için bu ikinci geçiş hem gereksiz hem yıkıcı; CSS'i kapatıyoruz.
+  integrations: [icon(), sitemap(), compress({ CSS: false })],
 
   build: { inlineStylesheets: "auto" },
 
   // Adapter'ı tutuyoruz ama imageService'i KAPATIYORUZ: görseller build
   // sırasında (sharp ile) optimize edilip statik servis edilsin; böylece
   // runtime'da görsel için çalışan bir fonksiyon da kalmaz.
-  adapter: vercel(),
+  adapter: vercel({ imageService: false }),
 
   markdown: {
     shikiConfig: {

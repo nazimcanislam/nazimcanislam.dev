@@ -35,10 +35,10 @@ const { title = t("meta", "title"), description = t("meta", "description"), hero
 
 <!doctype html>
 <html lang={lang}>
-  <!-- Charset meta tag -->
-  <meta charset="UTF-8" />
-
   <head>
+    <!-- Karakter kodlaması: <head>'in ilk öğesi olmalı (ilk 1024 bayt içinde). -->
+    <meta charset="UTF-8" />
+
     <!--
       Dil otomatik tespiti (cold-start YOK; bu istemci tarafında çalışır).
       İlk ziyarette tarayıcı diline göre, sonraki ziyaretlerde kaydedilmiş

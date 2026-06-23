@@ -11,7 +11,7 @@ export const GET: APIRoute = async () => {
 
   const blogUrls = posts.map(
     (post) => `  <url>
-    <loc>${baseUrl}/blog/${post.slug}</loc>
+    <loc>${baseUrl}/blog/${post.id}</loc>
     <lastmod>${post.data.pubDate.toISOString().split("T")[0]}</lastmod>
   </url>`,
   );

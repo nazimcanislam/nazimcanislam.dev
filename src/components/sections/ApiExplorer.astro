@@ -369,14 +369,21 @@ const endpoints: Endpoint[] = [
 
     <div class="api-panel">
       <div class="api-endpoints">
-        <p class="api-endpoints-label">Endpoints</p>
-        <div role="tablist">
+        <p class="api-endpoints-label" id="api-endpoints-label">Endpoints</p>
+        <div
+          role="tablist"
+          aria-labelledby="api-endpoints-label"
+          aria-orientation="vertical"
+        >
           {
-            endpoints.map((ep) => (
+            endpoints.map((ep, index) => (
               <button
                 role="tab"
+                id={`tab-${ep.key}`}
                 class="api-endpoint-btn"
                 aria-selected="false"
+                aria-controls={`response-${ep.key}`}
+                tabindex={index === 0 ? 0 : -1}
                 data-key={ep.key}
                 data-response={JSON.stringify(ep.response)}
                 type="button"
@@ -393,7 +400,13 @@ const endpoints: Endpoint[] = [
       <div class="api-response" aria-live="polite" aria-atomic="true">
         {
           endpoints.map((ep) => (
-            <div class="api-response-inner" id={`response-${ep.key}`}>
+            <div
+              class="api-response-inner"
+              id={`response-${ep.key}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${ep.key}`}
+              tabindex="0"
+            >
               <div class="api-response-header">
                 <span class="api-response-label">Response body</span>
                 <div class="api-response-meta">
@@ -488,16 +501,59 @@ const endpoints: Endpoint[] = [
   }
 
   function initApiExplorer(): void {
-    const buttons =
-      document.querySelectorAll<HTMLButtonElement>(".api-endpoint-btn");
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>(".api-endpoint-btn"),
+    );
     const emptyState = document.getElementById("api-empty-state");
 
     let activeKey: string | null = null;
 
+    // Roving tabindex: tab'lardan yalnızca biri sekme (Tab) sırasındadır;
+    // tab'lar arası gezinme ok tuşlarıyla yapılır (WAI-ARIA tabs deseni).
+    function focusTab(index: number): void {
+      const target = (index + buttons.length) % buttons.length;
+      buttons.forEach((b, i) =>
+        b.setAttribute("tabindex", i === target ? "0" : "-1"),
+      );
+      buttons[target].focus();
+    }
+
     buttons.forEach((btn) => {
+      // Dikey tablist klavye gezinmesi. Etkinleştirme MANUEL'dir: ok tuşları
+      // yalnızca odağı taşır (typewriter'ı her ok basışında tetiklememek için),
+      // seçim Enter/Space ile (button'ın yerel click davranışı) yapılır.
+      btn.addEventListener("keydown", (e) => {
+        const i = buttons.indexOf(btn);
+        switch (e.key) {
+          case "ArrowDown":
+          case "ArrowRight":
+            e.preventDefault();
+            focusTab(i + 1);
+            break;
+          case "ArrowUp":
+          case "ArrowLeft":
+            e.preventDefault();
+            focusTab(i - 1);
+            break;
+          case "Home":
+            e.preventDefault();
+            focusTab(0);
+            break;
+          case "End":
+            e.preventDefault();
+            focusTab(buttons.length - 1);
+            break;
+        }
+      });
+
       btn.addEventListener("click", () => {
         const key = btn.dataset.key;
         if (!key) return;
+
+        // Tıklanan/etkinleştirilen tab artık sekme sırasındaki tab olur.
+        buttons.forEach((b) =>
+          b.setAttribute("tabindex", b === btn ? "0" : "-1"),
+        );
 
         // Toggle
         if (key === activeKey) {
