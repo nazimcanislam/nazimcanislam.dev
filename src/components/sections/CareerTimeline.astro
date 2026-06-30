@@ -1,0 +1,549 @@
+---
+// =============================================================================
+//  src/components/sections/CareerTimeline.astro
+//  Hakkımda sayfasındaki kronolojik kariyer çizelgesi.
+//  Tüm İÇERİK src/data/profile.ts -> `career` dizisinden gelir; burada sadece
+//  görsel sunum + tarih/süre biçimlendirme vardır. Yeni durak eklemek için
+//  profile.ts'i düzenle, yeter.
+// =============================================================================
+import {
+  profile,
+  type CareerEntry,
+  type CareerRole,
+  type YearMonth,
+  type Employment,
+} from "@/data/profile";
+import { useTranslations } from "@/i18n/utils";
+import type { Lang } from "@/i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// ── Tarih / süre yardımcıları ──────────────────────────────────────────────
+const MONTHS: Record<Lang, string[]> = {
+  tr: [
+    "Oca",
+    "Şub",
+    "Mar",
+    "Nis",
+    "May",
+    "Haz",
+    "Tem",
+    "Ağu",
+    "Eyl",
+    "Eki",
+    "Kas",
+    "Ara",
+  ],
+  en: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+};
+const EMPLOYMENT: Record<Employment, Record<Lang, string>> = {
+  "full-time": { tr: "Tam Zamanlı", en: "Full-time" },
+  "part-time": { tr: "Yarı Zamanlı", en: "Part-time" },
+  internship: { tr: "Staj", en: "Internship" },
+};
+
+const presentLabel = t("about", "journey_present");
+const nowLabel = t("about", "journey_now");
+
+// Build zamanındaki "şimdi" (statik site → her derlemede güncellenir).
+const _now = new Date();
+const NOW: YearMonth = { year: _now.getFullYear(), month: _now.getMonth() + 1 };
+
+const ymv = (d: YearMonth): number => d.year * 12 + d.month;
+
+const fmtMonth = (d: YearMonth): string =>
+  `${MONTHS[lang][d.month - 1]} ${d.year}`;
+
+const fmtRange = (start: YearMonth, end: YearMonth | null): string =>
+  `${fmtMonth(start)} — ${end === null ? presentLabel : fmtMonth(end)}`;
+
+// LinkedIn'deki gibi her iki uç dahil edilerek hesaplanır (+1).
+function fmtDuration(start: YearMonth, end: YearMonth | null): string {
+  const total = Math.max(1, ymv(end ?? NOW) - ymv(start) + 1);
+  const y = Math.floor(total / 12);
+  const m = total % 12;
+  const parts: string[] = [];
+  if (lang === "tr") {
+    if (y) parts.push(`${y} yıl`);
+    if (m) parts.push(`${m} ay`);
+    return parts.join(" ") || "1 ay";
+  }
+  if (y) parts.push(`${y} year${y > 1 ? "s" : ""}`);
+  if (m) parts.push(`${m} month${m > 1 ? "s" : ""}`);
+  return parts.join(" ") || "1 month";
+}
+
+// ── Kategori meta (rozet + nokta rengi) ──────────────────────────────────────
+const KIND: Record<
+  CareerEntry["kind"],
+  { label: Record<Lang, string>; color: string }
+> = {
+  freelance: { label: { tr: "serbest", en: "freelance" }, color: "#fab387" },
+  education: { label: { tr: "eğitim", en: "education" }, color: "#cba6f7" },
+  work: { label: { tr: "kurumsal", en: "corporate" }, color: "#89b4fa" },
+  building: { label: { tr: "bağımsız", en: "independent" }, color: "#a6e3a1" },
+};
+
+// En yeni en üstte sırala.
+const entries: CareerEntry[] = [...profile.career].sort(
+  (a, b) => ymv(b.start) - ymv(a.start),
+);
+
+// Bir durağın efektif aralığını (varsa pozisyonlardan) hesaplar.
+function resolveEntry(entry: CareerEntry) {
+  const roles: CareerRole[] = entry.roles
+    ? [...entry.roles].sort((a, b) => ymv(b.start) - ymv(a.start))
+    : [];
+  const hasRoles = roles.length > 0;
+
+  const start = hasRoles
+    ? roles.reduce(
+        (acc, r) => (ymv(r.start) < ymv(acc) ? r.start : acc),
+        roles[0].start,
+      )
+    : entry.start;
+
+  const ongoing = hasRoles
+    ? roles.some((r) => r.end === null || r.current)
+    : entry.end === null;
+
+  let end: YearMonth | null;
+  if (ongoing) end = null;
+  else if (hasRoles)
+    end = roles.reduce(
+      (acc, r) => (r.end && ymv(r.end) > ymv(acc) ? r.end : acc),
+      roles[0].end as YearMonth,
+    );
+  else end = entry.end;
+
+  const current = entry.current || roles.some((r) => r.current);
+
+  return { roles, hasRoles, start, end, current };
+}
+---
+
+<style>
+  .timeline {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* The spine — a single vertical line that fades at both ends so it never
+     "sticks out" past the first/last commit node. */
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      transparent 0,
+      var(--color-border) 6%,
+      var(--color-border) 94%,
+      transparent 100%
+    );
+  }
+
+  .t-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    column-gap: 24px;
+    align-items: start;
+  }
+  .t-item + .t-item {
+    margin-top: 28px;
+  }
+
+  /* ── Commit node ─────────────────────────────────────────────────────── */
+  .t-node {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    margin-top: 16px; /* line up with the first row of the card */
+  }
+  .t-dot {
+    position: absolute;
+    left: 9px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--color-background);
+    border: 2px solid var(--kind);
+    box-shadow: 0 0 0 4px var(--color-background);
+  }
+  .t-dot::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--kind);
+  }
+  /* Current role: a soft pulsing halo (auto-disabled under reduced motion). */
+  .t-item.is-current .t-dot {
+    box-shadow:
+      0 0 0 4px var(--color-background),
+      0 0 10px 1px var(--kind);
+    animation: nodePulse 2.4s ease-in-out infinite;
+  }
+
+  /* ── Card ────────────────────────────────────────────────────────────── */
+  .t-card {
+    position: relative;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-left: 2px solid var(--kind);
+    border-radius: 14px;
+    padding: 18px 22px;
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.12));
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .t-card:hover {
+    transform: translateX(2px);
+  }
+
+  .t-meta,
+  .t-meta-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .t-period {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+  }
+  /* Total duration, e.g. "· 2 yıl 8 ay" */
+  .t-dur {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+    opacity: 0.75;
+  }
+  .t-kind {
+    font-family: ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    padding: 2px 9px;
+    border-radius: 20px;
+    color: var(--color-text-secondary);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+  }
+  .t-kind::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+    background: var(--kind);
+  }
+  .t-now {
+    font-family: ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    padding: 2px 9px;
+    border-radius: 20px;
+    color: var(--color-code-green-text);
+    background: var(--color-code-green-background);
+    border: 1px solid var(--color-code-green-border);
+  }
+
+  .t-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+    color: var(--color-text-primary);
+  }
+  .t-title a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .t-title a:hover {
+    text-decoration: underline;
+  }
+  .t-org {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+  .t-org a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .t-org a:hover {
+    text-decoration: underline;
+  }
+  .t-org::before {
+    content: "·";
+    margin: 0 7px;
+    color: var(--color-text-secondary);
+  }
+
+  .t-summary {
+    margin: 10px 0 0 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  /* ── Alt-kronoloji (aynı kurumdaki pozisyonlar) ──────────────────────── */
+  .t-roles {
+    position: relative;
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+  }
+  /* Sub-spine — quieter than the main one. */
+  .t-roles::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 9px;
+    width: 2px;
+    background: var(--color-border);
+  }
+  .t-role {
+    position: relative;
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    column-gap: 14px;
+    align-items: start;
+  }
+  .t-role + .t-role {
+    margin-top: 13px;
+  }
+  .t-role-node {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    margin-top: 4px;
+  }
+  .t-role-dot {
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background: var(--color-glass-bg);
+    border: 2px solid var(--kind);
+  }
+  .t-role.is-current .t-role-dot {
+    background: var(--kind);
+  }
+  .t-role-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .t-role-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+  .t-emp {
+    font-family: ui-monospace, monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    padding: 1px 8px;
+    border-radius: 20px;
+    color: var(--color-text-secondary);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+  }
+  .t-role-meta {
+    font-family: ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--color-text-secondary);
+    opacity: 0.85;
+    margin-top: 3px;
+  }
+
+  .t-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+  }
+  .t-tag {
+    font-family: ui-monospace, monospace;
+    font-size: 0.72rem;
+    padding: 2px 9px;
+    border-radius: 6px;
+    color: var(--color-text-secondary);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  @keyframes nodePulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 4px var(--color-background),
+        0 0 0 0 var(--kind);
+    }
+    50% {
+      box-shadow:
+        0 0 0 4px var(--color-background),
+        0 0 12px 2px var(--kind);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .t-item {
+      column-gap: 16px;
+    }
+    .t-card {
+      padding: 16px 18px;
+    }
+  }
+</style>
+
+<ol class="timeline">
+  {
+    entries.map((entry) => {
+      const meta = KIND[entry.kind];
+      const { roles, hasRoles, start, end, current } = resolveEntry(entry);
+      const range = fmtRange(start, end);
+      const duration = fmtDuration(start, end);
+
+      return (
+        <li
+          class:list={["t-item", { "is-current": current }]}
+          style={`--kind: ${meta.color}`}
+        >
+          <div class="t-node" aria-hidden="true">
+            <span class="t-dot" />
+          </div>
+
+          <div class="t-card">
+            <div class="t-meta-header">
+              <span class="t-kind" translate="no">
+                {meta.label[lang]}
+              </span>
+              {current && (
+                <span class="t-now" translate="no">
+                  ● {nowLabel}
+                </span>
+              )}
+            </div>
+
+            <div class="t-meta">
+              <span class="t-period" translate="no">
+                {range}
+              </span>
+              <span class="t-dur" translate="no">
+                · {duration}
+              </span>
+            </div>
+
+            <h3 class="t-title">
+              {hasRoles ? (
+                entry.orgUrl ? (
+                  <a href={entry.orgUrl} target="_blank" rel="noopener">
+                    {(entry.org ?? entry.title)[lang]}
+                  </a>
+                ) : (
+                  (entry.org ?? entry.title)[lang]
+                )
+              ) : (
+                <>
+                  {entry.title[lang]}
+                  {entry.org && (
+                    <span class="t-org" translate="no">
+                      {entry.orgUrl ? (
+                        <a href={entry.orgUrl} target="_blank" rel="noopener">
+                          {entry.org[lang]}
+                        </a>
+                      ) : (
+                        entry.org[lang]
+                      )}
+                    </span>
+                  )}
+                </>
+              )}
+            </h3>
+
+            <p class="t-summary">{entry.summary[lang]}</p>
+
+            {hasRoles && (
+              <ol class="t-roles">
+                {roles.map((role) => (
+                  <li class:list={["t-role", { "is-current": role.current }]}>
+                    <div class="t-role-node" aria-hidden="true">
+                      <span class="t-role-dot" />
+                    </div>
+                    <div>
+                      <div class="t-role-head">
+                        <span class="t-role-title">{role.title[lang]}</span>
+                        {role.employment && (
+                          <span class="t-emp" translate="no">
+                            {EMPLOYMENT[role.employment][lang]}
+                          </span>
+                        )}
+                      </div>
+                      <div class="t-role-meta" translate="no">
+                        {fmtRange(role.start, role.end)} ·{" "}
+                        {fmtDuration(role.start, role.end)}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+
+            {entry.tags && entry.tags.length > 0 && (
+              <ul class="t-tags">
+                {entry.tags.map((tag) => (
+                  <li class="t-tag" translate="no">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </li>
+      );
+    })
+  }
+</ol>

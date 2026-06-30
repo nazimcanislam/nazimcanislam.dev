@@ -70,6 +70,11 @@ export const translations = {
         "Currently preparing for the DGS exam for Computer Engineering and I am working with TypeScript, React, Astro, Node.js, and Python. I enjoy the entire software lifecycle, from architectural decisions to deployment pipelines.",
       bio_3:
         "Outside of code, I'm into Linux, competitive gaming (Master in League of Legends and Zed main), anime, and anything at the intersection of technology and craft.",
+      section_journey: "journey",
+      journey_intro:
+        "The path so far — from building paid client sites at 17 to working with enterprise teams and shipping my own open-source tools. Roughly newest at the bottom.",
+      journey_present: "present",
+      journey_now: "now",
       section_skills: "skills",
       skills_languages: "Languages",
       skills_frameworks: "Frameworks & Runtimes",
@@ -210,6 +215,11 @@ export const translations = {
         "Şu anda Bilgisayar Mühendisliği için DGS'ye hazırlanıyorum ve TypeScript, React, Astro, Node.js ve Python ile çalışıyorum. Mimari kararlardan deployment pipeline'larına kadar yazılımın tüm yaşam döngüsünü seviyorum.",
       bio_3:
         "Kodun dışında Linux, rekabetçi oyun (League of Legends'ta Master ve Zed main), anime ve teknoloji ile zanaat kesişimindeki her şeyle ilgileniyorum.",
+      section_journey: "yolculuk",
+      journey_intro:
+        "Buraya kadar gelen yol — 17 yaşında ücretli müşteri siteleri yapmaktan kurumsal ekiplerle çalışmaya ve kendi açık kaynak araçlarımı geliştirmeye. Aşağıya doğru en yeniye gider.",
+      journey_present: "devam ediyor",
+      journey_now: "şimdi",
       section_skills: "yetenekler",
       skills_languages: "Diller",
       skills_frameworks: "Framework & Runtime",

@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations, localizePath } from "@/i18n/utils";
 import { profile } from "@/data/profile";
 import Button from "@ui/Button.astro";
+import CareerTimeline from "@sections/CareerTimeline.astro";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
@@ -74,6 +75,9 @@ const work = profile.work;
   }
   .about-section:nth-child(6) {
     animation-delay: 0.25s;
+  }
+  .about-section:nth-child(7) {
+    animation-delay: 0.3s;
   }
 
   .sponsor-section {
@@ -421,6 +425,16 @@ const work = profile.work;
             }
           </dl>
         </div>
+      </section>
+
+      <section class="about-section" aria-labelledby="journey-label">
+        <h2 class="section-label" id="journey-label">
+          {t("about", "section_journey")}
+        </h2>
+        <p class="lead" style="margin-bottom: 32px;">
+          {t("about", "journey_intro")}
+        </p>
+        <CareerTimeline lang={lang} />
       </section>
 
       <section class="about-section" aria-labelledby="skills-label">

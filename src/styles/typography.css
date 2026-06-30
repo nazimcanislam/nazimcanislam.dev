@@ -57,7 +57,7 @@ p {
 
 /* Lead text (hero açıklaması gibi) */
 .lead {
-  font-size: 1.125rem;
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
   line-height: 1.7;
   color: var(--color-text-secondary);
 }
