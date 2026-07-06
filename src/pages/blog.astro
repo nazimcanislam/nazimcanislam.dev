@@ -12,6 +12,11 @@ const posts = allPosts.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
+// Tüm yazılardaki benzersiz etiketler (Türkçe locale ile sıralı).
+const allTags = Array.from(
+  new Set(posts.flatMap((p) => p.data.tags)),
+).sort((a, b) => a.localeCompare(b, lang === "tr" ? "tr" : "en"));
+
 function formatDate(date: Date) {
   return date.toLocaleDateString(lang === "tr" ? "tr-TR" : "en-US", {
     year: "numeric",
@@ -34,7 +39,7 @@ function formatDate(date: Date) {
   }
 
   .blog-hero {
-    margin-bottom: 56px;
+    margin-bottom: 40px;
   }
 
   .blog-hero-title {
@@ -57,6 +62,210 @@ function formatDate(date: Date) {
     opacity: 0.9;
   }
 
+  /* ---------- Kontroller (arama + etiket filtresi) ---------- */
+  /* JS kapalıyken filtreleme/pagination anlamsız → gizle, tüm liste görünsün. */
+  .blog-controls,
+  .blog-pagination {
+    display: none;
+  }
+  @media (scripting: enabled) {
+    .blog-controls {
+      display: flex;
+    }
+  }
+
+  .blog-controls {
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  /* Arama kutusu */
+  .blog-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .blog-search-icon {
+    position: absolute;
+    left: 14px;
+    width: 17px;
+    height: 17px;
+    color: var(--color-text-secondary);
+    pointer-events: none;
+  }
+  .blog-search-input.input {
+    padding: 12px 42px 12px 42px;
+    border-radius: 12px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.9rem;
+  }
+  .blog-search-clear {
+    position: absolute;
+    right: 10px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+  }
+  .blog-search-clear:hover {
+    color: var(--color-text-primary);
+    background: var(--color-card);
+  }
+  .blog-search-clear[hidden] {
+    display: none;
+  }
+
+  /* Etiket filtresi (collapsible) */
+  .tags-filter {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tags-filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    align-self: flex-start;
+    font-family: ui-monospace, monospace;
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    padding: 9px 14px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition:
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+  .tags-filter-toggle:hover {
+    color: var(--color-text-primary);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+  }
+  .tags-filter-toggle .tag-icon {
+    width: 15px;
+    height: 15px;
+    color: var(--color-accent);
+  }
+  .tags-filter-toggle .chevron {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.25s ease;
+  }
+  .tags-filter-toggle[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+  .tags-count-badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    font-size: 0.68rem;
+    color: #fff;
+    background: var(--color-accent);
+    border-radius: 999px;
+    line-height: 1;
+  }
+  .tags-count-badge[hidden] {
+    display: none;
+  }
+
+  .tags-filter-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: grid-template-rows 0.28s ease;
+  }
+  .tags-filter-panel.is-open {
+    grid-template-rows: 1fr;
+  }
+  .tags-filter-panel-inner {
+    min-height: 0;
+  }
+  .tags-filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px 2px 4px;
+  }
+
+  .tag-chip {
+    font-family: ui-monospace, monospace;
+    font-size: 0.76rem;
+    color: var(--color-text-secondary);
+    padding: 5px 11px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      color 0.16s ease,
+      border-color 0.16s ease,
+      background-color 0.16s ease,
+      transform 0.16s ease;
+  }
+  .tag-chip::before {
+    content: "#";
+    color: var(--color-accent);
+    margin-right: 1px;
+    opacity: 0.7;
+  }
+  .tag-chip:hover {
+    transform: translateY(-1px);
+    color: var(--color-text-primary);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+  }
+  .tag-chip.is-active {
+    color: var(--color-text-primary);
+    background: rgba(var(--color-accent-rgb), 0.12);
+    border-color: rgba(var(--color-accent-rgb), 0.55);
+  }
+  .tag-chip.is-active::before {
+    opacity: 1;
+  }
+
+  .tags-clear {
+    font-family: ui-monospace, monospace;
+    font-size: 0.74rem;
+    color: var(--color-text-secondary);
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px dashed var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.16s ease;
+  }
+  .tags-clear:hover {
+    color: var(--color-accent);
+  }
+  .tags-clear[hidden] {
+    display: none;
+  }
+
+  .blog-result-count {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 18px;
+    opacity: 0.85;
+    min-height: 1em;
+  }
+  @media (scripting: none) {
+    .blog-result-count {
+      display: none;
+    }
+  }
+
   .posts-list {
     display: flex;
     flex-direction: column;
@@ -64,6 +273,9 @@ function formatDate(date: Date) {
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+  .posts-list li[hidden] {
+    display: none;
   }
 
   .post-card {
@@ -74,7 +286,7 @@ function formatDate(date: Date) {
     border-radius: 16px;
     text-decoration: none;
     filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
-    animation: fadeUp 0.6s ease both;
+    animation: fadeUp 0.5s ease both;
     transition:
       transform 0.2s ease,
       border-color 0.2s ease;
@@ -122,11 +334,82 @@ function formatDate(date: Date) {
     margin: 0;
   }
 
-  .no-posts {
+  .no-posts,
+  .no-results {
     text-align: center;
-    padding: 64px 16px;
+    padding: 56px 16px;
     color: var(--color-text-secondary);
     font-family: ui-monospace, monospace;
+  }
+  .no-results[hidden] {
+    display: none;
+  }
+  .no-results .prompt {
+    color: var(--color-accent);
+    margin-right: 6px;
+  }
+
+  /* ---------- Pagination ---------- */
+  .blog-pagination {
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  @media (scripting: enabled) {
+    .blog-pagination.is-visible {
+      display: flex;
+    }
+  }
+
+  .page-btn {
+    display: inline-grid;
+    place-items: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition:
+      color 0.16s ease,
+      border-color 0.16s ease,
+      background-color 0.16s ease;
+  }
+  .page-btn:hover:not(:disabled):not(.is-current) {
+    color: var(--color-text-primary);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+  }
+  .page-btn.is-current {
+    color: #fff;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    cursor: default;
+  }
+  .page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .page-btn.page-nav {
+    gap: 4px;
+  }
+  .page-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+  .page-ellipsis {
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 38px;
+    color: var(--color-text-secondary);
+    font-family: ui-monospace, monospace;
+    opacity: 0.6;
   }
 
   @keyframes fadeUp {
@@ -144,6 +427,9 @@ function formatDate(date: Date) {
     .post-card {
       padding: 20px;
     }
+    .page-btn.page-nav .page-nav-label {
+      display: none;
+    }
   }
 </style>
 
@@ -151,10 +437,7 @@ function formatDate(date: Date) {
   <div class="blog-page">
     <div class="blog-page-wrapper">
       <header class="blog-hero">
-        <PageCommand
-          pageTitle={t("blog", "hero_title")}
-          command="cat posts/*"
-        />
+        <PageCommand pageTitle={t("blog", "hero_title")} command="cat posts/*" />
 
         <h1 class="blog-hero-title">
           {t("blog", "hero_title")}<span class="dot" aria-hidden="true">.</span>
@@ -166,31 +449,445 @@ function formatDate(date: Date) {
         posts.length === 0 ? (
           <div class="no-posts">{t("blog", "no_posts")}</div>
         ) : (
-          <ul class="posts-list">
-            {posts.map((post) => (
-              <li
-                style={`animation-delay: ${100 * posts.indexOf(post) + 1}ms;`}
-              >
-                <a href={localizePath(`/blog/${post.id}`, lang)} class="post-card">
-                  <div class="post-meta">
-                    <time
-                      class="post-date"
-                      datetime={post.data.pubDate.toISOString()}
+          <div
+            data-blog-root
+            data-per-page="10"
+            data-tpl-count={t("blog", "result_count")}
+            data-tpl-page={t("blog", "page_word")}
+          >
+            <div class="blog-controls">
+              <div class="blog-search">
+                <svg
+                  class="blog-search-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+                <input
+                  type="search"
+                  id="blog-search"
+                  class="input blog-search-input"
+                  placeholder={t("blog", "search_placeholder")}
+                  aria-label={t("blog", "search_label")}
+                  autocomplete="off"
+                />
+                <button
+                  type="button"
+                  class="blog-search-clear"
+                  data-search-clear
+                  aria-label={t("blog", "clear_search")}
+                  hidden
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {allTags.length > 0 && (
+                <div class="tags-filter">
+                  <button
+                    type="button"
+                    class="tags-filter-toggle"
+                    data-tags-toggle
+                    aria-expanded="false"
+                    aria-controls="tags-panel"
+                  >
+                    <svg
+                      class="tag-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
                     >
-                      {formatDate(post.data.pubDate)}
-                    </time>
-                    {post.data.tags.slice(0, 3).map((tag) => (
-                      <span class="post-tag">#{tag}</span>
-                    ))}
+                      <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" />
+                      <circle cx="7.5" cy="7.5" r="0.5" fill="currentColor" />
+                    </svg>
+                    <span>{t("blog", "tags_filter_label")}</span>
+                    <span class="tags-count-badge" data-tags-badge hidden />
+                    <svg
+                      class="chevron"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+
+                  <div class="tags-filter-panel" id="tags-panel">
+                    <div class="tags-filter-panel-inner">
+                      <div class="tags-filter-chips">
+                        {allTags.map((tag) => (
+                          <button
+                            type="button"
+                            class="tag-chip"
+                            data-tag={tag}
+                            aria-pressed="false"
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          class="tags-clear"
+                          data-tags-clear
+                          hidden
+                        >
+                          {t("blog", "clear")}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <h2 class="post-title">{post.data.title}</h2>
-                  <p class="post-desc">{post.data.description}</p>
-                </a>
-              </li>
-            ))}
-          </ul>
+                </div>
+              )}
+            </div>
+
+            <p
+              class="blog-result-count"
+              data-result-count
+              role="status"
+              aria-live="polite"
+            />
+
+            <ul class="posts-list" data-posts-list>
+              {posts.map((post) => (
+                <li
+                  data-title={post.data.title}
+                  data-desc={post.data.description}
+                  data-tags={post.data.tags.join("|")}
+                >
+                  <a
+                    href={localizePath(`/blog/${post.id}`, lang)}
+                    class="post-card"
+                  >
+                    <div class="post-meta">
+                      <time
+                        class="post-date"
+                        datetime={post.data.pubDate.toISOString()}
+                      >
+                        {formatDate(post.data.pubDate)}
+                      </time>
+                      {post.data.tags.slice(0, 3).map((tag) => (
+                        <span class="post-tag">#{tag}</span>
+                      ))}
+                    </div>
+                    <h2 class="post-title">{post.data.title}</h2>
+                    <p class="post-desc">{post.data.description}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div class="no-results" data-no-results hidden>
+              <span class="prompt">{">"}</span>
+              {t("blog", "no_results")}
+            </div>
+
+            <nav
+              class="blog-pagination"
+              data-pagination
+              aria-label={t("blog", "pagination_label")}
+            />
+          </div>
         )
       }
     </div>
   </div>
 </Layout>
+
+<script>
+  // Client-side blog: arama + collapsible etiket filtresi + pagination.
+  // Tüm yazılar statik HTML'de render edilir (linkler SEO için DOM'da kalır);
+  // burada yalnızca görünürlük + sayfalama yönetilir.
+  function initBlog(): void {
+    const root = document.querySelector<HTMLElement>("[data-blog-root]");
+    if (!root || root.dataset.blogInit === "1") return;
+    root.dataset.blogInit = "1";
+
+    const PER_PAGE = parseInt(root.dataset.perPage ?? "10", 10);
+    const tplCount = root.dataset.tplCount ?? "{n}";
+    const tplPage = root.dataset.tplPage ?? "Page";
+
+    const list = root.querySelector<HTMLUListElement>("[data-posts-list]");
+    if (!list) return;
+    const items = Array.from(list.querySelectorAll<HTMLLIElement>("li"));
+
+    const searchInput = root.querySelector<HTMLInputElement>("#blog-search");
+    const searchClear = root.querySelector<HTMLButtonElement>("[data-search-clear]");
+    const tagsToggle = root.querySelector<HTMLButtonElement>("[data-tags-toggle]");
+    const tagsPanel = root.querySelector<HTMLElement>("#tags-panel");
+    const tagBadge = root.querySelector<HTMLElement>("[data-tags-badge]");
+    const tagsClear = root.querySelector<HTMLButtonElement>("[data-tags-clear]");
+    const tagChips = Array.from(
+      root.querySelectorAll<HTMLButtonElement>("[data-tag]"),
+    );
+    const resultCount = root.querySelector<HTMLElement>("[data-result-count]");
+    const noResults = root.querySelector<HTMLElement>("[data-no-results]");
+    const pagination = root.querySelector<HTMLElement>("[data-pagination]");
+
+    // Türkçe locale-aware küçük harf (İ/ı doğru çalışsın).
+    const lower = (s: string) => s.toLocaleLowerCase("tr");
+
+    let query = "";
+    const selectedTags = new Set<string>();
+    let page = 1;
+    let firstRender = true; // ilk boyamada CSS animasyonunu bırak, yeniden tetikleme
+
+    // Her li'nin aranabilir alanlarını önceden hazırla (title+desc+tags).
+    const meta = items.map((li) => ({
+      li,
+      haystack: lower(
+        `${li.dataset.title ?? ""} ${li.dataset.desc ?? ""} ${(
+          li.dataset.tags ?? ""
+        ).replace(/\|/g, " ")}`,
+      ),
+      tags: (li.dataset.tags ?? "").split("|").filter(Boolean),
+    }));
+
+    function getFiltered() {
+      const q = lower(query.trim());
+      return meta.filter((m) => {
+        const matchQ = q === "" || m.haystack.includes(q);
+        const matchTags =
+          selectedTags.size === 0 ||
+          m.tags.some((tg) => selectedTags.has(tg));
+        return matchQ && matchTags;
+      });
+    }
+
+    function render(): void {
+      const filtered = getFiltered();
+      const total = filtered.length;
+      const pageCount = Math.max(1, Math.ceil(total / PER_PAGE));
+      if (page > pageCount) page = pageCount;
+
+      const start = (page - 1) * PER_PAGE;
+      const end = start + PER_PAGE;
+      const visibleSet = new Set(
+        filtered.slice(start, end).map((m) => m.li),
+      );
+
+      // Görünürlük + görünenlere hafif stagger animasyonu.
+      let shownIndex = 0;
+      items.forEach((li) => {
+        const show = visibleSet.has(li);
+        li.hidden = !show;
+        if (show) {
+          // İlk boyama hariç: filtre/sayfa değişiminde kartları hafif stagger'la
+          // yeniden belirt (ilk yüklemede CSS zaten animasyonu oynatıyor).
+          if (!firstRender) {
+            const card = li.querySelector<HTMLElement>(".post-card");
+            if (card) {
+              card.style.animation = "none";
+              void card.offsetHeight; // reflow → animasyonu yeniden tetikle
+              card.style.animation = "";
+              card.style.animationDelay = `${shownIndex * 55}ms`;
+            }
+          }
+          shownIndex++;
+        }
+      });
+
+      if (noResults) noResults.hidden = total !== 0;
+      if (resultCount) {
+        resultCount.textContent =
+          total === 0 ? "" : tplCount.replace("{n}", String(total));
+      }
+
+      renderPagination(pageCount);
+      firstRender = false;
+    }
+
+    function renderPagination(pageCount: number): void {
+      if (!pagination) return;
+      pagination.innerHTML = "";
+
+      if (pageCount <= 1) {
+        pagination.classList.remove("is-visible");
+        return;
+      }
+      pagination.classList.add("is-visible");
+
+      const makeBtn = (
+        label: string,
+        opts: {
+          page?: number;
+          current?: boolean;
+          disabled?: boolean;
+          nav?: boolean;
+          aria?: string;
+          html?: string;
+        } = {},
+      ) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "page-btn" + (opts.nav ? " page-nav" : "");
+        if (opts.current) {
+          b.classList.add("is-current");
+          b.setAttribute("aria-current", "page");
+        }
+        if (opts.disabled) b.disabled = true;
+        if (opts.aria) b.setAttribute("aria-label", opts.aria);
+        b.innerHTML = opts.html ?? label;
+        if (opts.page && !opts.current && !opts.disabled) {
+          b.addEventListener("click", () => goTo(opts.page as number));
+        }
+        return b;
+      };
+
+      const prevIcon =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
+      const nextIcon =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+
+      pagination.appendChild(
+        makeBtn("", {
+          page: page - 1,
+          disabled: page === 1,
+          nav: true,
+          aria: "prev",
+          html: prevIcon,
+        }),
+      );
+
+      // Sayfa numaraları: 7'ye kadar hepsi; fazlaysa 1 … civar … son.
+      const pagesToShow: (number | "…")[] = [];
+      if (pageCount <= 7) {
+        for (let i = 1; i <= pageCount; i++) pagesToShow.push(i);
+      } else {
+        pagesToShow.push(1);
+        const lo = Math.max(2, page - 1);
+        const hi = Math.min(pageCount - 1, page + 1);
+        if (lo > 2) pagesToShow.push("…");
+        for (let i = lo; i <= hi; i++) pagesToShow.push(i);
+        if (hi < pageCount - 1) pagesToShow.push("…");
+        pagesToShow.push(pageCount);
+      }
+
+      pagesToShow.forEach((p) => {
+        if (p === "…") {
+          const span = document.createElement("span");
+          span.className = "page-ellipsis";
+          span.textContent = "…";
+          span.setAttribute("aria-hidden", "true");
+          pagination.appendChild(span);
+        } else {
+          pagination.appendChild(
+            makeBtn(String(p), {
+              page: p,
+              current: p === page,
+              aria: `${tplPage} ${p}`,
+            }),
+          );
+        }
+      });
+
+      pagination.appendChild(
+        makeBtn("", {
+          page: page + 1,
+          disabled: page === pageCount,
+          nav: true,
+          aria: "next",
+          html: nextIcon,
+        }),
+      );
+    }
+
+    function goTo(p: number): void {
+      page = p;
+      render();
+      // Liste başına yumuşak kaydır (sayfa değişimini hissettir).
+      list?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // --- Arama ---
+    let debounce: number | undefined;
+    searchInput?.addEventListener("input", () => {
+      window.clearTimeout(debounce);
+      debounce = window.setTimeout(() => {
+        query = searchInput.value;
+        page = 1;
+        if (searchClear) searchClear.hidden = query.length === 0;
+        render();
+      }, 120);
+    });
+    searchClear?.addEventListener("click", () => {
+      if (!searchInput) return;
+      searchInput.value = "";
+      query = "";
+      page = 1;
+      searchClear.hidden = true;
+      searchInput.focus();
+      render();
+    });
+
+    // --- Etiket collapsible ---
+    tagsToggle?.addEventListener("click", () => {
+      const open = tagsToggle.getAttribute("aria-expanded") === "true";
+      tagsToggle.setAttribute("aria-expanded", String(!open));
+      tagsPanel?.classList.toggle("is-open", !open);
+    });
+
+    // --- Etiket seçimi ---
+    function updateTagUI(): void {
+      tagChips.forEach((c) =>
+        c.classList.toggle("is-active", selectedTags.has(c.dataset.tag ?? "")),
+      );
+      if (tagBadge) {
+        tagBadge.hidden = selectedTags.size === 0;
+        tagBadge.textContent = String(selectedTags.size);
+      }
+      if (tagsClear) tagsClear.hidden = selectedTags.size === 0;
+    }
+
+    tagChips.forEach((chip) =>
+      chip.addEventListener("click", () => {
+        const tag = chip.dataset.tag ?? "";
+        if (selectedTags.has(tag)) selectedTags.delete(tag);
+        else selectedTags.add(tag);
+        chip.setAttribute("aria-pressed", String(selectedTags.has(tag)));
+        page = 1;
+        updateTagUI();
+        render();
+      }),
+    );
+
+    tagsClear?.addEventListener("click", () => {
+      selectedTags.clear();
+      tagChips.forEach((c) => c.setAttribute("aria-pressed", "false"));
+      page = 1;
+      updateTagUI();
+      render();
+    });
+
+    render();
+  }
+
+  // View Transitions desteği + doğrudan fallback.
+  document.addEventListener("astro:page-load", initBlog);
+  initBlog();
+</script>
