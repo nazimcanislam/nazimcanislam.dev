@@ -1,0 +1,13 @@
+/* TEAM */
+
+Developer: Nazımcan İslam
+Site: https://nazimcanislam-dev.vercel.app
+Location: Istanbul, Turkey
+
+/* SITE */
+Language: Turkish
+Doctype: HTML5
+IDE: Astro
+Standards: HTML5, CSS3
+Components: Astro, HTML, CSS, JavaScript
+Tools: Bun, Claude
