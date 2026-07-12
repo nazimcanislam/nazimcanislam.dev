@@ -33,7 +33,7 @@ export default defineConfig({
     compress({ CSS: false }),
   ],
 
-  build: { inlineStylesheets: "always" },
+  build: { inlineStylesheets: "auto" },
 
   adapter: vercel({ imageService: false }),
 
