@@ -2,9 +2,11 @@
 import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
+import { profile } from "@/data/profile";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
+const professionalProjects = profile.professionalProjects;
 
 // Build-time fetch from GitHub API
 type Repo = {
@@ -198,6 +200,20 @@ const fmtPct = (p: number) =>
     content: "# ";
     color: var(--color-accent);
     font-weight: 600;
+  }
+
+  /* ---------- Profesyonel projeler bölümü ---------- */
+  .professional-section {
+    margin-bottom: 44px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .professional-note {
+    margin: 14px 2px 0;
+    font-family: ui-monospace, monospace;
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+    opacity: 0.75;
   }
 
   /* ---------- Dil dağılımı paneli ---------- */
@@ -514,6 +530,46 @@ const fmtPct = (p: number) =>
       </header>
 
       {
+        professionalProjects.length > 0 && (
+          <section class="professional-section">
+            <div class="section-label" aria-hidden="true">
+              {t("projects", "professional_section_title")}
+            </div>
+            <ul class="repos-grid">
+              {professionalProjects.map((p, i) => (
+                <li style={`animation-delay: ${100 * i + 1}ms;`}>
+                  <a
+                    href={p.url}
+                    class="repo-card"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${p.name} — ${p.description[lang]}`}
+                  >
+                    <h2 class="repo-name">{p.name}</h2>
+                    <p class="repo-desc">{p.description[lang]}</p>
+                    <div class="repo-topics" aria-hidden="true">
+                      <span class="repo-topic">{p.org[lang]}</span>
+                      {p.tags.map((tag) => (
+                        <span class="repo-topic">{tag}</span>
+                      ))}
+                    </div>
+                    <div class="repo-meta" aria-hidden="true">
+                      <span class="repo-stat">
+                        {t("projects", "view_live")} ↗
+                      </span>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p class="professional-note">
+              {t("projects", "professional_source_note")}
+            </p>
+          </section>
+        )
+      }
+
+      {
         showLangBar && (
           <section
             class="lang-panel"
@@ -600,7 +656,7 @@ const fmtPct = (p: number) =>
           <div class="empty-state">{t("projects", "loading")}</div>
         ) : (
           <>
-            <ul class="repos-grid">
+            <ul class="repos-grid" data-repo-filter-grid>
               {reposWithLangs.map((repo, i) => (
                 <li
                   data-languages={repo.languages.join("|")}
@@ -672,7 +728,9 @@ const fmtPct = (p: number) =>
   // (fare için görsel kısayol) aynı applyFilter() fonksiyonunu tetikler.
   function initLanguageFilter(): void {
     const root = document.querySelector<HTMLElement>("[data-lang-filter-root]");
-    const grid = document.querySelector<HTMLUListElement>(".repos-grid");
+    const grid = document.querySelector<HTMLUListElement>(
+      "[data-repo-filter-grid]",
+    );
     if (!root || !grid) return;
 
     // Aynı DOM üzerinde çift init'i önle (astro:page-load + doğrudan çağrı).

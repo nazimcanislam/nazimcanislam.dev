@@ -92,7 +92,8 @@ export const translations = {
     },
     projects: {
       meta_title: "Projects — Nazımcan İslam",
-      meta_desc: "A collection of open-source projects by Nazımcan İslam.",
+      meta_desc:
+        "Open-source and professional projects by Nazımcan İslam.",
       hero_label: "~/projects",
       hero_title: "Projects",
       hero_subtitle:
@@ -110,6 +111,9 @@ export const translations = {
       filter_all: "All",
       filter_by_lang: "Filter projects by language",
       filter_no_match: "No projects use this language yet.",
+      professional_section_title: "Professional Work",
+      professional_source_note: "Closed source — client project",
+      view_live: "View Live Site",
     },
     blog: {
       meta_title: "Blog — Nazımcan İslam",
@@ -252,7 +256,7 @@ export const translations = {
     },
     projects: {
       meta_title: "Projeler — Nazımcan İslam",
-      meta_desc: "Nazımcan İslam'ın açık kaynak projeleri.",
+      meta_desc: "Nazımcan İslam'ın açık kaynak ve profesyonel projeleri.",
       hero_label: "~/projeler",
       hero_title: "Projeler",
       hero_subtitle:
@@ -270,6 +274,9 @@ export const translations = {
       filter_all: "Tümü",
       filter_by_lang: "Projeleri programlama diline göre filtrele",
       filter_no_match: "Bu dili kullanan bir proje yok.",
+      professional_section_title: "Profesyonel Projeler",
+      professional_source_note: "Kapalı kaynak — kurumsal proje",
+      view_live: "Canlı Siteyi Gör",
     },
     blog: {
       meta_title: "Blog — Nazımcan İslam",

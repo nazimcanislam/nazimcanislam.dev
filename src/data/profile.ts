@@ -71,6 +71,24 @@ export type CareerEntry = {
   roles?: CareerRole[];
 };
 
+/**
+ * Kaynağı açık olmayan (kurumsal/müşteri) bir proje.
+ * GitHub'daki açık kaynak repo kartlarından ayrı, "Profesyonel Projeler"
+ * bölümünde gösterilir — sadece canlı site linki verilir, kod linki yok.
+ */
+export type ProfessionalProject = {
+  /** Proje adı (marka adı olduğu için genelde tek dilde kalır). */
+  name: string;
+  /** 1-2 cümlelik açıklama. */
+  description: Localized;
+  /** Canlı siteye link. */
+  url: string;
+  /** Kurum adı. */
+  org: Localized;
+  /** Teknoloji etiketleri. */
+  tags: string[];
+};
+
 export const profile = {
   name: "Nazımcan İslam",
 
@@ -312,6 +330,23 @@ export const profile = {
       ],
     },
   ] satisfies CareerEntry[],
+
+  // ── PROFESYONEL / KURUMSAL PROJELER ──────────────────────────────────────
+  // Kaynağı kapalı olan (müşteri/kurum) projeler burada listelenir. Yeni bir
+  // tane eklemek için diziye bu şekilde bir nesne ekle — Projeler sayfasında
+  // açık kaynak repoların ÜSTÜNDE, ayrı bir bölümde otomatik görünür.
+  professionalProjects: [
+    {
+      name: "Öğretmen Hikâyeleri Yarışması",
+      description: {
+        tr: "İGEDER için geliştirdiğim, öğretmenlerin ilham verici hikâyelerini paylaştığı yarışma sitesi. Astro ile sıfırdan kurdum: karanlık mod, self-hosted fontlar, Cloudflare entegrasyonu ve Lighthouse'da tüm kategorilerde 100 puan.",
+        en: "A competition site I built for İGEDER where teachers share inspiring stories. Built from scratch with Astro: dark mode, self-hosted fonts, Cloudflare integration, and a perfect 100 Lighthouse score across every category.",
+      },
+      url: "https://ogretmenhikayeleri.igeder.org.tr",
+      org: { tr: "İGEDER", en: "İGEDER" },
+      tags: ["Astro", "TypeScript", "Cloudflare"],
+    },
+  ] satisfies ProfessionalProject[],
 
   // ── SOSYAL / İLETİŞİM ────────────────────────────────────────────────────
   social: {
