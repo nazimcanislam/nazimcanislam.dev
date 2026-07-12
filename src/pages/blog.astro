@@ -95,33 +95,10 @@ function formatDate(date: Date) {
     pointer-events: none;
   }
   .blog-search-input.input {
-    padding: 12px 42px 12px 42px;
+    padding: 12px 12px 12px 42px;
     border-radius: 12px;
     font-family: ui-monospace, monospace;
     font-size: 0.9rem;
-  }
-  .blog-search-clear {
-    position: absolute;
-    right: 10px;
-    display: grid;
-    place-items: center;
-    width: 26px;
-    height: 26px;
-    border: none;
-    background: transparent;
-    color: var(--color-text-secondary);
-    border-radius: 6px;
-    cursor: pointer;
-    transition:
-      color 0.15s ease,
-      background-color 0.15s ease;
-  }
-  .blog-search-clear:hover {
-    color: var(--color-text-primary);
-    background: var(--color-card);
-  }
-  .blog-search-clear[hidden] {
-    display: none;
   }
 
   /* Etiket filtresi (collapsible) */
@@ -478,26 +455,6 @@ function formatDate(date: Date) {
                   aria-label={t("blog", "search_label")}
                   autocomplete="off"
                 />
-                <button
-                  type="button"
-                  class="blog-search-clear"
-                  data-search-clear
-                  aria-label={t("blog", "clear_search")}
-                  hidden
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M18 6 6 18M6 6l12 12" />
-                  </svg>
-                </button>
               </div>
 
               {allTags.length > 0 && (
@@ -637,7 +594,6 @@ function formatDate(date: Date) {
     const items = Array.from(list.querySelectorAll<HTMLLIElement>("li"));
 
     const searchInput = root.querySelector<HTMLInputElement>("#blog-search");
-    const searchClear = root.querySelector<HTMLButtonElement>("[data-search-clear]");
     const tagsToggle = root.querySelector<HTMLButtonElement>("[data-tags-toggle]");
     const tagsPanel = root.querySelector<HTMLElement>("#tags-panel");
     const tagBadge = root.querySelector<HTMLElement>("[data-tags-badge]");
