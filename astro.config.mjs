@@ -32,7 +32,15 @@ export default defineConfig({
   // tabanlı media query'ler kaybolup mobil düzen bozuluyor (dev'de sorun yok,
   // çünkü compress yalnızca build'de çalışır). Astro 7 zaten CSS'i kendisi
   // minify ettiği için bu ikinci geçiş hem gereksiz hem yıkıcı; CSS'i kapatıyoruz.
-  integrations: [icon(), sitemap(), compress({ CSS: false })],
+  integrations: [icon(), sitemap({
+    i18n: {
+      defaultLocale: "en",
+      locales: {
+        en: "en-US",
+        tr: "tr-TR"
+      }
+    }
+  }), compress({ CSS: false })],
 
   build: { inlineStylesheets: "auto" },
 
