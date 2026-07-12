@@ -100,9 +100,15 @@ const { title = t("meta", "title"), description = t("meta", "description"), hero
     <!-- Open Graph  -->
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
+    <!-- og:site_name: arama sonuçlarında "Vercel" yerine gerçek marka adının
+         görünmesi için kritik. Google, site adını sıklıkla bu alandan (veya
+         yokluğunda hostname'den) türetir. -->
+    <meta property="og:site_name" content="Nazımcan İslam" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === "tr" ? "tr_TR" : "en_US"} />
+    <meta property="og:locale:alternate" content={lang === "tr" ? "en_US" : "tr_TR"} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content="nazimcanislam-dev.vercel.app" />
     <meta property="twitter:url" content={canonicalUrl} />
