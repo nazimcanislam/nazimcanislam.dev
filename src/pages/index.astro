@@ -4,20 +4,9 @@ import Hero from "@sections/Hero.astro";
 import FeaturedProjects from "@sections/FeaturedProjects.astro";
 import ApiExplorer from "@/components/sections/ApiExplorer.astro";
 import BrieflyAbout from "@/components/sections/BrieflyAbout.astro";
-import me from "@assets/pictures/me.jpg";
-import { getImage } from "astro:assets";
-
-// LCP olan hero görselini erkenden indir (Hero'daki <Picture> ile aynı
-// parametreler → aynı dosya). Mobilde LCP'yi belirgin biçimde iyileştirir.
-const heroAvif = await getImage({
-  src: me,
-  format: "avif",
-  width: 320,
-  height: 427,
-});
 ---
 
-<Layout heroPreload={heroAvif.src}>
+<Layout>
   <!-- Home hero  -->
   <Hero />
 

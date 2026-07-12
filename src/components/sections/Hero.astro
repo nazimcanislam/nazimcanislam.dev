@@ -213,12 +213,12 @@ const statusValue = profile.work.isEmployed
         <Picture
           src={me}
           alt="Nazımcan İslam"
+          title={t("home", "portrait_title")}
           fetchpriority={"high"}
           loading={"eager"}
-          widths={[400, 800, 1200, me.width]}
-          sizes="(max-width: 768px) 100vw, 1200px"
-          title={t("home", "portrait_title")}
-          formats={["avif", "webp"]}
+          widths={[320, 500]}
+          sizes="(max-width: 480px) 320px, (max-width: 768px) 500px"
+          formats={["avif", "webp", "jpg"]}
         />
         <div class="hero-scanlines" aria-hidden="true"></div>
         <div class="hero-status-dot" aria-hidden="true"></div>
