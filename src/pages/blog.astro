@@ -787,18 +787,8 @@ function formatDate(date: Date) {
       debounce = window.setTimeout(() => {
         query = searchInput.value;
         page = 1;
-        if (searchClear) searchClear.hidden = query.length === 0;
         render();
       }, 120);
-    });
-    searchClear?.addEventListener("click", () => {
-      if (!searchInput) return;
-      searchInput.value = "";
-      query = "";
-      page = 1;
-      searchClear.hidden = true;
-      searchInput.focus();
-      render();
     });
 
     // --- Etiket collapsible ---
