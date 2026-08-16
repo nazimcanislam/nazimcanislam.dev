@@ -34,10 +34,12 @@ const { title = t("meta", "title"), description = t("meta", "description"), hero
 ---
 
 <!doctype html>
-<html lang={lang} style="color-scheme: light dark;">
+<html lang={lang} style="color-scheme: dark light;">
   <head>
     <!-- Karakter kodlaması: <head>'in ilk öğesi olmalı (ilk 1024 bayt içinde). -->
     <meta charset="UTF-8" />
+
+    <meta name="color-scheme" content="dark light" />
 
     <!--
       Dil otomatik tespiti (cold-start YOK; bu istemci tarafında çalışır).
