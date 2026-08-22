@@ -33,6 +33,7 @@ export const translations = {
     },
     featured_projects: {
       title: "Featured Projects",
+      gphotos_fixer_desc: "Rescue your Google Photos Takeout export — handles every broken JSON naming variant Python can find.",
       shrinkify_desc:
         "Analyze media files, suggest codec conversions, detect duplicates, and generate a detailed HTML report.",
       fast_prime_finder_desc:
@@ -65,7 +66,7 @@ export const translations = {
       hero_subtitle: "Software developer. Systems thinker. Perpetual learner.",
       section_whoami: "whoami",
       bio_1:
-        "I'm Nazımcan, a 23-year-old software developer based in Istanbul. I see software not just as lines of code, but as the art of transforming ideas into working systems. My focus is on clean, sustainable, and maintainable solutions.",
+        "I'm Nazımcan, a 24-year-old software developer based in Istanbul. I see software not just as lines of code, but as the art of transforming ideas into working systems. My focus is on clean, sustainable, and maintainable solutions.",
       bio_2:
         "Currently preparing for the DGS exam for Computer Engineering and I am working with TypeScript, React, Astro, Node.js, and Python. I enjoy the entire software lifecycle, from architectural decisions to deployment pipelines.",
       bio_3:
@@ -196,6 +197,7 @@ export const translations = {
     },
     featured_projects: {
       title: "Öne Çıkan Projeler",
+      gphotos_fixer_desc: "Google Photos Takeout dışa aktarımınızı kurtarın — Python'ın bulabileceği her türlü bozuk JSON adlandırma varyasyonunu ele alır.",
       shrinkify_desc:
         "Medya dosyalarını analiz edin, kodek dönüştürme önerilerinde bulunun, kopyaları tespit edin ve ayrıntılı bir HTML raporu oluşturun.",
       fast_prime_finder_desc:
@@ -229,7 +231,7 @@ export const translations = {
       hero_subtitle: "Yazılım geliştirici. Sistem düşünürü. Sürekli öğrenen.",
       section_whoami: "whoami",
       bio_1:
-        "Merhaba, ben Nazımcan. İstanbul'da yaşayan 23 yaşında bir yazılım geliştiriciyim. Yazılımı sadece kod satırları olarak değil, fikirleri çalışan sistemlere dönüştürme sanatı olarak görüyorum. Temiz, sürdürülebilir ve bakımı kolay çözümler üretmeye odaklanıyorum.",
+        "Merhaba, ben Nazımcan. İstanbul'da yaşayan 24 yaşında bir yazılım geliştiriciyim. Yazılımı sadece kod satırları olarak değil, fikirleri çalışan sistemlere dönüştürme sanatı olarak görüyorum. Temiz, sürdürülebilir ve bakımı kolay çözümler üretmeye odaklanıyorum.",
       bio_2:
         "Şu anda Bilgisayar Mühendisliği için DGS'ye hazırlanıyorum ve TypeScript, React, Astro, Node.js ve Python ile çalışıyorum. Mimari kararlardan deployment pipeline'larına kadar yazılımın tüm yaşam döngüsünü seviyorum.",
       bio_3:
