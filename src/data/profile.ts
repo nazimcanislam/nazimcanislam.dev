@@ -345,6 +345,16 @@ export const profile = {
       org: { tr: "İGEDER", en: "İGEDER" },
       tags: ["Astro", "TypeScript", "Cloudflare"],
     },
+    {
+      name: "Mahir İZ Öğretmen Destekleme Projesi",
+      description: {
+        tr: "İGEDER için geliştirdiğim, Mahir İZ temalı öğretmen destekleme projesinin tanıtım web sitesi. Astro ile sıfırdan kurdum. Görsel optimizasyonu, mobil uyumluluk ve SEO dostu.",
+        en: "A promotional website for the Mahir İz-themed teacher support project I developed for İGEDER. I built it from scratch using Astro. It features image optimization, mobile responsiveness, and SEO-friendly design.",
+      },
+      url: "https://sendenbiriz.igeder.org.tr",
+      org: { tr: "İGEDER", en: "İGEDER" },
+      tags: ["Astro", "TypeScript", "SEO"],
+    },
   ] satisfies ProfessionalProject[],
 
   // ── SOSYAL / İLETİŞİM ────────────────────────────────────────────────────
