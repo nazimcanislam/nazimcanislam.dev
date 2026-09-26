@@ -12,7 +12,7 @@ export const translations = {
       return_home: "Return Home",
     },
     meta: {
-      title: "Nazımcan İslam | Software Developer & Graphic Designer — Portfolio",
+      title: "Nazımcan İslam | Software Developer — Portfolio",
       description:
         "Personal portfolio of Nazımcan İslam, a software developer focused on turning ideas into working systems through clean, sustainable, and elegant solutions.",
     },
@@ -25,7 +25,7 @@ export const translations = {
       menu: "Menu",
     },
     home: {
-      role: "Software Developer & Graphic Designer 👨🏻‍💻",
+      role: "Software Developer 👨🏻‍💻",
       portrait_title: "Nazımcan İslam portrait",
       bio: "I see software development not just as writing code, but as transforming ideas into working systems. I focus on creating clean, sustainable, and elegant solutions.",
       btn_projects: "Projects",
@@ -176,7 +176,7 @@ export const translations = {
       return_home: "Ana Sayfaya Dön",
     },
     meta: {
-      title: "Nazımcan İslam | Yazılım Geliştirici & Grafik Tasarımcı — Portföy",
+      title: "Nazımcan İslam | Yazılım Geliştirici — Portföy",
       description:
         "Nazımcan İslam’ın kişisel portföyü. Fikirleri temiz, sürdürülebilir ve zarif çözümlerle çalışan sistemlere dönüştürmeye odaklanan bir yazılım geliştirici.",
     },
@@ -189,7 +189,7 @@ export const translations = {
       menu: "Menü",
     },
     home: {
-      role: "Yazılım Geliştirici & Grafik Tasarımcı 👨🏻‍💻",
+      role: "Yazılım Geliştirici 👨🏻‍💻",
       portrait_title: "Nazımcan İslam portresi",
       bio: "Yazılım geliştirmeyi sadece kod yazmak olarak değil, fikirleri çalışan sistemlere dönüştürmek olarak görüyorum. Temiz, sürdürülebilir ve şık çözümler üretmeye odaklanıyorum.",
       btn_projects: "Projeler",

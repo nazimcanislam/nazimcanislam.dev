@@ -102,8 +102,8 @@ export const profile = {
   // ── Rol / unvan ──────────────────────────────────────────────────────────
   // Kendini nasıl tanıtmak istiyorsan burada değiştir.
   role: {
-    tr: "Yazılım Geliştirici & Grafik Tasarımcı",
-    en: "Software Developer & Graphic Designer",
+    tr: "Yazılım Geliştirici",
+    en: "Software Developer",
   } satisfies Localized,
   // API / JSON rozetleri gibi dar alanlar için kısa hali.
   roleShort: {
@@ -146,7 +146,6 @@ export const profile = {
     "compilers",
     "systems programming",
     "open-source",
-    "graphic design",
     "linux",
     "game dev concepts",
     "Jungian psychology",

@@ -1,6 +1,6 @@
 # Nazımcan İslam
 
-> Software developer & graphic designer building clean, sustainable web systems.
+> Software developer building clean, sustainable web systems.
 
 ## Pages
 - [About](https://nazimcanislam-dev.vercel.app/about)
