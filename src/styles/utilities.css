@@ -138,3 +138,14 @@
   border-color: #16a34a;
   box-shadow: 0 0 0 1px #16a34a;
 }
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

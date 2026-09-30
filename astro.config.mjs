@@ -19,6 +19,12 @@ export default defineConfig({
     fallback: { tr: "en" },
   },
 
+  vite: {
+    build: {
+      cssMinify: "lightningcss"
+    }
+  },
+
   integrations: [
     icon(),
     sitemap({
@@ -30,7 +36,6 @@ export default defineConfig({
         },
       },
     }),
-    compress({ CSS: false }),
   ],
 
   build: { inlineStylesheets: "auto" },
