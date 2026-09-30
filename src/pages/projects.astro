@@ -524,7 +524,7 @@ const fmtPct = (p: number) =>
           >
         </h1>
         <p class="projects-hero-subtitle">
-          {">"}
+          {"> "}
           {t("projects", "hero_subtitle")}
         </p>
       </header>
@@ -745,8 +745,7 @@ const fmtPct = (p: number) =>
       root.querySelectorAll<HTMLElement>(".lang-bar-segment"),
     );
     const statusEl = root.querySelector<HTMLElement>("#filter-status");
-    const emptyEl =
-      document.querySelector<HTMLElement>("[data-filter-empty]");
+    const emptyEl = document.querySelector<HTMLElement>("[data-filter-empty]");
 
     const projectsWord = root.dataset.labelProjects ?? "projects";
     const allLabel = root.dataset.labelAll ?? "All";
