@@ -36,6 +36,7 @@ export default defineConfig({
         },
       },
     }),
+    compress()
   ],
 
   build: { inlineStylesheets: "auto" },
