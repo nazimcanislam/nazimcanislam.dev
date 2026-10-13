@@ -3,15 +3,23 @@ import Header from "@layout/Header.astro";
 import Footer from "@layout/Footer.astro";
 import BubbleBackgroundCanvas from "@/components/sections/BubbleBackgroundCanvas.astro";
 import NoScript from "@/components/layout/NoScript.astro";
-import { getLang, useTranslations, localizePath, stripLocale } from "@/i18n/utils";
+import StructuredData from "@/components/data/StructuredData.astro";
+import {
+  getLang,
+  useTranslations,
+  localizePath,
+  stripLocale,
+} from "@/i18n/utils";
 import "@styles/base.css";
 import "@styles/typography.css";
 import "@styles/utilities.css";
+import { profile } from "@/data/profile";
 
 interface Props {
   title?: string;
   description?: string;
   heroPreload?: string;
+  schema?: object;
 }
 
 const lang = getLang(Astro);
@@ -29,8 +37,12 @@ const canonicalUrl = lang === "tr" ? trUrl : enUrl;
 // og görseli kökte; yola eklemek yerine mutlak URL ver (alt sayfalarda kırılmasın).
 const ogImage = new URL("/og-image.jpg", Astro.site).href;
 
-const { title = t("meta", "title"), description = t("meta", "description"), heroPreload } =
-  Astro.props;
+const {
+  title = t("meta", "title"),
+  description = t("meta", "description"),
+  heroPreload,
+  schema,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -109,8 +121,12 @@ const { title = t("meta", "title"), description = t("meta", "description"), hero
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content="A preview for Nazımcan İslam's portfolio web site" />
     <meta property="og:locale" content={lang === "tr" ? "tr_TR" : "en_US"} />
-    <meta property="og:locale:alternate" content={lang === "tr" ? "en_US" : "tr_TR"} />
+    <meta
+      property="og:locale:alternate"
+      content={lang === "tr" ? "en_US" : "tr_TR"}
+    />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:domain" content="nazimcanislam-dev.vercel.app" />
     <meta property="twitter:url" content={canonicalUrl} />
@@ -145,6 +161,36 @@ const { title = t("meta", "title"), description = t("meta", "description"), hero
 
     <!-- Add sitemap link -->
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <StructuredData
+      schema={schema ?? {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": `${profile.url}/#person`,
+            name: profile.name,
+            url: profile.url,
+            jobTitle: profile.role,
+            description: t("home", "bio"),
+            knowsAbout: Object.values(profile.skills).flat(),
+            sameAs: profile.sameAs,
+          },
+          {
+            "@type": "WebSite",
+            "@id": `${profile.url}/#website`,
+            url: profile.url,
+            name: title,
+            description: description,
+            inLanguage: lang,
+            publisher: {
+              "@id": `${profile.url}/#person`,
+            },
+          },
+        ],
+      }}
+      }
+    />
   </head>
   <body>
     <a href="#main-content" class="skip-link"

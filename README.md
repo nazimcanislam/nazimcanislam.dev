@@ -17,7 +17,7 @@ The goal was simple: a fast, accessible, and honest representation of who I am a
 
 Pages: **Home · About · Projects · Blog · Contact**
 
-Live at → **[nazimcanislam.dev](https://nazimcanislam.dev)**
+Live at → **[nazimcanislam-dev.vercel.app](https://nazimcanislam-dev.vercel.app)**
 
 ---
 

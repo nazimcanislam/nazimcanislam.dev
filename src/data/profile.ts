@@ -91,9 +91,15 @@ export type ProfessionalProject = {
 
 export const profile = {
   name: "Nazımcan İslam",
+  url: "https://nazimcanislam-dev.vercel.app",
 
   // ── Doğum bilgisi (yaş otomatik hesaplanır) ──────────────────────────────
   birth: { year: 2002, month: 7, day: 28 },
+
+  sameAs: [
+    "https://github.com/nazimcanislam",
+    "linkedin.com/in/nazimcanislam"
+  ],
 
   region: "🇹🇷 Türkiye",
   location: { tr: "İstanbul, 🇹🇷", en: "Istanbul, 🇹🇷" } satisfies Localized,
