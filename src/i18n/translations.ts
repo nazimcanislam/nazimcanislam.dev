@@ -33,6 +33,7 @@ export const translations = {
     },
     featured_projects: {
       title: "Featured Projects",
+      metaweave_desc: "Check your website before it ships: SEO, Open Graph, favicons, accessibility, security headers, broken links and more, in one fast Rust CLI.",
       gphotos_fixer_desc: "Rescue your Google Photos Takeout export — handles every broken JSON naming variant Python can find.",
       shrinkify_desc:
         "Analyze media files, suggest codec conversions, detect duplicates, and generate a detailed HTML report.",
@@ -197,6 +198,7 @@ export const translations = {
     },
     featured_projects: {
       title: "Öne Çıkan Projeler",
+      metaweave_desc: "Yayına almadan önce web sitenizi kontrol edin: SEO, Open Graph, favicon'lar, erişilebilirlik, güvenlik başlıkları, kırık bağlantılar ve daha fazlası; hepsi tek bir hızlı Rust CLI aracında.",
       gphotos_fixer_desc: "Google Photos Takeout dışa aktarımınızı kurtarın — Python'ın bulabileceği her türlü bozuk JSON adlandırma varyasyonunu ele alır.",
       shrinkify_desc:
         "Medya dosyalarını analiz edin, kodek dönüştürme önerilerinde bulunun, kopyaları tespit edin ve ayrıntılı bir HTML raporu oluşturun.",
