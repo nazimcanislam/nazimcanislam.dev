@@ -103,16 +103,14 @@
 
       // Resize
       let resizeTimeout: ReturnType<typeof setTimeout>;
-      let stableHeight = window.innerHeight;
       window.addEventListener("resize", () => {
-        const rawH = window.visualViewport?.height ?? window.innerHeight;
-        const w = window.visualViewport?.width ?? window.innerWidth;
-        if (Math.abs(rawH - stableHeight) < 100) return;
-        stableHeight = rawH;
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-          worker?.postMessage({ type: "resize", w, h: rawH });
-        }, 150);
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          worker?.postMessage({ type: "resize", w, h, dpr });
+        }, 80);
       });
 
       // Tab visibility — CPU savings

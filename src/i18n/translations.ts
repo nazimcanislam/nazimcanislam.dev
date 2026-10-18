@@ -163,6 +163,19 @@ export const translations = {
     footer: {
       navigation: "Navigation",
       social: "Social",
+      systems_operational: "All systems operational",
+      status_tooltip: "Click to inspect system status in terminal",
+    },
+    command_palette: {
+      title: "terminal@nazimcanislam.dev",
+      placeholder: "Type a command or search... (try 'help' or 'sudo rm -rf /')",
+      hint: "Use ↑↓ to navigate, ↵ to run, ESC to exit",
+      no_results: "No matching commands. Type 'help' for available commands.",
+      group_navigation: "Navigation",
+      group_commands: "Terminal Commands",
+      group_social: "Links & Social",
+      copied: "Email address copied to clipboard!",
+      all_systems_healthy: "All systems operational. Latency: 18ms. 0 errors detected.",
     },
   },
   tr: {
@@ -331,6 +344,19 @@ export const translations = {
     footer: {
       navigation: "Navigasyon",
       social: "Sosyal",
+      systems_operational: "Tüm sistemler çalışıyor",
+      status_tooltip: "Sistem durumunu terminalde incelemek için tıkla",
+    },
+    command_palette: {
+      title: "terminal@nazimcanislam.dev",
+      placeholder: "Bir komut yaz veya ara... ('help' veya 'sudo rm -rf /' dene)",
+      hint: "Gezinmek için ↑↓, çalıştırmak için ↵, çıkış için ESC",
+      no_results: "Eşleşen komut bulunamadı. Kullanılabilir komutlar için 'help' yaz.",
+      group_navigation: "Sayfalar",
+      group_commands: "Terminal Komutları",
+      group_social: "Bağlantılar",
+      copied: "E-posta adresi panoya kopyalandı!",
+      all_systems_healthy: "Tüm sistemler çalışıyor. Gecikme: 18ms. 0 hata tespit edildi.",
     },
   },
 } as const;

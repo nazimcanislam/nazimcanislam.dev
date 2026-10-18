@@ -142,13 +142,54 @@ function spawnBubbles(w, h) {
   }
 }
 
-function applyResize(w, h) {
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
+function applyResize(w, h, newDpr) {
+  const oldW = canvas.width / (dpr || 1);
+  const oldH = canvas.height / (dpr || 1);
+  if (newDpr) dpr = newDpr;
+
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  cachedBaseRadius = Math.min(w, h) * BASE_RADIUS_FACTOR;
+
+  const newBaseRadius = Math.min(w, h) * BASE_RADIUS_FACTOR;
+  const radiusRatio = cachedBaseRadius > 0 ? newBaseRadius / cachedBaseRadius : 1;
+  cachedBaseRadius = newBaseRadius;
+
   buildBackgroundGradient(w, h);
-  spawnBubbles(w, h);
+
+  if (!bubbles || bubbles.length === 0) {
+    spawnBubbles(w, h);
+  } else {
+    // Proportional repositioning of existing bubbles to prevent teleportation/flicker
+    const scaleX = oldW > 0 ? w / oldW : 1;
+    const scaleY = oldH > 0 ? h / oldH : 1;
+
+    for (const bubble of bubbles) {
+      bubble.x = Math.max(-MAX_OVERFLOW, Math.min(w + MAX_OVERFLOW, bubble.x * scaleX));
+      bubble.y = Math.max(-MAX_OVERFLOW, Math.min(h + MAX_OVERFLOW, bubble.y * scaleY));
+
+      // Rebuild sprite only if size changed significantly (>15%) to avoid GC pressure
+      if (Math.abs(radiusRatio - 1) > 0.15) {
+        bubble.r = Math.max(10, bubble.r * radiusRatio);
+        bubble.sprite = createBubbleSprite(bubble.r, bubble.color);
+      }
+    }
+
+    if (interactiveBubble) {
+      interactiveBubble.x = Math.max(0, Math.min(w, interactiveBubble.x * scaleX));
+      interactiveBubble.y = Math.max(0, Math.min(h, interactiveBubble.y * scaleY));
+      targetX = Math.max(0, Math.min(w, targetX * scaleX));
+      targetY = Math.max(0, Math.min(h, targetY * scaleY));
+
+      if (Math.abs(radiusRatio - 1) > 0.15) {
+        interactiveBubble.r = cachedBaseRadius * INTERACTIVE_BUBBLE_SCALE * currentScale;
+        interactiveBubble.sprite = createBubbleSprite(
+          interactiveBubble.r,
+          interactiveBubble.color,
+        );
+      }
+    }
+  }
 }
 
 // ─── Render loop ─────────────────────────────────────────────────────────────
@@ -237,7 +278,7 @@ self.onmessage = ({ data }) => {
       break;
 
     case "resize":
-      applyResize(data.w, data.h);
+      applyResize(data.w, data.h, data.dpr);
       break;
 
     case "theme":

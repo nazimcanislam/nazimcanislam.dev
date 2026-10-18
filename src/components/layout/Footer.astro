@@ -45,15 +45,99 @@ const currentYear = new Date().getFullYear();
 
   .footer-bottom {
     width: 100%;
-    padding: 16px;
+    padding: 20px 16px;
     border-top: 1px solid var(--color-border);
-    text-align: center;
     font-size: 0.875rem;
     color: var(--color-text-secondary);
   }
 
+  .footer-bottom-inner {
+    max-width: 1024px;
+    width: 100%;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-bottom-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
   .footer-bottom p {
     margin: 0;
+  }
+
+  .system-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--color-code-green-text);
+    cursor: pointer;
+    transition:
+      transform 0.18s ease,
+      border-color 0.18s ease,
+      background-color 0.18s ease,
+      box-shadow 0.18s ease;
+    text-decoration: none;
+  }
+
+  .system-status-badge:hover {
+    transform: translateY(-1px);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+    background-color: rgba(var(--color-accent-rgb), 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .system-status-badge:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .system-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #a6e3a1;
+    box-shadow: 0 0 6px #a6e3a1;
+    flex-shrink: 0;
+    animation: statusPulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes statusPulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(0.85);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-bottom-inner {
+      flex-direction: column;
+      text-align: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .footer-bottom-info {
+      flex-direction: column;
+      gap: 4px;
+    }
   }
 
   .footer-nav,
@@ -164,7 +248,32 @@ const currentYear = new Date().getFullYear();
   </div>
 
   <div class="footer-bottom">
-    <p lang="tr" translate="no">© {currentYear} Nazımcan İslam</p>
-    <small class="small">Built with Astro and ❤️</small>
+    <div class="footer-bottom-inner">
+      <button
+        type="button"
+        class="system-status-badge"
+        id="system-status-btn"
+        title={t("footer", "status_tooltip")}
+        aria-label={t("footer", "systems_operational")}
+      >
+        <span class="system-status-dot" aria-hidden="true"></span>
+        <span class="system-status-text">{t("footer", "systems_operational")}</span>
+      </button>
+
+      <div class="footer-bottom-info">
+        <p lang="tr" translate="no">© {currentYear} Nazımcan İslam</p>
+        <small class="small">Built with Astro and ❤️</small>
+      </div>
+    </div>
   </div>
 </footer>
+
+<script>
+  document.getElementById("system-status-btn")?.addEventListener("click", () => {
+    window.dispatchEvent(
+      new CustomEvent("open-command-palette", {
+        detail: { runCommand: "status" },
+      }),
+    );
+  });
+</script>

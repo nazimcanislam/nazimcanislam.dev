@@ -16,9 +16,14 @@ const { pathname } = Astro.url;
 
 // Aktif-link tespiti dil ön ekinden bağımsız olsun diye yolu sadeleştiriyoruz.
 const currentPath = stripLocale(pathname);
+const normPath =
+  currentPath.length > 1 && currentPath.endsWith("/")
+    ? currentPath.slice(0, -1)
+    : currentPath;
+
 // Dil değiştirici: aynı sayfanın diğer dildeki sürümü.
 const otherLang = lang === "tr" ? "en" : "tr";
-const switchHref = localizePath(currentPath, otherLang);
+const switchHref = localizePath(normPath, otherLang);
 const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
 ---
 
@@ -105,37 +110,127 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
     content: none !important;
   }
 
+  /* Command palette button in header */
+  .cmd-palette-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-for-button);
+    padding: 6px 10px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+    margin-left: 6px;
+  }
+
+  .cmd-palette-trigger:hover,
+  .cmd-palette-trigger:focus-visible {
+    color: var(--color-accent);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+    background-color: color-mix(in srgb, var(--color-card) 70%, transparent);
+  }
+
+  .cmd-palette-trigger .cmd-icon {
+    font-size: 1rem;
+    color: var(--color-accent);
+  }
+
+  .cmd-palette-trigger .cmd-kbd {
+    font-size: 0.68rem;
+    padding: 1px 5px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-text-secondary);
+  }
+
+  .cmd-palette-trigger-mobile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: var(--color-text-primary);
+    padding: 10px 12px;
+    border-radius: var(--border-radius-for-button);
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .cmd-palette-trigger-mobile:hover {
+    color: var(--color-accent);
+    background-color: var(--color-card);
+  }
+
   /* Mobile toggle button */
   .navbar-toggle {
     display: none;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 0;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.1s ease;
+  }
+
+  .navbar-toggle:hover,
+  .navbar-toggle:focus-visible {
+    background-color: var(--color-card);
+    color: var(--color-accent);
+    border-color: rgba(var(--color-accent-rgb), 0.4);
+  }
+
+  .navbar-toggle:active {
+    transform: scale(0.95);
   }
 
   /* Mobile dropdown */
   .navbar-mobile {
-    display: none; /* Will be 'grid' on mobile */
-    grid-template-rows: 0fr;
+    display: none;
+    max-height: 0;
     opacity: 0;
-    /* Kapalıyken linkler tab sırasından çıksın (aria-hidden + odaklanılabilir
-       çelişkisini önler). Görünürlük, katlanma bitince gizlenir. */
+    overflow: hidden;
     visibility: hidden;
     transition:
-      grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.3s ease,
-      visibility 0s linear 0.3s;
+      max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.25s ease,
+      visibility 0s linear 0.35s;
   }
 
   .navbar-mobile.open {
-    grid-template-rows: 1fr;
+    max-height: 450px;
     opacity: 1;
     visibility: visible;
     transition:
-      grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.3s ease,
+      max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.25s ease,
       visibility 0s linear 0s;
   }
 
   .navbar-mobile.open .navbar-mobile-inner {
-    padding: 8px 0 4px;
+    padding: 10px 0 6px;
     margin-top: 8px;
     border-top: 1px solid var(--color-border);
   }
@@ -144,16 +239,12 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
     padding: 0;
     margin: 0;
     border-top: none;
-
-    overflow: hidden;
-    min-height: 0;
     max-width: 1024px;
     width: 100%;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-
+    gap: 4px;
     transition:
       padding 0.3s ease,
       margin-top 0.3s ease,
@@ -163,9 +254,10 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
   .navbar-mobile-inner a {
     text-decoration: none;
     color: var(--color-text-primary);
-    padding: 10px 12px;
+    padding: 10px 14px;
     border-radius: var(--border-radius-for-button);
     font-size: 1rem;
+    font-family: ui-monospace, monospace;
     transition:
       color 0.2s ease,
       background-color 0.2s ease;
@@ -180,54 +272,30 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
 
   .navbar-mobile-inner a.active::before {
     content: "> ";
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   /* Chevron animation */
   .navbar-toggle-icon {
-    transition: transform 0.3s ease;
+    font-size: 26px !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .navbar-toggle[aria-expanded="true"] .navbar-toggle-icon {
     transform: rotate(180deg);
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .navbar-navs {
-      display: none;
+      display: none !important;
     }
 
     .navbar-toggle {
-      display: flex;
+      display: inline-flex !important;
     }
 
     .navbar-mobile {
-      display: grid;
-    }
-  }
-
-  @media (max-width: 640px) and (scripting: none) {
-    .navbar-toggle {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    .navbar-mobile {
-      display: grid;
-      grid-template-rows: 1fr;
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .navbar-mobile .navbar-mobile-inner {
-      padding: 8px 0 4px;
-      margin-top: 8px;
-      border-top: 1px solid var(--color-border);
-      display: flex;
-      flex-direction: row;
-      overflow-x: auto;
-      text-wrap: nowrap;
-      white-space: nowrap;
+      display: block;
     }
   }
 </style>
@@ -248,8 +316,8 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       {
         NAV_LINKS.map((link) => {
           const isActive =
-            currentPath === link.href ||
-            currentPath.startsWith(link.href + "/");
+            normPath === link.href ||
+            normPath.startsWith(link.href + "/");
           return (
             <li>
               <a
@@ -264,6 +332,18 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
         })
       }
       <li>
+        <button
+          type="button"
+          class="cmd-palette-trigger"
+          id="header-cmd-trigger"
+          title={lang === "tr" ? "Komut Paleti (Ctrl+K)" : "Command Palette (Cmd+K)"}
+          aria-label={lang === "tr" ? "Komut Paleti" : "Command Palette"}
+        >
+          <Icon name="mdi:console" class="cmd-icon" aria-hidden="true" />
+          <kbd class="cmd-kbd">{lang === "tr" ? "Ctrl K" : "⌘K"}</kbd>
+        </button>
+      </li>
+      <li>
         <a
           href={switchHref}
           class="lang-switch"
@@ -277,11 +357,8 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       </li>
     </ul>
 
-    <!-- Mobile toggle -->
-    <Button
-      variant="ghost"
-      size="lg"
-      singleIcon
+    <!-- Mobile toggle button -->
+    <button
       id="navbar-toggle"
       class="navbar-toggle"
       type="button"
@@ -294,19 +371,25 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
         name="mdi:chevron-down"
         class="navbar-toggle-icon"
         aria-hidden="true"
-        style="font-size: 32px"
       />
-    </Button>
+    </button>
   </nav>
 
   <!-- Mobile dropdown -->
   <div id="navbar-mobile" class="navbar-mobile" aria-hidden="true">
     <div class="navbar-mobile-inner">
+      <a
+        href={localizePath("/", lang)}
+        class={normPath === "/" ? "active" : ""}
+        aria-current={normPath === "/" ? "page" : null}
+      >
+        {t("nav", "home")}
+      </a>
       {
         NAV_LINKS.map((link) => {
           const isActive =
-            currentPath === link.href ||
-            currentPath.startsWith(link.href + "/");
+            normPath === link.href ||
+            normPath.startsWith(link.href + "/");
           return (
             <a
               href={localizePath(link.href, lang)}
@@ -318,6 +401,14 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
           );
         })
       }
+      <button
+        type="button"
+        class="cmd-palette-trigger-mobile"
+        id="mobile-cmd-trigger"
+      >
+        <Icon name="mdi:console" style="font-size: 1.2rem; color: var(--color-accent);" aria-hidden="true" />
+        <span>Terminal ({lang === "tr" ? "Ctrl+K" : "⌘K"})</span>
+      </button>
       <a
         href={switchHref}
         class="lang-switch"
@@ -332,26 +423,35 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
 </header>
 
 <script>
-  const toggle = document.getElementById(
-    "navbar-toggle",
-  ) as HTMLButtonElement | null;
-  const menu = document.getElementById(
-    "navbar-mobile",
-  ) as HTMLDivElement | null;
+  const toggle = document.getElementById("navbar-toggle");
+  const menu = document.getElementById("navbar-mobile");
 
-  toggle?.addEventListener("click", () => {
+  function setMenuOpen(open: boolean) {
+    if (!menu || !toggle) return;
+    menu.classList.toggle("open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    menu.setAttribute("aria-hidden", String(!open));
+  }
+
+  toggle?.addEventListener("click", (e) => {
+    e.stopPropagation();
     const isOpen = menu?.classList.contains("open");
+    setMenuOpen(!isOpen);
+  });
 
-    menu?.classList.toggle("open", !isOpen);
-    toggle.setAttribute("aria-expanded", String(!isOpen));
-    menu?.setAttribute("aria-hidden", String(isOpen));
+  // Close when clicking outside header
+  document.addEventListener("click", (e) => {
+    if (
+      menu?.classList.contains("open") &&
+      !document.querySelector("header")?.contains(e.target as Node)
+    ) {
+      setMenuOpen(false);
+    }
   });
 
   menu?.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
-      menu.classList.remove("open");
-      toggle?.setAttribute("aria-expanded", "false");
-      menu.setAttribute("aria-hidden", "true");
+      setMenuOpen(false);
     });
   });
 
@@ -365,5 +465,14 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
         } catch {}
       }
     });
+  });
+
+  const openCmdPalette = () => {
+    window.dispatchEvent(new CustomEvent("open-command-palette"));
+  };
+  document.getElementById("header-cmd-trigger")?.addEventListener("click", openCmdPalette);
+  document.getElementById("mobile-cmd-trigger")?.addEventListener("click", () => {
+    setMenuOpen(false);
+    openCmdPalette();
   });
 </script>
