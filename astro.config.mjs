@@ -21,8 +21,8 @@ export default defineConfig({
 
   vite: {
     build: {
-      cssMinify: "lightningcss"
-    }
+      cssMinify: "lightningcss",
+    },
   },
 
   integrations: [
@@ -36,7 +36,7 @@ export default defineConfig({
         },
       },
     }),
-    compress()
+    compress({ CSS: false }),
   ],
 
   build: { inlineStylesheets: "auto" },
