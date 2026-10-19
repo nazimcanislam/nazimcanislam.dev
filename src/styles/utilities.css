@@ -149,3 +149,11 @@
     transform: translateY(0);
   }
 }
+
+/* JSON söz dizimi renkleri (ApiExplorer + BrieflyAbout ortak) */
+.json-key { color: var(--color-json-key); }
+.json-str { color: var(--color-json-str); }
+.json-num { color: var(--color-json-num); }
+.json-bool { color: var(--color-json-bool); }
+.json-punct { color: var(--color-json-punct); }
+.json-comment { color: var(--color-json-punct); font-style: italic; }

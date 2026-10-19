@@ -39,6 +39,9 @@ export default defineConfig({
     compress({ CSS: false }),
   ],
 
+  // data-astro-cid-* yerine daha kısa astro-HASH sınıfı (izolasyon korunur).
+  scopedStyleStrategy: "class",
+
   build: { inlineStylesheets: "auto" },
 
   adapter: vercel({ imageService: false }),

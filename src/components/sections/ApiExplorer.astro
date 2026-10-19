@@ -300,23 +300,6 @@ const endpoints: Endpoint[] = [
     display: inline-block;
   }
 
-  /* JSON syntax colors */
-  :global(.json-key) {
-    color: var(--color-json-key);
-  }
-  :global(.json-str) {
-    color: var(--color-json-str);
-  }
-  :global(.json-num) {
-    color: var(--color-json-num);
-  }
-  :global(.json-bool) {
-    color: var(--color-json-bool);
-  }
-  :global(.json-punct) {
-    color: var(--color-json-punct);
-  }
-
   .api-empty.no-js {
     display: none;
   }
@@ -446,26 +429,7 @@ const endpoints: Endpoint[] = [
 </div>
 
 <script>
-  function escapeHtml(str: string): string {
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  }
-
-  function highlightJson(text: string): string {
-    return text.replace(
-      /("(?:[^"\\]|\\.)*")(\s*:)?|(\btrue\b|\bfalse\b|\bnull\b)|(-?\d+(?:\.\d+)?)|([{}\[\],])/g,
-      (_, str, colon, bool, num, punct) => {
-        if (str && colon) return `<span class="json-key">${str}</span>${colon}`;
-        if (str) return `<span class="json-str">${str}</span>`;
-        if (bool) return `<span class="json-bool">${bool}</span>`;
-        if (num) return `<span class="json-num">${num}</span>`;
-        if (punct) return `<span class="json-punct">${punct}</span>`;
-        return _;
-      },
-    );
-  }
+  import { escapeHtml, highlightJson } from "@/utils/highlight-json";
 
   function typewrite(
     el: HTMLPreElement,

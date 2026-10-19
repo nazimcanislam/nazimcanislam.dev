@@ -2,7 +2,7 @@
 import { getLang, useTranslations } from "@/i18n/utils";
 import { profile, getAge } from "@/data/profile";
 import { Icon } from "astro-icon/components";
-import { Code } from "astro:components";
+import { escapeHtml, highlightJson } from "@/utils/highlight-json";
 import Button from "@ui/Button.astro";
 
 const lang = getLang(Astro);
@@ -18,6 +18,7 @@ const brieflyAbout = `{
     "role": "${profile.roleShort.en}"
   }
 }`;
+const brieflyAboutHtml = highlightJson(escapeHtml(brieflyAbout));
 ---
 
 <style>
@@ -44,6 +45,7 @@ const brieflyAbout = `{
     line-height: 1.4;
     margin: 0;
     padding: 16px;
+    color: var(--color-text-primary);
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     border-top: none;
     -webkit-overflow-scrolling: touch;
@@ -124,7 +126,7 @@ const brieflyAbout = `{
         <span id="about-copy-button-text">{t("home_about", "copy")}</span>
       </Button>
     </div>
-    <Code code={brieflyAbout} lang="json" theme="catppuccin-macchiato" />
+    <pre tabindex="0"><code set:html={brieflyAboutHtml} /></pre>
   </div>
 </section>
 
