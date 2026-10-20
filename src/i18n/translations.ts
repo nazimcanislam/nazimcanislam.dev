@@ -4,7 +4,7 @@ export const translations = {
       skip_to_main_content: "Skip to main content",
       logo_title: "Nazımcan İslam logo",
       noscript_message:
-        "Please enable JavaScript to experience the site's interactive features (API demo, dynamic backgrounds).",
+        "Please enable JavaScript to experience the site's interactive features (API demo, dynamic backgrounds, command palette).",
     },
     "404": {
       title: "404 — Page Not Found",
@@ -164,6 +164,7 @@ export const translations = {
       navigation: "Navigation",
       social: "Social",
       systems_operational: "All systems operational",
+      systems_operational_no_js: "JavaScript is disabled, systems are shut down!",
       status_tooltip: "Click to inspect system status in terminal",
     },
     command_palette: {
@@ -183,7 +184,7 @@ export const translations = {
       skip_to_main_content: "Ana içeriğe atla",
       logo_title: "Nazımcan İslam logo",
       noscript_message:
-        "Sitenin interaktif özelliklerini (API demosu, dinamik arka planlar) deneyimlemek için lütfen JavaScript'i etkinleştirin.",
+        "Sitenin interaktif özelliklerini (API demosu, dinamik arka planlar, komut paleti) deneyimlemek için lütfen JavaScript'i etkinleştirin.",
     },
     "404": {
       title: "404 — Sayfa Bulunamadı",
@@ -345,6 +346,7 @@ export const translations = {
       navigation: "Navigasyon",
       social: "Sosyal",
       systems_operational: "Tüm sistemler çalışıyor",
+      systems_operational_no_js: "JavaScript devre dışı, sistemler kapalı!",
       status_tooltip: "Sistem durumunu terminalde incelemek için tıkla",
     },
     command_palette: {

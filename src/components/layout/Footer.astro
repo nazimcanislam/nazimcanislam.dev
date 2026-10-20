@@ -179,6 +179,30 @@ const currentYear = new Date().getFullYear();
   .link-icon {
     display: block;
   }
+
+  .system-status-text-no-js {
+    display: none;
+    color: var(--color-warning) !important;
+  }
+
+  @media (scripting: none) {
+    .system-status-badge {
+      pointer-events: none;
+    }
+
+    .system-status-text {
+      display: none !important;
+    }
+
+    .system-status-text-no-js {
+      display: block !important;
+    }
+
+    .system-status-dot {
+      background-color: var(--color-warning);
+      box-shadow: 0 0 6px var(--color-warning);
+    }
+  }
 </style>
 
 <footer class="glass" aria-label="Site footer">
@@ -257,7 +281,12 @@ const currentYear = new Date().getFullYear();
         aria-label={t("footer", "systems_operational")}
       >
         <span class="system-status-dot" aria-hidden="true"></span>
-        <span class="system-status-text">{t("footer", "systems_operational")}</span>
+        <span class="system-status-text"
+          >{t("footer", "systems_operational")}</span
+        >
+        <span class="system-status-text-no-js" style="display: none;"
+          >{t("footer", "systems_operational_no_js")}</span
+        >
       </button>
 
       <div class="footer-bottom-info">
@@ -269,11 +298,13 @@ const currentYear = new Date().getFullYear();
 </footer>
 
 <script>
-  document.getElementById("system-status-btn")?.addEventListener("click", () => {
-    window.dispatchEvent(
-      new CustomEvent("open-command-palette", {
-        detail: { runCommand: "status" },
-      }),
-    );
-  });
+  document
+    .getElementById("system-status-btn")
+    ?.addEventListener("click", () => {
+      window.dispatchEvent(
+        new CustomEvent("open-command-palette", {
+          detail: { runCommand: "status" },
+        }),
+      );
+    });
 </script>
