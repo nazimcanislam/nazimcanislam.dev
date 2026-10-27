@@ -298,13 +298,15 @@ const currentYear = new Date().getFullYear();
 </footer>
 
 <script>
-  document
-    .getElementById("system-status-btn")
-    ?.addEventListener("click", () => {
-      window.dispatchEvent(
-        new CustomEvent("open-command-palette", {
-          detail: { runCommand: "status" },
-        }),
-      );
-    });
+  document.addEventListener("astro:page-load", () => {
+    document
+      .getElementById("system-status-btn")
+      ?.addEventListener("click", () => {
+        window.dispatchEvent(
+          new CustomEvent("open-command-palette", {
+            detail: { runCommand: "status" },
+          }),
+        );
+      });
+  });
 </script>

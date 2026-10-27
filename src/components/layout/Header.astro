@@ -324,8 +324,7 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       {
         NAV_LINKS.map((link) => {
           const isActive =
-            normPath === link.href ||
-            normPath.startsWith(link.href + "/");
+            normPath === link.href || normPath.startsWith(link.href + "/");
           return (
             <li>
               <a
@@ -344,7 +343,9 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
           type="button"
           class="cmd-palette-trigger"
           id="header-cmd-trigger"
-          title={lang === "tr" ? "Komut Paleti (Ctrl+K)" : "Command Palette (Cmd+K)"}
+          title={lang === "tr"
+            ? "Komut Paleti (Ctrl+K)"
+            : "Command Palette (Cmd+K)"}
           aria-label={lang === "tr" ? "Komut Paleti" : "Command Palette"}
         >
           <Icon name="mdi:console" class="cmd-icon" aria-hidden="true" />
@@ -396,8 +397,7 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       {
         NAV_LINKS.map((link) => {
           const isActive =
-            normPath === link.href ||
-            normPath.startsWith(link.href + "/");
+            normPath === link.href || normPath.startsWith(link.href + "/");
           return (
             <a
               href={localizePath(link.href, lang)}
@@ -414,7 +414,11 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
         class="cmd-palette-trigger-mobile"
         id="mobile-cmd-trigger"
       >
-        <Icon name="mdi:console" style="font-size: 1.2rem; color: var(--color-accent);" aria-hidden="true" />
+        <Icon
+          name="mdi:console"
+          style="font-size: 1.2rem; color: var(--color-accent);"
+          aria-hidden="true"
+        />
         <span>Terminal ({lang === "tr" ? "Ctrl+K" : "⌘K"})</span>
       </button>
       <a
@@ -431,56 +435,62 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
 </header>
 
 <script>
-  const toggle = document.getElementById("navbar-toggle");
-  const menu = document.getElementById("navbar-mobile");
+  document.addEventListener("astro:page-load", () => {
+    const toggle = document.getElementById("navbar-toggle");
+    const menu = document.getElementById("navbar-mobile");
 
-  function setMenuOpen(open: boolean) {
-    if (!menu || !toggle) return;
-    menu.classList.toggle("open", open);
-    toggle.setAttribute("aria-expanded", String(open));
-    menu.setAttribute("aria-hidden", String(!open));
-  }
-
-  toggle?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const isOpen = menu?.classList.contains("open");
-    setMenuOpen(!isOpen);
-  });
-
-  // Close when clicking outside header
-  document.addEventListener("click", (e) => {
-    if (
-      menu?.classList.contains("open") &&
-      !document.querySelector("header")?.contains(e.target as Node)
-    ) {
-      setMenuOpen(false);
+    function setMenuOpen(open: boolean) {
+      if (!menu || !toggle) return;
+      menu.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      menu.setAttribute("aria-hidden", String(!open));
     }
-  });
 
-  menu?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      setMenuOpen(false);
+    toggle?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = menu?.classList.contains("open");
+      setMenuOpen(!isOpen);
     });
-  });
 
-  // Dil değiştiriciye tıklanınca seçimi hatırla; otomatik yönlendirme bunu ezmez.
-  document.querySelectorAll("a.lang-switch").forEach((el) => {
-    el.addEventListener("click", () => {
-      const l = el.getAttribute("data-set-lang");
-      if (l) {
-        try {
-          localStorage.setItem("preferred-lang", l);
-        } catch {}
+    // Close when clicking outside header
+    document.addEventListener("click", (e) => {
+      if (
+        menu?.classList.contains("open") &&
+        !document.querySelector("header")?.contains(e.target as Node)
+      ) {
+        setMenuOpen(false);
       }
     });
-  });
 
-  const openCmdPalette = () => {
-    window.dispatchEvent(new CustomEvent("open-command-palette"));
-  };
-  document.getElementById("header-cmd-trigger")?.addEventListener("click", openCmdPalette);
-  document.getElementById("mobile-cmd-trigger")?.addEventListener("click", () => {
-    setMenuOpen(false);
-    openCmdPalette();
+    menu?.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        setMenuOpen(false);
+      });
+    });
+
+    // Dil değiştiriciye tıklanınca seçimi hatırla; otomatik yönlendirme bunu ezmez.
+    document.querySelectorAll("a.lang-switch").forEach((el) => {
+      el.addEventListener("click", () => {
+        const l = el.getAttribute("data-set-lang");
+        if (l) {
+          try {
+            localStorage.setItem("preferred-lang", l);
+          } catch {}
+        }
+      });
+    });
+
+    const openCmdPalette = () => {
+      window.dispatchEvent(new CustomEvent("open-command-palette"));
+    };
+    document
+      .getElementById("header-cmd-trigger")
+      ?.addEventListener("click", openCmdPalette);
+    document
+      .getElementById("mobile-cmd-trigger")
+      ?.addEventListener("click", () => {
+        setMenuOpen(false);
+        openCmdPalette();
+      });
   });
 </script>

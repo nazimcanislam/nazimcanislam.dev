@@ -566,5 +566,7 @@ const endpoints: Endpoint[] = [
     });
   }
 
-  initApiExplorer();
+  document.addEventListener("astro:page-load", () => {
+    initApiExplorer();
+  });
 </script>

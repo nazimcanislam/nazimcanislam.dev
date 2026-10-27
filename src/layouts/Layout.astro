@@ -15,6 +15,7 @@ import "@styles/base.css";
 import "@styles/typography.css";
 import "@styles/utilities.css";
 import { profile } from "@/data/profile";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title?: string;
@@ -195,6 +196,8 @@ const {
       }}
       }
     />
+
+    <ClientRouter />
   </head>
   <body>
     <a href="#main-content" class="skip-link"

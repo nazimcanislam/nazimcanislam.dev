@@ -177,5 +177,7 @@ const brieflyAboutHtml = highlightJson(escapeHtml(brieflyAbout));
     });
   }
 
-  initCopyButton();
+  document.addEventListener("astro:page-load", () => {
+    initCopyButton();
+  });
 </script>

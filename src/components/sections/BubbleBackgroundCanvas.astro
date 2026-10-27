@@ -10,7 +10,7 @@
 */
 ---
 
-<canvas id="bubble-canvas" aria-hidden="true" role="presentation"></canvas>
+<canvas id="bubble-canvas" transition:persist aria-hidden="true" role="presentation"></canvas>
 
 <script>
   (function () {
@@ -57,8 +57,6 @@
 
     function startWorker() {
       if (workerStarted) return;
-
-      if (window.location.href.includes("/blog/")) return;
 
       workerStarted = true;
 

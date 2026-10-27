@@ -6,27 +6,144 @@ const lang = getLang(Astro);
 const t = useTranslations(lang);
 
 const navCommands = [
-  { id: "nav-home", cmd: "home", label: t("nav", "home"), href: localizePath("/", lang), icon: "mdi:home", group: "nav" },
-  { id: "nav-about", cmd: "about", label: t("nav", "about"), href: localizePath("/about", lang), icon: "mdi:account", group: "nav" },
-  { id: "nav-projects", cmd: "projects", label: t("nav", "projects"), href: localizePath("/projects", lang), icon: "mdi:code-tags", group: "nav" },
-  { id: "nav-blog", cmd: "blog", label: t("nav", "blog"), href: localizePath("/blog", lang), icon: "mdi:post", group: "nav" },
-  { id: "nav-contact", cmd: "contact", label: t("nav", "contact"), href: localizePath("/contact", lang), icon: "mdi:email", group: "nav" },
+  {
+    id: "nav-home",
+    cmd: "home",
+    label: t("nav", "home"),
+    href: localizePath("/", lang),
+    icon: "mdi:home",
+    group: "nav",
+  },
+  {
+    id: "nav-about",
+    cmd: "about",
+    label: t("nav", "about"),
+    href: localizePath("/about", lang),
+    icon: "mdi:account",
+    group: "nav",
+  },
+  {
+    id: "nav-projects",
+    cmd: "projects",
+    label: t("nav", "projects"),
+    href: localizePath("/projects", lang),
+    icon: "mdi:code-tags",
+    group: "nav",
+  },
+  {
+    id: "nav-blog",
+    cmd: "blog",
+    label: t("nav", "blog"),
+    href: localizePath("/blog", lang),
+    icon: "mdi:post",
+    group: "nav",
+  },
+  {
+    id: "nav-contact",
+    cmd: "contact",
+    label: t("nav", "contact"),
+    href: localizePath("/contact", lang),
+    icon: "mdi:email",
+    group: "nav",
+  },
 ];
 
 const terminalCommands = [
-  { id: "cmd-whoami", cmd: "whoami", label: lang === "tr" ? "Hakkımda bilgi ve profil özeti" : "Profile summary & bio", icon: "mdi:account-box", group: "cmd" },
-  { id: "cmd-skills", cmd: "skills", label: lang === "tr" ? "Yetenekler ve teknoloji yığını" : "List skills & tech stack", icon: "mdi:xml", group: "cmd" },
-  { id: "cmd-status", cmd: "status", label: lang === "tr" ? "Sistem ve servis sağlık kontrolü" : "System & services health check", icon: "mdi:pulse", group: "cmd" },
-  { id: "cmd-matrix", cmd: "matrix", label: lang === "tr" ? "Matrix dijital yağmur efekti" : "Toggle Matrix digital rain", icon: "mdi:matrix", group: "cmd" },
-  { id: "cmd-clear", cmd: "clear", label: lang === "tr" ? "Terminal çıktısını temizle" : "Clear terminal output", icon: "mdi:broom", group: "cmd" },
-  { id: "cmd-help", cmd: "help", label: lang === "tr" ? "Tüm komutları listele" : "List available commands", icon: "mdi:help-circle", group: "cmd" },
-  { id: "cmd-sudo-rm", cmd: "sudo rm -rf /", label: lang === "tr" ? "⚠️ Root dosya sistemini sil (Easter Egg!)" : "⚠️ Delete root filesystem (Easter Egg!)", icon: "mdi:alert-octagon", group: "cmd", danger: true },
+  {
+    id: "cmd-whoami",
+    cmd: "whoami",
+    label:
+      lang === "tr"
+        ? "Hakkımda bilgi ve profil özeti"
+        : "Profile summary & bio",
+    icon: "mdi:account-box",
+    group: "cmd",
+  },
+  {
+    id: "cmd-skills",
+    cmd: "skills",
+    label:
+      lang === "tr"
+        ? "Yetenekler ve teknoloji yığını"
+        : "List skills & tech stack",
+    icon: "mdi:xml",
+    group: "cmd",
+  },
+  {
+    id: "cmd-status",
+    cmd: "status",
+    label:
+      lang === "tr"
+        ? "Sistem ve servis sağlık kontrolü"
+        : "System & services health check",
+    icon: "mdi:pulse",
+    group: "cmd",
+  },
+  {
+    id: "cmd-matrix",
+    cmd: "matrix",
+    label:
+      lang === "tr"
+        ? "Matrix dijital yağmur efekti"
+        : "Toggle Matrix digital rain",
+    icon: "mdi:matrix",
+    group: "cmd",
+  },
+  {
+    id: "cmd-clear",
+    cmd: "clear",
+    label:
+      lang === "tr" ? "Terminal çıktısını temizle" : "Clear terminal output",
+    icon: "mdi:broom",
+    group: "cmd",
+  },
+  {
+    id: "cmd-help",
+    cmd: "help",
+    label: lang === "tr" ? "Tüm komutları listele" : "List available commands",
+    icon: "mdi:help-circle",
+    group: "cmd",
+  },
+  {
+    id: "cmd-sudo-rm",
+    cmd: "sudo rm -rf /",
+    label:
+      lang === "tr"
+        ? "⚠️ Root dosya sistemini sil (Easter Egg!)"
+        : "⚠️ Delete root filesystem (Easter Egg!)",
+    icon: "mdi:alert-octagon",
+    group: "cmd",
+    danger: true,
+  },
 ];
 
 const socialCommands = [
-  { id: "social-github", cmd: "github", label: "GitHub Profile", href: "https://github.com/nazimcanislam", icon: "mdi:github", external: true, group: "social" },
-  { id: "social-linkedin", cmd: "linkedin", label: "LinkedIn Profile", href: "https://linkedin.com/in/nazimcanislam", icon: "mdi:linkedin", external: true, group: "social" },
-  { id: "social-email", cmd: "email", label: profile.social.email, href: `mailto:${profile.social.email}`, icon: "mdi:email-outline", group: "social" },
+  {
+    id: "social-github",
+    cmd: "github",
+    label: "GitHub Profile",
+    href: "https://github.com/nazimcanislam",
+    icon: "mdi:github",
+    external: true,
+    group: "social",
+  },
+  {
+    id: "social-linkedin",
+    cmd: "linkedin",
+    label: "LinkedIn Profile",
+    href: "https://linkedin.com/in/nazimcanislam",
+    icon: "mdi:linkedin",
+    external: true,
+    group: "social",
+  },
+  {
+    id: "social-email",
+    cmd: "email",
+    label: profile.social.email,
+    href: `mailto:${profile.social.email}`,
+    icon: "mdi:email-outline",
+    group: "social",
+  },
 ];
 
 const data = {
@@ -53,31 +170,37 @@ const data = {
 
 <script>
   type PaletteModule = typeof import("@/scripts/palette");
+  
+  document.addEventListener("astro:page-load", () => {
+    let loading: Promise<PaletteModule> | null = null;
+    const load = (): Promise<PaletteModule> =>
+      (loading ??= import("@/scripts/palette"));
 
-  let loading: Promise<PaletteModule> | null = null;
-  const load = (): Promise<PaletteModule> => (loading ??= import("@/scripts/palette"));
+    // Kısayollar: Ctrl/Cmd+K, ` ve /
+    window.addEventListener("keydown", (e) => {
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      const typing = tag === "INPUT" || tag === "TEXTAREA";
+      const isCmdK = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k";
+      if (isCmdK || (!typing && (e.key === "`" || e.key === "/"))) {
+        e.preventDefault();
+        load().then((m) => m.toggle());
+      }
+    });
 
-  // Kısayollar: Ctrl/Cmd+K, ` ve /
-  window.addEventListener("keydown", (e) => {
-    const tag = (e.target as HTMLElement | null)?.tagName;
-    const typing = tag === "INPUT" || tag === "TEXTAREA";
-    const isCmdK = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k";
-    if (isCmdK || (!typing && (e.key === "`" || e.key === "/"))) {
-      e.preventDefault();
-      load().then((m) => m.toggle());
-    }
-  });
+    // Header / footer butonlarından gelen olay
+    window.addEventListener("open-command-palette", (e) => {
+      const cmd = (e as CustomEvent<{ runCommand?: string } | undefined>).detail
+        ?.runCommand;
+      load().then((m) => m.open(cmd));
+    });
 
-  // Header / footer butonlarından gelen olay
-  window.addEventListener("open-command-palette", (e) => {
-    const cmd = (e as CustomEvent<{ runCommand?: string } | undefined>).detail?.runCommand;
-    load().then((m) => m.open(cmd));
-  });
-
-  // Tıklamadan önce ısıt: butonun üzerine gelince/odaklanınca chunk'ı indir.
-  ["header-cmd-trigger", "mobile-cmd-trigger", "system-status-btn"].forEach((id) => {
-    const el = document.getElementById(id);
-    el?.addEventListener("pointerenter", () => void load(), { once: true });
-    el?.addEventListener("focus", () => void load(), { once: true });
+    // Tıklamadan önce ısıt: butonun üzerine gelince/odaklanınca chunk'ı indir.
+    ["header-cmd-trigger", "mobile-cmd-trigger", "system-status-btn"].forEach(
+      (id) => {
+        const el = document.getElementById(id);
+        el?.addEventListener("pointerenter", () => void load(), { once: true });
+        el?.addEventListener("focus", () => void load(), { once: true });
+      },
+    );
   });
 </script>
