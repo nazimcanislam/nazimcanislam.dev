@@ -170,31 +170,31 @@ const data = {
 
 <script>
   type PaletteModule = typeof import("@/scripts/palette");
-  
+  let loading: Promise<PaletteModule> | null = null;
+  const load = (): Promise<PaletteModule> =>
+    (loading ??= import("@/scripts/palette"));
+
+  // Kısayollar: Ctrl/Cmd+K, ` ve / (Kalıcı - Window)
+  window.addEventListener("keydown", (e) => {
+    const tag = (e.target as HTMLElement | null)?.tagName;
+    const typing = tag === "INPUT" || tag === "TEXTAREA";
+    const isCmdK = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k";
+    if (isCmdK || (!typing && (e.key === "`" || e.key === "/"))) {
+      e.preventDefault();
+      load().then((m) => m.toggle());
+    }
+  });
+
+  // Header / footer butonlarından gelen olay (Kalıcı - Window)
+  window.addEventListener("open-command-palette", (e) => {
+    const cmd = (e as CustomEvent<{ runCommand?: string } | undefined>).detail
+      ?.runCommand;
+    load().then((m) => m.open(cmd));
+  });
+
+  // Sayfa geçişlerinde tetiklenecek DOM dinleyicileri (Geçici)
+  // Tıklama dinleyicileri Header.astro / Footer.astro içinde; burada sadece ısıtma.
   document.addEventListener("astro:page-load", () => {
-    let loading: Promise<PaletteModule> | null = null;
-    const load = (): Promise<PaletteModule> =>
-      (loading ??= import("@/scripts/palette"));
-
-    // Kısayollar: Ctrl/Cmd+K, ` ve /
-    window.addEventListener("keydown", (e) => {
-      const tag = (e.target as HTMLElement | null)?.tagName;
-      const typing = tag === "INPUT" || tag === "TEXTAREA";
-      const isCmdK = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k";
-      if (isCmdK || (!typing && (e.key === "`" || e.key === "/"))) {
-        e.preventDefault();
-        load().then((m) => m.toggle());
-      }
-    });
-
-    // Header / footer butonlarından gelen olay
-    window.addEventListener("open-command-palette", (e) => {
-      const cmd = (e as CustomEvent<{ runCommand?: string } | undefined>).detail
-        ?.runCommand;
-      load().then((m) => m.open(cmd));
-    });
-
-    // Tıklamadan önce ısıt: butonun üzerine gelince/odaklanınca chunk'ı indir.
     ["header-cmd-trigger", "mobile-cmd-trigger", "system-status-btn"].forEach(
       (id) => {
         const el = document.getElementById(id);

@@ -1,7 +1,7 @@
 // Komut paleti: ilk kullanımda (Ctrl+K, `, /, header/footer butonu) dinamik
 // import ile yüklenir. Modal DOM'u burada kurulur; veri CommandPalette.astro'nun
 // bastığı <script type="application/json" id="cmd-data"> içinden okunur.
-import "@/styles/command-palette.css";
+import paletteCss from "@/styles/command-palette.css?inline";
 import { profile, getAge } from "@/data/profile";
 import { escapeHtml } from "@/utils/highlight-json";
 import { ICONS } from "./palette-icons";
@@ -43,6 +43,17 @@ let matrixAnimationId: number | null = null;
 let matrixStopTimer: ReturnType<typeof setTimeout> | null = null;
 let isDeletingSystem = false;
 
+// ClientRouter, sayfa geçişinde <head>'de yeni sayfada bulunmayan her şeyi
+// (dinamik eklenen stil dahil) siler. Modül önbellekte kaldığı için CSS'i
+// kendimiz her kurulumda kontrol edip geri ekliyoruz.
+function ensureStyles(): void {
+  if (document.getElementById("cmd-palette-css")) return;
+  const style = document.createElement("style");
+  style.id = "cmd-palette-css";
+  style.textContent = paletteCss;
+  document.head.appendChild(style);
+}
+
 function icon(name: string, cls: string): string {
   return `<svg class="${cls}" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] ?? ""}</svg>`;
 }
@@ -72,6 +83,7 @@ function groupHtml(group: string, label: string, items: string): string {
 }
 
 function build(): void {
+  ensureStyles();
   const raw = document.getElementById("cmd-data")?.textContent;
   if (!raw) throw new Error("cmd-data bulunamadı");
   const d: CmdData = JSON.parse(raw);
@@ -97,7 +109,7 @@ function build(): void {
     `<span class="cmd-close-hint">ESC</span></div>` +
     `<div class="cmd-input-wrap">` +
     `<span class="cmd-prompt"><span>~/portfolio</span><span class="cmd-prompt-sep">❯</span></span>` +
-    `<input type="text" id="cmd-palette-input" class="cmd-input" placeholder="${escapeHtml(u.placeholder)}" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="cmd-palette-list" /></div>` +
+    `<input type="search" id="cmd-palette-input" class="cmd-input" placeholder="${escapeHtml(u.placeholder)}" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-controls="cmd-palette-list" /></div>` +
     `<div class="cmd-output" id="cmd-palette-output" role="log" aria-live="polite"></div>` +
     `<div class="cmd-results" id="cmd-palette-list" role="listbox">` +
     groupHtml("nav", u.groupNav, nav) +
@@ -124,9 +136,6 @@ function build(): void {
     if (e.target === backdrop) close();
   });
   $("cmd-close-btn").addEventListener("click", close);
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && isOpen) close();
-  });
   input.addEventListener("input", () => filterCommands(input.value));
   input.addEventListener("keydown", onInputKeydown);
   list.addEventListener("click", (e) => {
@@ -204,19 +213,37 @@ function appendOutput(html: string): void {
   output.scrollTop = output.scrollHeight;
 }
 
+// ── Kalıcı dinleyiciler (modül başına bir kez) ─────────────────────
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && isOpen) close();
+});
+
+// Sayfa geçişinde body yenilenir → palet DOM'u gider; durumu sıfırla,
+// bir sonraki open() yeni sayfadaki #cmd-data ile paleti yeniden kurar.
+document.addEventListener("astro:after-swap", () => {
+  stopMatrix();
+  built = false;
+  isOpen = false;
+  document.documentElement.style.overflow = "";
+});
+
 // ── Genel API (yükleyici bunları çağırır) ──────────────────────────
 export function open(initialCommand?: string): void {
-  if (!built) build();
+  // ClientRouter sayfa geçişinde <body>'yi değiştirir; eski palet DOM'u kopar.
+  if (!built || !backdrop?.isConnected) {
+    built = false;
+    isOpen = false;
+    build();
+  }
   if (isOpen) {
     if (initialCommand) executeCommand(initialCommand);
     return;
   }
   isOpen = true;
   backdrop.classList.add("is-open");
-  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
   input.value = "";
   filterCommands("");
-  setTimeout(() => input.focus(), 50);
   if (initialCommand) executeCommand(initialCommand);
 }
 
@@ -224,7 +251,7 @@ export function close(): void {
   if (!isOpen) return;
   isOpen = false;
   backdrop.classList.remove("is-open");
-  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
   stopMatrix();
 }
 
