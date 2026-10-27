@@ -36,7 +36,14 @@ export default defineConfig({
         },
       },
     }),
-    compress({ CSS: false }),
+    compress({
+      HTML: {
+        "html-minifier-terser": {
+          removeAttributeQuotes: false,
+        }
+      },
+      CSS: false,
+    }),
   ],
 
   // data-astro-cid-* yerine daha kısa astro-HASH sınıfı (izolasyon korunur).
