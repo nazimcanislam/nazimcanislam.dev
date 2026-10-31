@@ -157,3 +157,26 @@
 .json-bool { color: var(--color-json-bool); }
 .json-punct { color: var(--color-json-punct); }
 .json-comment { color: var(--color-json-punct); font-style: italic; }
+
+/* Content */
+.right-arrow {
+  &::after {
+    content: "→";
+    transition: transform 300ms ease;
+  }
+
+  &:hover::after {
+    transform: translateX(5px);
+  }
+}
+
+.up-right-arrow {
+  &::after {
+    content: "↗";
+    transition: transform 300ms ease;
+  }
+
+  &:hover::after {
+    transform: translateX(5px) translateY(-5px);
+  }
+}
