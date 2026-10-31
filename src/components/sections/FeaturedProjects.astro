@@ -19,31 +19,31 @@ const projects: Project[] = [
     title: "metaweave",
     description: {
       section: "featured_projects",
-      desc: "metaweave_desc"
+      desc: "metaweave_desc",
     },
     url: "https://github.com/nazimcanislam/metaweave",
     tech: [
       {
         name: "Rust",
         color: "orange",
-        theme: "tech"
-      }
-    ]
+        theme: "tech",
+      },
+    ],
   },
   {
     title: "gphotos-fixer",
     description: {
       section: "featured_projects",
-      desc: "gphotos_fixer_desc"
+      desc: "gphotos_fixer_desc",
     },
     url: "https://github.com/nazimcanislam/gphotos-fixer",
     tech: [
       {
         name: "Python",
         color: "blue",
-        theme: "tech"
-      }
-    ]
+        theme: "tech",
+      },
+    ],
   },
   {
     title: "Shrinkify",
@@ -84,30 +84,37 @@ const projects: Project[] = [
     margin: 0 auto;
   }
 
-  .featured-project {
+  .featured-project a {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
-    padding: 24px 32px;
-    border-radius: 24px;
     height: 100%;
+    padding: 24px 32px;
 
-    background: var(--color-glass-bg);
     border: 1px solid var(--color-glass-border);
-
+    border-radius: 24px;
+    
+    background: var(--color-glass-bg);
     filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
-
-    transition: transform 0.3s ease;
-  }
-
-  .featured-project:hover,
-  .featured-project:focus-within {
-    transform: translateY(-4px);
-  }
-
-  .featured-project a {
+    
     color: var(--color-text-primary);
+    text-decoration: none;
+
+    transition:
+      border-color 0.18s ease,
+      transform 0.18s ease;
+
+    &:hover,
+    &:focus-within {
+      border-color: rgba(var(--color-accent-rgb), 0.4);
+      transform: translateY(-4px);
+    }
+  }
+
+  .featured-project h3 {
+    color: var(--color-accent);
+    font-family: ui-monospace, monospace;
   }
 
   .featured-project a:focus-visible {
@@ -142,26 +149,26 @@ const projects: Project[] = [
       <ul class="projects-grid">
         {projects.map((project) => (
           <li class="featured-project">
-            <div>
-              <h3 class="mb-md" translate="no" lang="en">
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-describedby={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
-                >
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
+            >
+              <div>
+                <h3 class="mb-md" translate="no" lang="en">
                   {project.title}
-                </a>
-              </h3>
-              <p
-                class="lead"
-                id={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
-              >
-                {t(project.description.section, project.description.desc)}
-              </p>
-            </div>
+                </h3>
+                <p
+                  class="lead"
+                  id={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
+                >
+                  {t(project.description.section, project.description.desc)}
+                </p>
+              </div>
 
-            <Badges items={project.tech} />
+              <Badges items={project.tech} />
+            </a>
           </li>
         ))}
       </ul>
