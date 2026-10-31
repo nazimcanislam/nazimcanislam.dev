@@ -140,16 +140,16 @@ const endpoints: Endpoint[] = [
   }
 
   .api-endpoint-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.05);
   }
 
   .api-endpoint-btn:active {
-    background: rgba(255, 255, 255, 0.09);
+    background: rgba(0, 0, 0, 0.09);
   }
 
   .api-endpoint-btn[aria-selected="true"] {
     background: rgba(137, 180, 250, 0.2);
-    border-left-color: #89b4fa;
+    border-left-color: #6483b5;
   }
 
   .api-method-badge {
@@ -302,6 +302,21 @@ const endpoints: Endpoint[] = [
 
   .api-empty.no-js {
     display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .api-endpoint-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .api-endpoint-btn:active {
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .api-endpoint-btn[aria-selected="true"] {
+      background: rgba(137, 180, 250, 0.2);
+      border-left-color: #89b4fa;
+    }
   }
 
   @media (scripting: none) {
