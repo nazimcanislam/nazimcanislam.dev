@@ -156,6 +156,7 @@ export const profile = {
     "game dev concepts",
     "Jungian psychology",
     "competitive gaming",
+    "anime",
   ],
   // API Explorer'daki gündelik/eğlenceli kısa ilgi listesi.
   casualInterests: [

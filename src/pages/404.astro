@@ -31,7 +31,7 @@ const t = useTranslations(lang);
       <p class="lead mb-lg">
         {t("404", "desc")}
       </p>
-      <Button href={localizePath("/", lang)}>{t("404", "return_home")}</Button>
+      <Button href={localizePath("/", lang)} class="right-arrow">{t("404", "return_home")}</Button>
     </div>
   </main>
 </Layout>
