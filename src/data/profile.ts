@@ -141,8 +141,8 @@ export const profile = {
   // Ana sayfadaki API Explorer ve Hakkımda sayfası AYNI listeyi buradan çeker.
   // Tek yerde değiştir, iki yerde de güncellensin.
   skills: {
-    languages: ["HTML", "CSS", "JavaScript", "Python", "C"],
-    frameworks: ["React", "Astro", "Node.js", "Django"],
+    languages: ["HTML", "CSS", "JavaScript", "TypeScript", "Python", "C"],
+    frameworks: ["React", "Astro", "Django", "Node.js", "Bun"],
     tools: ["Git", "Docker", "Linux", "Figma", "Vercel"],
     learning: ["Godot Engine", "Payload CMS", "Affinity"],
   },
@@ -190,8 +190,8 @@ export const profile = {
       },
       org: { tr: "Kendi projelerim", en: "My own projects" },
       summary: {
-        tr: "Kendi araçlarımı kurarak ve açık kaynağa katkıda bulunarak üretmeye devam ediyorum: video sıkıştırma için masaüstü uygulaması Shrinkify, Google Photos Takeout düzeltici gphotos-fixer ve Astro ile geliştirdiğim bu portföy sitesi. Kalıplarla değil, temelden düşünerek çözüyorum.",
-        en: "Still building — shipping my own tools and contributing to open source: Shrinkify (a desktop app for video compression), gphotos-fixer (a Google Photos Takeout fixer), and this portfolio site built with Astro. I solve things by reasoning from first principles, not from templates.",
+        tr: "Kendi araçlarımı kurarak ve açık kaynağa katkıda bulunarak üretmeye devam ediyorum: video sıkıştırma için masaüstü uygulaması Shrinkify, Google Photos Takeout düzeltici gphotos-fixer, web sitelerini yayınlamadan önce meta verileri kontrol etmeyi amaçlayan CLI araç Metaweave ve Astro ile geliştirdiğim bu portföy sitesi. Kalıplarla değil, temelden düşünerek çözüyorum.",
+        en: "Still building — shipping my own tools and contributing to open source: Shrinkify (a desktop app for video compression), gphotos-fixer (a Google Photos Takeout fixer), Metaweave (a CLI tool designed to check metadata before publishing websites) and this portfolio site built with Astro. I solve things by reasoning from first principles, not from templates.",
       },
       tags: [
         "Python",
@@ -200,6 +200,7 @@ export const profile = {
         "CSS",
         "JavaScript",
         "TypeScript",
+        "Rust",
         "Open Source",
       ],
     },

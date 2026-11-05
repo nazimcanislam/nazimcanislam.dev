@@ -13,6 +13,24 @@ const t = useTranslations(lang);
 const skills = profile.skills;
 const interests = profile.interests;
 const work = profile.work;
+
+const personelData = {
+  fileName: "personal.json",
+  fileData: {
+    name: profile.name,
+    location: profile.location[lang],
+    role: profile.role[lang],
+    languages: profile.spokenLanguages,
+    open_to_work: !work.isEmployed
+  },
+};
+const jsonString = JSON.stringify(personelData.fileData, null, 2);
+const byteSize = Buffer.byteLength(jsonString, "utf-8");
+
+const formatValue = (val: unknown) => {
+  if (typeof val === "string") return `"${val}"`;
+  return JSON.stringify(val);
+};
 ---
 
 <style>
@@ -399,38 +417,18 @@ const work = profile.work;
             aria-label="Personal stats"
           >
             <div class="bio-card-title" aria-hidden="true">
-              <span>personal.json</span>
-              <span>156 B</span>
+              <span>{personelData.fileName}</span>
+              <span>{byteSize} B</span>
             </div>
-            <div class="bio-stat">
-              <dt class="bio-stat-key">"name"</dt>
-              <dd class="bio-stat-value">"{profile.name}"</dd>
-            </div>
-            <div class="bio-stat">
-              <dt class="bio-stat-key">"location"</dt>
-              <dd class="bio-stat-value">"Istanbul, 🇹🇷"</dd>
-            </div>
-            <div class="bio-stat">
-              <dt class="bio-stat-key">"role"</dt>
-              <dd class="bio-stat-value">"Dev & Designer"</dd>
-            </div>
-            <div class="bio-stat">
-              <dt class="bio-stat-key">"languages"</dt>
-              <dd class="bio-stat-value">["tr", "en"]</dd>
-            </div>
+
             {
-              work.isEmployed ? (
+              Object.entries(personelData.fileData).map(([key, value]) => (
                 <div class="bio-stat">
-                  <dt class="bio-stat-key">"works_at"</dt>
-                  <dd class="bio-stat-value">"{work.employer}"</dd>
+                  <dt class="bio-stat-key">"{key}"</dt>
+                  <dd class="bio-stat-value">{formatValue(value)}</dd>
                 </div>
-              ) : (
-                <div class="bio-stat">
-                  <dt class="bio-stat-key">"open_to_work"</dt>
-                  <dd class="bio-stat-value">true</dd>
-                </div>
-              )
-            }
+              ))
+              }
           </dl>
         </div>
       </section>

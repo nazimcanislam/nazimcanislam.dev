@@ -218,8 +218,14 @@ const fmtPct = (p: number) =>
 
   /* ---------- Dil dağılımı paneli ---------- */
   .lang-panel {
-    margin-bottom: 44px;
+    margin-bottom: 20px;
     animation: fadeUp 0.6s ease both;
+
+    padding: 20px 24px;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 16px;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
   }
 
   .lang-panel-head {
@@ -589,6 +595,10 @@ const fmtPct = (p: number) =>
         )
       }
 
+      <div class="section-label" aria-hidden="true">
+        {t("projects", "section_title")}
+      </div>
+
       {
         showLangBar && (
           <section
@@ -660,10 +670,6 @@ const fmtPct = (p: number) =>
           </section>
         )
       }
-
-      <div class="section-label" aria-hidden="true">
-        {t("projects", "section_title")}
-      </div>
 
       {
         fetchError ? (

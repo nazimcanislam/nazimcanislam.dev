@@ -197,6 +197,7 @@ const channels = [
   }
 
   .channel-arrow {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
     color: var(--color-text-secondary);
     opacity: 0.5;
     flex-shrink: 0;
@@ -291,22 +292,8 @@ const channels = [
                     </p>
                     <p class="channel-note">{ch.note}</p>
                   </div>
-                  <svg
-                    class="channel-arrow"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M3 8h10M9 4l4 4-4 4"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+
+                  <span class="channel-arrow">→</span>
                 </a>
               </li>
             ))
