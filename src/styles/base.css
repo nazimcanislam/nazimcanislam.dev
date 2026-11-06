@@ -218,6 +218,12 @@ code {
   body {
     background-color: #020617;
     background-image: linear-gradient(to bottom right, #0f172a, #020617);
+  }
+}
+
+/* fixed yalnızca fare olan cihazlarda (canvas'ın olduğu yerde) */
+@media (prefers-color-scheme: dark) and (hover: hover) and (pointer: fine) {
+  body {
     background-attachment: fixed;
   }
 }
