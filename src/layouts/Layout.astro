@@ -208,6 +208,14 @@ const {
       );
     </script>
 
+    <script is:inline>
+      // Samsung Internet: The history.replaceState() call made by ClientRouter on 'scrollend'
+      // breaks the browser's "scroll to top" button. Disable the listener in this browser.
+      if (/SamsungBrowser/i.test(navigator.userAgent)) {
+        addEventListener("scrollend", (e) => e.stopImmediatePropagation());
+      }
+    </script>
+
     <ClientRouter />
   </head>
   <body>
