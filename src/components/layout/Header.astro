@@ -73,6 +73,10 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       background-color 0.2s ease;
   }
 
+  .navbar-navs a.active {
+    border: 1px solid var(--color-border);
+  }
+
   .navbar-navs a.active,
   .navbar-navs a:active,
   .navbar-navs a:hover,
@@ -168,6 +172,10 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
     transition:
       color 0.2s ease,
       background-color 0.2s ease;
+
+    span {
+      font-family: monospace;
+    }
   }
 
   .cmd-palette-trigger-mobile:hover {
@@ -249,30 +257,34 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
       padding 0.3s ease,
       margin-top 0.3s ease,
       border-top 0.1s ease;
-  }
 
-  .navbar-mobile-inner a {
-    text-decoration: none;
-    color: var(--color-text-primary);
-    padding: 10px 14px;
-    border-radius: var(--border-radius-for-button);
-    font-size: 1rem;
-    font-family: ui-monospace, monospace;
-    transition:
-      color 0.2s ease,
-      background-color 0.2s ease;
-  }
+    a {
+      text-decoration: none;
+      color: var(--color-text-primary);
+      padding: 10px 14px;
+      border-radius: var(--border-radius-for-button);
+      font-size: 1rem;
+      font-family: ui-monospace, monospace;
+      transition:
+        color 0.2s ease,
+        background-color 0.2s ease;
+    }
 
-  .navbar-mobile-inner a.active,
-  .navbar-mobile-inner a:hover,
-  .navbar-mobile-inner a:focus-visible {
-    color: var(--color-accent);
-    background-color: var(--color-card);
-  }
+    a.active {
+      border: 1px solid var(--color-border);
+    }
 
-  .navbar-mobile-inner a.active::before {
-    content: "> ";
-    opacity: 0.7;
+    a.active,
+    a:hover,
+    a:focus-visible {
+      color: var(--color-accent);
+      background-color: var(--color-card);
+    }
+
+    a.active::before {
+      content: "> ";
+      opacity: 0.7;
+    }
   }
 
   /* Chevron animation */
@@ -296,6 +308,41 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
 
     .navbar-mobile {
       display: block;
+    }
+
+    .navbar-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 1fr;
+      margin-top: 16px;
+      gap: 12px;
+
+      a,
+      button {
+        text-align: center;
+      }
+
+      .cmd-palette-trigger-mobile {
+        justify-content: center;
+      }
+
+      .lang-switch {
+        border: none;
+        margin-left: 0;
+      }
+
+      .cmd-palette-trigger-mobile,
+      .lang-switch {
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-for-button);
+        background-color: var(--color-card);
+      }
+    }
+  }
+
+  @media (max-width: 500px) {
+    .navbar-controls {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -409,27 +456,30 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
           );
         })
       }
-      <button
-        type="button"
-        class="cmd-palette-trigger-mobile"
-        id="mobile-cmd-trigger"
-      >
-        <Icon
-          name="mdi:console"
-          style="font-size: 1.2rem; color: var(--color-accent);"
-          aria-hidden="true"
-        />
-        <span>Terminal ({lang === "tr" ? "Ctrl+K" : "⌘K"})</span>
-      </button>
-      <a
-        href={switchHref}
-        class="lang-switch"
-        data-set-lang={otherLang}
-        hreflang={otherLang}
-        aria-label={`${switchLabel} (${otherLang.toUpperCase()})`}
-      >
-        {switchLabel} ({otherLang.toUpperCase()})
-      </a>
+
+      <div class="navbar-controls">
+        <button
+          type="button"
+          class="cmd-palette-trigger-mobile"
+          id="mobile-cmd-trigger"
+        >
+          <Icon
+            name="mdi:console"
+            style="font-size: 1.2rem; color: var(--color-accent);"
+            aria-hidden="true"
+          />
+          <span>Terminal ({lang === "tr" ? "Ctrl+K" : "⌘K"})</span>
+        </button>
+        <a
+          href={switchHref}
+          class="lang-switch"
+          data-set-lang={otherLang}
+          hreflang={otherLang}
+          aria-label={`${switchLabel} (${otherLang.toUpperCase()})`}
+        >
+          {switchLabel} ({otherLang.toUpperCase()})
+        </a>
+      </div>
     </div>
   </div>
 </header>
