@@ -19,6 +19,7 @@ export const translations = {
     nav: {
       home: "Home",
       about: "About",
+      uses: "Uses",
       projects: "Projects",
       blog: "Blog",
       contact: "Contact",
@@ -160,6 +161,12 @@ export const translations = {
       open_to: "open_to_work",
       open_to_note: "Currently open to freelance and full-time opportunities.",
     },
+    uses: {
+      meta_title: "Uses — Nazımcan İslam",
+      meta_desc: "A list of all the vehicles used by Nazımcan İslam.",
+      uses_title: "Uses",
+      hero_subtitle: "A list of all the tools, hardware, and software I use in my daily development processes, while designing, when playing games, and for organizing my life."
+    },
     footer: {
       navigation: "Navigation",
       social: "Social",
@@ -199,6 +206,7 @@ export const translations = {
     nav: {
       home: "Ana Sayfa",
       about: "Hakkımda",
+      uses: "Kullanımlar",
       projects: "Projeler",
       blog: "Blog",
       contact: "İletişim",
@@ -341,6 +349,12 @@ export const translations = {
         "Gündelik şeyler, teknoloji keşifleri ve rastgele düşünceler.",
       open_to: "iş_arayışındayım",
       open_to_note: "Şu an freelance ve tam zamanlı fırsatlara açığım.",
+    },
+    uses: {
+      meta_title: "Kullanımlar — Nazımcan İslam",
+      meta_desc: "Nazımcan İslam'ın kullandığı tüm araçların bir listesi.",
+      uses_title: "Kullanımlar",
+      hero_subtitle: "Günlük geliştirme süreçlerimde, tasarım yaparken, oyun oynarken ve hayatımı düzenlerken kullandığım tüm araçların, donanımların ve yazılımların bir listesi."
     },
     footer: {
       navigation: "Navigasyon",

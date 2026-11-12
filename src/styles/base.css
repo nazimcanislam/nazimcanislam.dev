@@ -74,6 +74,11 @@ html {
   border-radius: 4px;
 }
 
+html {
+  scroll-padding-top: 70px;
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   isolation: isolate;

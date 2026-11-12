@@ -9,7 +9,7 @@
 import type { Lang } from "@/i18n/translations";
 
 /** Her iki dilde de geçerli olan kısa metinler için yardımcı tip. */
-type Localized = Record<Lang, string>;
+export type Localized = Record<Lang, string>;
 
 /**
  * Yıl + ay (ay 1–12). Hem "Şub 2023" gösterimi hem de otomatik süre

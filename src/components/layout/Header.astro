@@ -63,6 +63,10 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
     padding: 0;
   }
 
+  .navbar-navs .nav-link {
+    font-size: 1rem;
+  }
+
   .navbar-navs a {
     text-decoration: none;
     color: var(--color-text-primary);
@@ -376,7 +380,10 @@ const switchLabel = otherLang === "tr" ? "Türkçe" : "English";
             <li>
               <a
                 href={localizePath(link.href, lang)}
-                class={isActive ? "active" : ""}
+                class="nav-link"
+                class:list={
+                  {"active": isActive}
+                }
                 aria-current={isActive ? "page" : null}
               >
                 {t("nav", link.labelKey)}
