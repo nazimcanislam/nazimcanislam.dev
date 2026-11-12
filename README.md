@@ -15,7 +15,7 @@ A personal portfolio site. Not a template, not a boilerplate — built from scra
 
 The goal was simple: a fast, accessible, and honest representation of who I am as a developer. No unnecessary JavaScript, no bloated dependencies, no dark patterns. Just clean markup, good semantics, and a few interactive touches that earn their place.
 
-Pages: **Home · About · Projects · Blog · Contact**
+Pages: **Home · About · Uses · Projects · Blog · Contact**
 
 Live at → **[nazimcanislam-dev.vercel.app](https://nazimcanislam-dev.vercel.app)**
 
@@ -46,10 +46,13 @@ src/
 │   └── ui/            # Button, Badges
 ├── content/
 │   └── blog/          # .md files → blog posts
+├── data/              # profile.ts, uses.ts → typed content for pages
 ├── i18n/              # TR/EN translations
 ├── layouts/           # Base HTML layout
-├── pages/             # File-based routing
-└── styles/            # base.css, typography.css, utilities.css
+├── pages/             # File-based routing (about, uses, projects, blog, contact...)
+└── styles/
+    ├── base.css, typography.css, utilities.css
+    └── pages/         # Per-page stylesheets (e.g. uses.css)
 ```
 
 ---
@@ -107,6 +110,35 @@ Your content here.
 ```
 
 That's it. No CMS, no database, no admin panel. Git is the version control, the filesystem is the database. It sounds too simple — until you realize it's the right tool for the job.
+
+---
+
+## The Uses Page
+
+`/uses` (`/tr/uses`) is a living list of the hardware, software and games I use every day, grouped into categories: **Hardware & Peripherals**, **Software & Tools** and **Games**.
+
+| File | Role |
+|---|---|
+| `src/pages/uses.astro` | Page markup, renders every category and item |
+| `src/data/uses.ts` | The content itself (`usesData`), fully typed and bilingual |
+| `src/styles/pages/uses.css` | Page styles, imported from the page via `@styles/pages/uses.css` |
+| `src/i18n/translations.ts` | Page title and hero text under the `uses` key (EN/TR) |
+
+To add an item, append an object to the right category in `src/data/uses.ts`:
+
+```ts
+{
+  emoji: "⌨️",
+  title: "Keyboard name",
+  description: {
+    tr: "Türkçe açıklama.",
+    en: "English description.",
+  },
+  link: "https://example.com", // optional, renders the title as an external link
+}
+```
+
+To add a category, add a new object with a unique `id` and a localized `title`. The `id` doubles as the section's anchor (`/uses#hardware`).
 
 ---
 

@@ -40,6 +40,10 @@ export default defineConfig({
       HTML: {
         "html-minifier-terser": {
           removeAttributeQuotes: false,
+          // Inline <style> içindeki CSS'i clean-css ile küçültme: clean-css
+          // native CSS nesting'i (&, iç içe seçiciler) anlamaz ve bozar.
+          // CSS zaten Vite + lightningcss ile küçültülüyor (cssMinify).
+          minifyCSS: false,
         }
       },
       CSS: false,
