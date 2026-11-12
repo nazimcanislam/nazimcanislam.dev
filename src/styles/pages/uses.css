@@ -1,0 +1,114 @@
+.uses-page {
+  max-width: 100%;
+  width: 100%;
+  padding: 64px 16px;
+}
+
+.uses-page-wrapper {
+  max-width: 1024px;
+  margin-inline: auto;
+}
+
+.uses-hero {
+  margin-bottom: 48px;
+}
+
+.uses-hero-title {
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 12px;
+  color: var(--color-text-primary);
+}
+.uses-hero-title .dot {
+  color: var(--color-accent);
+}
+
+.uses-hero-subtitle {
+  font-family: ui-monospace, monospace;
+  font-size: 1rem;
+  color: var(--color-accent);
+  margin: 0;
+  opacity: 0.9;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  padding: 5px 12px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  text-decoration: none;
+  transition: transform 200ms ease;
+
+  h2 {
+    font-size: inherit;
+    margin: 0;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &::before {
+    content: "# ";
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+}
+
+.category-item {
+  background-color: var(--color-glass-bg);
+  padding: 24px;
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--border-radius-for-section);
+  margin-bottom: 24px;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 24px;
+}
+
+.item {
+  .item-heading {
+    max-width: max-content;
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+
+    &:hover {
+      .item-link {
+        color: var(--color-accent);
+      }
+    }
+
+    .item-link {
+      text-decoration: none;
+      color: var(--color-text-primary);
+      transition: color 200ms ease;
+
+      &::after {
+        content: "↗";
+        margin-left: 8px;
+        color: var(--color-text-secondary);
+      }
+    }
+  }
+
+  .item-desc {
+    font-size: clamp(0.75rem, 2.5vw, 0.8125rem);
+    margin: 0;
+  }
+}
+
+.categories-item {
+  animation: fadeUp 0.5s ease both;
+}
