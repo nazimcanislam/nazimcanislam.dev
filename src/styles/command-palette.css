@@ -72,7 +72,7 @@
   .cmd-dot-green { background: #a6da95; }
 
   .cmd-title {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.78rem;
     color: var(--color-text-secondary);
     letter-spacing: 0.02em;
@@ -82,7 +82,7 @@
   }
 
   .cmd-close-hint {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.68rem;
     padding: 2px 7px;
     background: var(--color-card);
@@ -102,7 +102,7 @@
   }
 
   .cmd-prompt {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-accent);
@@ -122,7 +122,7 @@
     background: transparent;
     border: none;
     outline: none;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.95rem;
     color: var(--color-text-primary);
     caret-color: var(--color-accent);
@@ -140,7 +140,7 @@
     padding: 16px 18px;
     background: rgba(0, 0, 0, 0.25);
     border-bottom: 1px solid var(--color-border);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.82rem;
     line-height: 1.6;
     max-height: 220px;
@@ -186,7 +186,7 @@
 
   .cmd-group-label {
     padding: 8px 12px 4px;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -203,7 +203,7 @@
     padding: 9px 12px;
     border-radius: 8px;
     cursor: pointer;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.84rem;
     color: var(--color-text-primary);
     transition: background 0.12s ease, transform 0.12s ease;
@@ -276,7 +276,7 @@
   .cmd-empty {
     padding: 28px 16px;
     text-align: center;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.85rem;
     color: var(--color-text-secondary);
   }
@@ -289,7 +289,7 @@
     padding: 10px 18px;
     background: rgba(15, 23, 42, 0.35);
     border-top: 1px solid var(--color-border);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.72rem;
     color: var(--color-text-secondary);
   }

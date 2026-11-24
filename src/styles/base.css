@@ -41,6 +41,10 @@ html {
   --border-radius-for-section: 24px;
   --border-radius-for-button: 8px;
 
+  /* Fonts */
+  --font-ui: system-ui, sans-serif;
+  --font-monospace: monospace;
+
   /* JSON Syntax Highlighting */
   --color-json-background: #f1f5f9;
   --color-json-key: #1d4ed8;
@@ -89,18 +93,8 @@ body {
   color: var(--color-text-primary);
   line-height: 1.6;
 
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif;
+  font-family: var(--font-ui);
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

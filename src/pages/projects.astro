@@ -3,6 +3,8 @@ import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations } from "@/i18n/utils";
 import { profile } from "@/data/profile";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import SectionHeader from "@/components/layout/SectionHeader.astro";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
@@ -176,30 +178,11 @@ const fmtPct = (p: number) =>
   }
 
   .projects-hero-subtitle {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 1rem;
     color: var(--color-accent);
     margin: 0;
     opacity: 0.9;
-  }
-
-  .section-label {
-    display: inline-flex;
-    align-items: center;
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.08em;
-    margin-bottom: 24px;
-    padding: 5px 12px;
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-  }
-  .section-label::before {
-    content: "# ";
-    color: var(--color-accent);
-    font-weight: 600;
   }
 
   /* ---------- Profesyonel projeler bölümü ---------- */
@@ -210,7 +193,7 @@ const fmtPct = (p: number) =>
 
   .professional-note {
     margin: 14px 2px 0;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.72rem;
     color: var(--color-text-secondary);
     opacity: 0.75;
@@ -238,7 +221,7 @@ const fmtPct = (p: number) =>
   }
 
   .lang-panel-title {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.8rem;
     letter-spacing: 0.04em;
     color: var(--color-text-secondary);
@@ -251,7 +234,7 @@ const fmtPct = (p: number) =>
   }
 
   .lang-panel-total {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.72rem;
     color: var(--color-text-secondary);
     opacity: 0.75;
@@ -303,7 +286,7 @@ const fmtPct = (p: number) =>
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.78rem;
     color: var(--color-text-secondary);
     padding: 5px 11px;
@@ -407,7 +390,7 @@ const fmtPct = (p: number) =>
   }
 
   .repo-name {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-accent);
@@ -430,7 +413,7 @@ const fmtPct = (p: number) =>
     margin-bottom: 14px;
   }
   .repo-topic {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.7rem;
     padding: 2px 8px;
     background: rgba(var(--color-accent-rgb), 0.08);
@@ -470,7 +453,7 @@ const fmtPct = (p: number) =>
     text-align: center;
     padding: 48px 16px;
     color: var(--color-text-secondary);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.9rem;
   }
 
@@ -479,7 +462,7 @@ const fmtPct = (p: number) =>
     text-align: center;
     padding: 64px 16px;
     color: var(--color-text-secondary);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
   }
   .error-state a {
     color: var(--color-accent);
@@ -503,7 +486,7 @@ const fmtPct = (p: number) =>
     color: var(--color-warning);
     font-size: 14px;
     font-weight: 600;
-    font-family: monospace, sans-serif;
+    font-family: var(--font-monospace);
   }
 
   @media (max-width: 768px) {
@@ -541,26 +524,20 @@ const fmtPct = (p: number) =>
 >
   <div class="projects-page">
     <div class="projects-page-wrapper">
-      <header class="projects-hero">
-        <PageCommand pageTitle={t("projects", "hero_title")} command="ls -la" />
-
-        <h1 class="projects-hero-title">
-          {t("projects", "hero_title")}<span class="dot" aria-hidden="true"
-            >.</span
-          >
-        </h1>
-        <p class="projects-hero-subtitle">
-          {"> "}
-          {t("projects", "hero_subtitle")}
-        </p>
-      </header>
+      <SectionHeader
+        dirName={t("projects", "hero_label")}
+        pageHeading={t("projects", "hero_title")}
+        subHeading={t("projects", "hero_subtitle")}
+        command="ls -la"
+      />
 
       {
         professionalProjects.length > 0 && (
           <section class="professional-section">
-            <div class="section-label" aria-hidden="true">
-              {t("projects", "professional_section_title")}
-            </div>
+            <SectionLabel
+              label={t("projects", "professional_section_title")}
+            />
+
             <ul class="repos-grid">
               {professionalProjects.map((p, i) => (
                 <li style={`animation-delay: ${100 * i + 1}ms;`}>
@@ -595,9 +572,9 @@ const fmtPct = (p: number) =>
         )
       }
 
-      <div class="section-label" aria-hidden="true">
-        {t("projects", "section_title")}
-      </div>
+      <SectionLabel
+        label={t("projects", "section_title")}
+      />
 
       {
         showLangBar && (

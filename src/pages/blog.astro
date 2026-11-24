@@ -1,8 +1,8 @@
 ---
-import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations, localizePath } from "@/i18n/utils";
 import { getCollection } from "astro:content";
+import SectionHeader from "@/components/layout/SectionHeader.astro";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
@@ -36,30 +36,6 @@ function formatDate(date: Date) {
   .blog-page-wrapper {
     max-width: 1024px;
     margin-inline: auto;
-  }
-
-  .blog-hero {
-    margin-bottom: 40px;
-  }
-
-  .blog-hero-title {
-    font-size: clamp(2.2rem, 5vw, 3rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin: 0 0 12px;
-    color: var(--color-text-primary);
-  }
-  .blog-hero-title .dot {
-    color: var(--color-accent);
-  }
-
-  .blog-hero-subtitle {
-    font-family: ui-monospace, monospace;
-    font-size: 1rem;
-    color: var(--color-accent);
-    margin: 0;
-    opacity: 0.9;
   }
 
   /* ---------- Kontroller (arama + etiket filtresi) ---------- */
@@ -97,7 +73,7 @@ function formatDate(date: Date) {
   .blog-search-input.input {
     padding: 12px 12px 12px 42px;
     border-radius: 12px;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.9rem;
   }
 
@@ -112,7 +88,7 @@ function formatDate(date: Date) {
     align-items: center;
     gap: 9px;
     align-self: flex-start;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.82rem;
     color: var(--color-text-secondary);
     padding: 9px 14px;
@@ -177,7 +153,7 @@ function formatDate(date: Date) {
   }
 
   .tag-chip {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.76rem;
     color: var(--color-text-secondary);
     padding: 5px 11px;
@@ -212,7 +188,7 @@ function formatDate(date: Date) {
   }
 
   .tags-clear {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.74rem;
     color: var(--color-text-secondary);
     padding: 5px 10px;
@@ -230,7 +206,7 @@ function formatDate(date: Date) {
   }
 
   .blog-result-count {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.75rem;
     color: var(--color-text-secondary);
     margin: 0 0 18px;
@@ -281,13 +257,13 @@ function formatDate(date: Date) {
     flex-wrap: wrap;
   }
   .post-date {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.75rem;
     color: var(--color-text-secondary);
     letter-spacing: 0.03em;
   }
   .post-tag {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.7rem;
     padding: 2px 8px;
     background: rgba(var(--color-accent-rgb), 0.08);
@@ -316,7 +292,7 @@ function formatDate(date: Date) {
     text-align: center;
     padding: 56px 16px;
     color: var(--color-text-secondary);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
   }
   .no-results[hidden] {
     display: none;
@@ -346,7 +322,7 @@ function formatDate(date: Date) {
     min-width: 38px;
     height: 38px;
     padding: 0 10px;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.82rem;
     color: var(--color-text-secondary);
     background: var(--color-glass-bg);
@@ -385,7 +361,7 @@ function formatDate(date: Date) {
     min-width: 24px;
     height: 38px;
     color: var(--color-text-secondary);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     opacity: 0.6;
   }
 
@@ -405,14 +381,12 @@ function formatDate(date: Date) {
 <Layout title={t("blog", "meta_title")} description={t("blog", "meta_desc")}>
   <div class="blog-page">
     <div class="blog-page-wrapper">
-      <header class="blog-hero">
-        <PageCommand pageTitle={t("blog", "hero_title")} command="cat posts/*" />
-
-        <h1 class="blog-hero-title">
-          {t("blog", "hero_title")}<span class="dot" aria-hidden="true">.</span>
-        </h1>
-        <p class="blog-hero-subtitle">{">"} {t("blog", "hero_subtitle")}</p>
-      </header>
+      <SectionHeader
+        dirName={t("blog", "hero_label")}
+        pageHeading={t("blog", "hero_title")}
+        subHeading={t("blog", "hero_subtitle")}
+        command="cat posts/*"
+      />
 
       {
         posts.length === 0 ? (

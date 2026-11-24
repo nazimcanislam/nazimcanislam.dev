@@ -1,8 +1,9 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import SectionLabel from '@/components/ui/SectionLabel.astro';
+import SectionHeader from '@/components/layout/SectionHeader.astro';
 import { usesData } from '../data/uses';
 import { getLang, useTranslations } from '@/i18n/utils';
-import PageCommand from '@/components/ui/PageCommand.astro';
-import Layout from '../layouts/Layout.astro';
 import "@styles/pages/uses.css";
 
 const lang = getLang(Astro);
@@ -15,24 +16,20 @@ const pageDescription = t("uses", "meta_subtitle");
 <Layout title={pageTitle} description={pageDescription}>
   <div class="uses-page">
     <div class="uses-page-wrapper">
-      <header class="uses-hero">
-        <PageCommand pageTitle={t("uses", "uses_title")} command="neofetch" />
-
-        <h1 class="uses-hero-title">
-          {t("uses", "uses_title")}<span class="dot" aria-hidden="true">.</span>
-        </h1>
-        <p class="uses-hero-subtitle">
-          {"> "}
-          {t("uses", "hero_subtitle")}
-        </p>
-      </header>
+      <SectionHeader
+        dirName={t("uses", "hero_label")}
+        pageHeading={t("uses", "hero_title")}
+        subHeading={t("uses", "hero_subtitle")}
+        command="neofetch"
+      />
 
       <div class="categories-section">
         {usesData.map((category, index) => (
           <section id={category.id} class="category-item" style={`animation-delay: ${0.3 * index}s`}>
-            <a href={`#${category.id}`} class="section-label">
-              <h2>{category.title[lang]}</h2>
-            </a>
+            <SectionLabel
+              label={category.title[lang]}
+              id={category.id}
+            />
 
             <div class="items-grid">
               {category.items.map((item) => (

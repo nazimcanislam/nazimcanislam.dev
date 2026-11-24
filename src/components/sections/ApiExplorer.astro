@@ -23,7 +23,7 @@ const endpoints: Endpoint[] = [
       name: profile.name,
       birth_year: profile.birth.year,
       age: getAge(),
-      gender: "he/him",
+      gender: profile.gender,
       region: profile.region,
       languages: profile.spokenLanguages,
       role: profile.roleShort.en,
@@ -69,7 +69,7 @@ const endpoints: Endpoint[] = [
 
   .api-base-url-label {
     font-size: 0.6rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-text-secondary);
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -99,7 +99,7 @@ const endpoints: Endpoint[] = [
 
   .api-base-url-text {
     font-size: 0.8rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-text-primary);
   }
 
@@ -118,7 +118,7 @@ const endpoints: Endpoint[] = [
 
   .api-endpoints-label {
     font-size: 0.6rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-text-secondary);
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -155,7 +155,7 @@ const endpoints: Endpoint[] = [
   .api-method-badge {
     font-size: 0.6rem;
     font-weight: 700;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-code-green-text);
     background: var(--color-code-green-background);
     border: 1px solid var(--color-code-green-border);
@@ -167,7 +167,7 @@ const endpoints: Endpoint[] = [
 
   .api-endpoint-path {
     font-size: 0.78rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-text-secondary);
     transition: color 0.15s ease;
     text-align: left;
@@ -200,7 +200,7 @@ const endpoints: Endpoint[] = [
 
   .api-response-label {
     font-size: 0.6rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -217,7 +217,7 @@ const endpoints: Endpoint[] = [
     align-items: center;
     gap: 5px;
     font-size: 0.5625rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-code-green-text);
     background: var(--color-code-green-background);
     border: 1px solid var(--color-code-green-border);
@@ -247,7 +247,7 @@ const endpoints: Endpoint[] = [
 
   .api-content-type {
     font-size: 0.6rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-text-secondary);
     opacity: 0.9;
   }
@@ -262,7 +262,7 @@ const endpoints: Endpoint[] = [
 
   .api-json-block pre {
     margin: 0;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.78rem;
     line-height: 1.7;
     color: var(--color-text-primary);
@@ -280,7 +280,7 @@ const endpoints: Endpoint[] = [
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-text-secondary);
     letter-spacing: 0.04em;
   }
@@ -367,62 +367,62 @@ const endpoints: Endpoint[] = [
 
     <div class="api-panel">
       <div class="api-endpoints">
-        <p class="api-endpoints-label" id="api-endpoints-label">Endpoints</p>
+        <p class="api-endpoints-label" id="api-endpoints-label">
+          Endpoints
+        </p>
         <div
           role="tablist"
           aria-labelledby="api-endpoints-label"
           aria-orientation="vertical"
         >
-          {
-            endpoints.map((ep, index) => (
-              <button
-                role="tab"
-                id={`tab-${ep.key}`}
-                class="api-endpoint-btn"
-                aria-selected="false"
-                aria-controls={`response-${ep.key}`}
-                tabindex={index === 0 ? 0 : -1}
-                data-key={ep.key}
-                data-response={JSON.stringify(ep.response)}
-                type="button"
-                title={`Get ${ep.path} endpoint response`}
-              >
-                <span class="api-method-badge">{ep.method}</span>
-                <span class="api-endpoint-path">{ep.path}</span>
-              </button>
-            ))
-          }
+          {endpoints.map((ep, index) => (
+            <button
+              role="tab"
+              id={`tab-${ep.key}`}
+              class="api-endpoint-btn"
+              aria-selected="false"
+              aria-controls={`response-${ep.key}`}
+              tabindex={index === 0 ? 0 : -1}
+              data-key={ep.key}
+              data-response={JSON.stringify(ep.response)}
+              type="button"
+              title={`Get ${ep.path} endpoint response`}
+            >
+              <span class="api-method-badge">{ep.method}</span>
+              <span class="api-endpoint-path">{ep.path}</span>
+            </button>
+          ))}
         </div>
       </div>
 
       <div class="api-response" aria-live="polite" aria-atomic="true">
-        {
-          endpoints.map((ep) => (
-            <div
-              class="api-response-inner"
-              id={`response-${ep.key}`}
-              role="tabpanel"
-              aria-labelledby={`tab-${ep.key}`}
-              tabindex="0"
-            >
-              <div class="api-response-header">
-                <span class="api-response-label">Response body</span>
-                <div class="api-response-meta">
-                  <span class="api-status-badge" id={`status-${ep.key}`}>
-                    <span class="api-status-dot" />
-                    <span>200 OK</span>
-                  </span>
-                  <span class="api-content-type">application/json</span>
-                </div>
-              </div>
-              <div class="api-json-block">
-                <pre id={`json-${ep.key}`} />
+        {endpoints.map((ep) => (
+          <div
+            class="api-response-inner"
+            id={`response-${ep.key}`}
+            role="tabpanel"
+            aria-labelledby={`tab-${ep.key}`}
+            tabindex="0"
+          >
+            <div class="api-response-header">
+              <span class="api-response-label">Response body</span>
+              <div class="api-response-meta">
+                <span class="api-status-badge" id={`status-${ep.key}`}>
+                  <span class="api-status-dot" />
+                  <span>200 OK</span>
+                </span>
+                <span class="api-content-type">application/json</span>
               </div>
             </div>
-          ))
-        }
+            <div class="api-json-block">
+              <pre id={`json-${ep.key}`} />
+            </div>
+          </div>
+        ))}
 
-        <div class="api-empty" id="api-empty-state">← select an endpoint</div>
+        <div class="api-empty" id="api-empty-state">
+          ← select an endpoint
+        </div>
         <div class="api-empty no-js">
           Please enable JavaScript to use the API explorer.
         </div>

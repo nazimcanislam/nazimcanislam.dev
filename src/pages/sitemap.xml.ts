@@ -7,7 +7,7 @@ export const GET: APIRoute = async () => {
   const baseUrl = "https://nazimcanislam-dev.vercel.app";
   const today = new Date().toISOString().split("T")[0];
 
-  const staticPages = ["", "about", "projects", "blog", "contact"];
+  const staticPages = ["", "about", "projects", "blog", "contact", "uses"];
 
   const blogUrls = posts.map(
     (post) => `  <url>

@@ -63,7 +63,7 @@ export const translations = {
       meta_title: "About — Nazımcan İslam",
       meta_desc:
         "Learn more about Nazımcan İslam — a software developer from Istanbul passionate about clean systems, open source, and building things that last.",
-      hero_label: "~/about",
+      hero_label: "about",
       hero_title: "About Me",
       hero_subtitle: "Software developer. Systems thinker. Perpetual learner.",
       section_whoami: "whoami",
@@ -97,7 +97,7 @@ export const translations = {
       meta_title: "Projects — Nazımcan İslam",
       meta_desc:
         "Open-source and professional projects by Nazımcan İslam.",
-      hero_label: "~/projects",
+      hero_label: "projects",
       hero_title: "Projects",
       hero_subtitle:
         "Things I've built, experiments I've run, and problems I've solved.",
@@ -123,7 +123,7 @@ export const translations = {
       meta_title: "Blog — Nazımcan İslam",
       meta_desc:
         "Thoughts on software development, systems, and technology by Nazımcan İslam.",
-      hero_label: "~/blog",
+      hero_label: "blog",
       hero_title: "Blog",
       hero_subtitle: "Occasional notes on things I build and learn.",
       read_more: "Read more",
@@ -144,7 +144,7 @@ export const translations = {
     contact: {
       meta_title: "Contact — Nazımcan İslam",
       meta_desc: "Get in touch with Nazımcan İslam.",
-      hero_label: "~/contact",
+      hero_label: "contact",
       hero_title: "Contact",
       hero_subtitle:
         "The best way to reach me is via email or GitHub. I try to respond within a few days.",
@@ -164,7 +164,8 @@ export const translations = {
     uses: {
       meta_title: "Uses — Nazımcan İslam",
       meta_desc: "A list of all the vehicles used by Nazımcan İslam.",
-      uses_title: "Uses",
+      hero_label: "uses",
+      hero_title: "Uses",
       hero_subtitle: "A list of all the tools, hardware, and software I use in my daily development processes, while designing, when playing games, and for organizing my life."
     },
     footer: {
@@ -251,10 +252,10 @@ export const translations = {
       meta_title: "Hakkımda — Nazımcan İslam",
       meta_desc:
         "Nazımcan İslam hakkında — İstanbul'dan, temiz sistemlere, açık kaynak koduna ve kalıcı şeyler inşa etmeye tutkuyla bağlı bir yazılım geliştirici.",
-      hero_label: "~/hakkımda",
+      hero_label: "hakkımda",
       hero_title: "Hakkımda",
       hero_subtitle: "Yazılım geliştirici. Sistem düşünürü. Sürekli öğrenen.",
-      section_whoami: "whoami",
+      section_whoami: "kimim",
       bio_1:
         "Merhaba, ben Nazımcan. İstanbul'da yaşayan 24 yaşında bir yazılım geliştiriciyim. Yazılımı sadece kod satırları olarak değil, fikirleri çalışan sistemlere dönüştürme sanatı olarak görüyorum. Temiz, sürdürülebilir ve bakımı kolay çözümler üretmeye odaklanıyorum.",
       bio_2:
@@ -284,7 +285,7 @@ export const translations = {
     projects: {
       meta_title: "Projeler — Nazımcan İslam",
       meta_desc: "Nazımcan İslam'ın açık kaynak ve profesyonel projeleri.",
-      hero_label: "~/projeler",
+      hero_label: "projeler",
       hero_title: "Projeler",
       hero_subtitle:
         "İnşa ettiğim şeyler, yaptığım deneyler ve çözdüğüm problemler.",
@@ -310,7 +311,7 @@ export const translations = {
       meta_title: "Blog — Nazımcan İslam",
       meta_desc:
         "Nazımcan İslam'dan yazılım geliştirme, sistemler ve teknoloji üzerine düşünceler.",
-      hero_label: "~/blog",
+      hero_label: "blog",
       hero_title: "Blog",
       hero_subtitle:
         "İnşa ettiğim ve öğrendiğim şeyler üzerine ara sıra notlar.",
@@ -332,7 +333,7 @@ export const translations = {
     contact: {
       meta_title: "İletişim — Nazımcan İslam",
       meta_desc: "Nazımcan İslam ile iletişime geç.",
-      hero_label: "~/iletişim",
+      hero_label: "iletişim",
       hero_title: "İletişim",
       hero_subtitle:
         "Ulaşmanın en iyi yolu e-posta veya GitHub. Birkaç gün içinde yanıt vermeye çalışıyorum.",
@@ -353,7 +354,8 @@ export const translations = {
     uses: {
       meta_title: "Kullanımlar — Nazımcan İslam",
       meta_desc: "Nazımcan İslam'ın kullandığı tüm araçların bir listesi.",
-      uses_title: "Kullanımlar",
+      hero_label: "kullanımlar",
+      hero_title: "Kullanımlar",
       hero_subtitle: "Günlük geliştirme süreçlerimde, tasarım yaparken, oyun oynarken ve hayatımı düzenlerken kullandığım tüm araçların, donanımların ve yazılımların bir listesi."
     },
     footer: {

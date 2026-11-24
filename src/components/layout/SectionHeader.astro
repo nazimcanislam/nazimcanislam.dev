@@ -1,0 +1,60 @@
+---
+import PageCommand from "../ui/PageCommand.astro";
+
+interface Props {
+  dirName: string;
+  pageHeading: string;
+  subHeading: string;
+  command: string;
+  largeCommand?: boolean;
+}
+
+const { dirName, pageHeading, subHeading, command, largeCommand } = Astro.props;
+---
+
+<style>
+  .section-header {
+    margin-bottom: 72px;
+  }
+
+  .page-heading {
+    font-family: var(--font-ui);
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    color: var(--color-text-primary);
+  }
+
+  .heading-dot {
+    color: var(--color-accent);
+  }
+
+  .sub-heading {
+    font-family: var(--font-monospace);
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    font-weight: 400;
+    color: var(--color-accent);
+    margin: 0 0 20px;
+    letter-spacing: 0.01em;
+    max-width: 75ch;
+  }
+
+  .sub-heading::before {
+    content: "> ";
+  }
+</style>
+
+<header class="section-header">
+  <PageCommand pageTitle={dirName} command={command} largeText={largeCommand} />
+
+  <h1 class="page-heading">
+    {pageHeading}
+    <span class="heading-dot" aria-hidden="true">
+      .
+    </span>
+  </h1>
+
+  <p class="sub-heading">{subHeading}</p>
+</header>

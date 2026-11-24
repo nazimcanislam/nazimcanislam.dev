@@ -19,14 +19,14 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.5ch;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-monospace);
   font-weight: 600;
   letter-spacing: -0.03em;
 }
 
 .h2--terminal::before {
   content: ">_";
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-monospace);
   font-size: 0.75em;
   font-weight: 400;
   color: var(--color-accent);
@@ -80,7 +80,7 @@ a:hover {
 
 /* Code */
 .code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-monospace);
   background-color: var(--color-card);
   padding: 2px 6px;
   border-radius: 6px;

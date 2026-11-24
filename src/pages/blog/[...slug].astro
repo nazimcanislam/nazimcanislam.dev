@@ -41,7 +41,7 @@ function formatDate(date: Date) {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.8rem;
     color: var(--color-text-secondary);
     text-decoration: none;
@@ -71,12 +71,12 @@ function formatDate(date: Date) {
     flex-wrap: wrap;
   }
   .post-date {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.8rem;
     color: var(--color-text-secondary);
   }
   .post-tag {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.7rem;
     padding: 2px 8px;
     background: rgba(var(--color-accent-rgb), 0.08);
@@ -151,7 +151,7 @@ function formatDate(date: Date) {
     padding: 10px;
   }
   .post-content :global(code:not(pre code)) {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     background: var(--color-card);
     border: 1px solid var(--color-border);
     padding: 2px 6px;

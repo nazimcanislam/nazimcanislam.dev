@@ -26,42 +26,11 @@
 }
 
 .uses-hero-subtitle {
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-monospace);
   font-size: 1rem;
   color: var(--color-accent);
   margin: 0;
   opacity: 0.9;
-}
-
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  font-family: ui-monospace, monospace;
-  font-size: 0.75rem;
-  color: var(--color-text-secondary);
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
-  padding: 5px 12px;
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  text-decoration: none;
-  transition: transform 200ms ease;
-
-  h2 {
-    font-size: inherit;
-    margin: 0;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &::before {
-    content: "# ";
-    color: var(--color-accent);
-    font-weight: 600;
-  }
 }
 
 .category-item {

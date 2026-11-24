@@ -1,10 +1,11 @@
 ---
-import me from "@assets/pictures/nazimcan-anime-avatar.jpg";
-import Button from "@ui/Button.astro";
 import { getLang, useTranslations, localizePath } from "@/i18n/utils";
 import { profile } from "@/data/profile";
-import PageCommand from "../ui/PageCommand.astro";
 import { Picture } from "astro:assets";
+import nazimcanPortrait from "@assets/pictures/nazimcan-anime-avatar.jpg";
+import Button from "@ui/Button.astro";
+import PageCommand from "../ui/PageCommand.astro";
+import SectionHeader from "../layout/SectionHeader.astro";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
@@ -109,7 +110,7 @@ const statusValue = profile.work.isEmployed
     border-radius: 8px;
     padding: 6px 14px;
     font-size: 0.7rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     color: var(--color-accent);
     white-space: nowrap;
     z-index: 3;
@@ -133,7 +134,7 @@ const statusValue = profile.work.isEmployed
   }
 
   .hero-role {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: clamp(0.9rem, 2vw, 1.05rem);
     font-weight: 400;
     color: var(--color-accent);
@@ -200,14 +201,14 @@ const statusValue = profile.work.isEmployed
 
       <div class="hero-image-frame">
         <Picture
-          src={me}
+          src={nazimcanPortrait}
           alt="Nazımcan İslam"
           title={t("home", "portrait_title")}
           fetchpriority={"high"}
           loading={"eager"}
           widths={[320, 500]}
           sizes="(max-width: 480px) 320px, (max-width: 768px) 500px"
-          formats={["avif", "webp", "jpg"]}
+          formats={["avif", "webp"]}
         />
         <div class="hero-scanlines" aria-hidden="true"></div>
         <div class="hero-status-dot" aria-hidden="true"></div>
@@ -223,11 +224,15 @@ const statusValue = profile.work.isEmployed
       <PageCommand pageTitle={"portfolio"} command="whoami" largeText />
 
       <h1 class="hero-name" translate="no" lang="tr">
-        Nazımcan İslam<span class="hero-name-dot" aria-hidden="true">.</span>
+        Nazımcan İslam
+        <span class="hero-name-dot" aria-hidden="true">
+          .
+        </span>
       </h1>
 
       <p class="hero-role">
-        <span aria-hidden="true">{">"} </span>{role}
+        <span aria-hidden="true">{">"} </span>
+        {role}
       </p>
 
       <p>{t("home", "bio")}</p>

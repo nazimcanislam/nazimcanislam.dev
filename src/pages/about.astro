@@ -1,10 +1,11 @@
 ---
-import PageCommand from "@/components/ui/PageCommand.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang, useTranslations, localizePath } from "@/i18n/utils";
 import { profile } from "@/data/profile";
 import Button from "@ui/Button.astro";
 import CareerTimeline from "@sections/CareerTimeline.astro";
+import SectionHeader from "@/components/layout/SectionHeader.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
@@ -50,31 +51,6 @@ const formatValue = (val: unknown) => {
     margin-bottom: 72px;
   }
 
-  .about-hero-title {
-    font-size: clamp(2.2rem, 5vw, 3rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin: 0 0 12px;
-    color: var(--color-text-primary);
-  }
-  .about-hero-title .dot {
-    color: var(--color-accent);
-  }
-
-  .about-hero-subtitle {
-    font-family: ui-monospace, monospace;
-    font-size: 1rem;
-    color: var(--color-accent);
-    margin: 0;
-    opacity: 0.9;
-  }
-
-  /* Decorative terminal prompt — CSS only so reader mode ignores it */
-  .about-hero-subtitle::before {
-    content: "> ";
-  }
-
   .about-section {
     margin-bottom: 64px;
     animation: fadeUp 0.5s ease both;
@@ -113,34 +89,6 @@ const formatValue = (val: unknown) => {
     filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.15));
   }
 
-  /*
-   * section-label is now an <h2> for proper heading hierarchy.
-   * Reader mode picks it up as a section title; the decorative "#" prefix
-   * stays CSS-only so it is stripped in reader mode.
-   */
-  .section-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5ch;
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.08em;
-    text-transform: lowercase;
-    margin-bottom: 24px;
-    padding: 5px 12px;
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    /* Reset <h2> browser defaults */
-    font-weight: normal;
-  }
-  .section-label::before {
-    content: "#";
-    color: var(--color-accent);
-    font-weight: 600;
-  }
-
   .bio-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -165,7 +113,7 @@ const formatValue = (val: unknown) => {
     border: 1px solid var(--color-glass-border);
     border-radius: 16px;
     padding: 24px;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.85rem;
     line-height: 1.7;
     color: var(--color-text-secondary);
@@ -228,7 +176,7 @@ const formatValue = (val: unknown) => {
     border-color: rgba(var(--color-accent-rgb), 0.4);
   }
   .skill-card-label {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -245,7 +193,7 @@ const formatValue = (val: unknown) => {
     padding: 0;
   }
   .skill-item {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.8rem;
     padding: 3px 10px;
     background: var(--color-card);
@@ -269,7 +217,7 @@ const formatValue = (val: unknown) => {
     padding: 0;
   }
   .interest-tag {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.85rem;
     padding: 6px 14px;
     background: var(--color-glass-bg);
@@ -313,7 +261,7 @@ const formatValue = (val: unknown) => {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.75rem;
     color: var(--color-code-green-text);
     background: var(--color-code-green-background);
@@ -368,35 +316,17 @@ const formatValue = (val: unknown) => {
       that this is the primary readable content of the page.
     -->
     <article class="about-page-wrapper">
-      <header class="about-hero">
-        <!-- PageCommand is a decorative UI element; aria-hidden keeps it out of the a11y tree -->
-        <PageCommand
-          pageTitle={t("about", "hero_title")}
-          command="whoami"
-          aria-hidden="true"
-        />
+      <SectionHeader
+        dirName={t("about", "hero_label")}
+        pageHeading={t("about", "hero_title")}
+        subHeading={t("about", "hero_subtitle")}
+        command="whoami"
+      />
 
-        <h1 class="about-hero-title">
-          {t("about", "hero_title")}<span class="dot" aria-hidden="true">.</span
-          >
-        </h1>
-        <!--
-          The "> " prompt is now a CSS ::before — reader mode strips CSS,
-          so it shows only the meaningful subtitle text.
-        -->
-        <p class="about-hero-subtitle">{t("about", "hero_subtitle")}</p>
-      </header>
-
-      <!--
-        section-label is now an <h2> instead of an aria-hidden div.
-        Previously: aria-labelledby pointed to an aria-hidden element (invalid).
-        Now: the <h2> is visible to both the a11y tree and reader mode,
-        giving each section a proper title.
-      -->
       <section class="about-section" aria-labelledby="whoami-label">
-        <h2 class="section-label" id="whoami-label">
-          {t("about", "section_whoami")}
-        </h2>
+        <SectionLabel
+          label={t("about", "section_whoami")}
+        />
         <div class="bio-grid">
           <div class="bio-text">
             <p>{t("about", "bio_1")}</p>
@@ -434,9 +364,10 @@ const formatValue = (val: unknown) => {
       </section>
 
       <section class="about-section" aria-labelledby="journey-label">
-        <h2 class="section-label" id="journey-label">
-          {t("about", "section_journey")}
-        </h2>
+        <SectionLabel
+          label={t("about", "section_journey")}
+        />
+
         <p class="lead" style="margin-bottom: 32px;">
           {t("about", "journey_intro")}
         </p>
@@ -444,9 +375,10 @@ const formatValue = (val: unknown) => {
       </section>
 
       <section class="about-section" aria-labelledby="skills-label">
-        <h2 class="section-label" id="skills-label">
-          {t("about", "section_skills")}
-        </h2>
+        <SectionLabel
+          label={t("about", "section_skills")}
+        />
+
         <div class="skills-grid">
           <div class="skill-card">
             <p class="skill-card-label">{t("about", "skills_languages")}</p>
@@ -500,9 +432,10 @@ const formatValue = (val: unknown) => {
       </section>
 
       <section class="about-section" aria-labelledby="interests-label">
-        <h2 class="section-label" id="interests-label">
-          {t("about", "section_interests")}
-        </h2>
+        <SectionLabel
+          label={t("about", "section_interests")}
+        />
+
         <p class="lead" style="margin-bottom: 20px;">
           {t("about", "interests_text")}
         </p>

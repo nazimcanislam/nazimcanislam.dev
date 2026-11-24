@@ -95,6 +95,7 @@ export const profile = {
 
   // ── Doğum bilgisi (yaş otomatik hesaplanır) ──────────────────────────────
   birth: { year: 2002, month: 7, day: 28 },
+  gender: "he/him",
 
   sameAs: [
     "https://github.com/nazimcanislam",

@@ -94,10 +94,10 @@ const projects: Project[] = [
 
     border: 1px solid var(--color-glass-border);
     border-radius: 24px;
-    
+
     background: var(--color-glass-bg);
     filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
-    
+
     color: var(--color-text-primary);
     text-decoration: none;
 
@@ -114,7 +114,7 @@ const projects: Project[] = [
 
   .featured-project h3 {
     color: var(--color-accent);
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
   }
 
   .featured-project a:focus-visible {
@@ -133,58 +133,50 @@ const projects: Project[] = [
   }
 </style>
 
-{
-  projects.length > 0 && (
-    <section
-      class="featured-projects"
-      aria-labelledby="featured-projects-title"
-    >
-      <h2
-        class="h2 h2--terminal text-center mb-lg"
-        id="featured-projects-title"
+{projects.length > 0 && (
+  <section class="featured-projects" aria-labelledby="featured-projects-title">
+    <h2 class="h2 h2--terminal text-center mb-lg" id="featured-projects-title">
+      {t("featured_projects", "title")}
+    </h2>
+
+    <ul class="projects-grid">
+      {projects.map((project) => (
+        <li class="featured-project">
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-describedby={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
+          >
+            <div>
+              <h3 class="mb-md" translate="no" lang="en">
+                {project.title}
+              </h3>
+              <p
+                class="lead"
+                id={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
+              >
+                {t(project.description.section, project.description.desc)}
+              </p>
+            </div>
+
+            <Badges items={project.tech} />
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="text-center mt-lg">
+      <p class="lead">{t("featured_projects", "want_learn_projects")}</p>
+      <Button
+        variant="primary"
+        size="lg"
+        href={localizePath("/projects", lang)}
+        title={t("featured_projects", "want_learn_projects_button")}
+        class="right-arrow"
       >
-        {t("featured_projects", "title")}
-      </h2>
-
-      <ul class="projects-grid">
-        {projects.map((project) => (
-          <li class="featured-project">
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-describedby={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
-            >
-              <div>
-                <h3 class="mb-md" translate="no" lang="en">
-                  {project.title}
-                </h3>
-                <p
-                  class="lead"
-                  id={`desc-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
-                >
-                  {t(project.description.section, project.description.desc)}
-                </p>
-              </div>
-
-              <Badges items={project.tech} />
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <div class="text-center mt-lg">
-        <p class="lead">{t("featured_projects", "want_learn_projects")}</p>
-        <Button
-          variant="primary"
-          size="lg"
-          href={localizePath("/projects", lang)}
-          title={t("featured_projects", "want_learn_projects_button")}
-          class="right-arrow"
-        >
-          {t("featured_projects", "want_learn_projects_button")}
-        </Button>
-      </div>
-    </section>
-  )
-}
+        {t("featured_projects", "want_learn_projects_button")}
+      </Button>
+    </div>
+  </section>
+)}

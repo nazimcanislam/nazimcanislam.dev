@@ -236,21 +236,21 @@ function resolveEntry(entry: CareerEntry) {
     margin-bottom: 10px;
   }
   .t-period {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.75rem;
     letter-spacing: 0.04em;
     color: var(--color-text-secondary);
   }
   /* Total duration, e.g. "· 2 yıl 8 ay" */
   .t-dur {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.75rem;
     letter-spacing: 0.04em;
     color: var(--color-text-secondary);
     opacity: 0.75;
   }
   .t-kind {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.68rem;
     letter-spacing: 0.06em;
     padding: 2px 9px;
@@ -270,7 +270,7 @@ function resolveEntry(entry: CareerEntry) {
     background: var(--kind);
   }
   .t-now {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.68rem;
     letter-spacing: 0.06em;
     padding: 2px 9px;
@@ -378,7 +378,7 @@ function resolveEntry(entry: CareerEntry) {
     color: var(--color-text-primary);
   }
   .t-emp {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.65rem;
     letter-spacing: 0.05em;
     padding: 1px 8px;
@@ -388,7 +388,7 @@ function resolveEntry(entry: CareerEntry) {
     border: 1px solid var(--color-border);
   }
   .t-role-meta {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.72rem;
     letter-spacing: 0.03em;
     color: var(--color-text-secondary);
@@ -405,7 +405,7 @@ function resolveEntry(entry: CareerEntry) {
     padding: 0;
   }
   .t-tag {
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-monospace);
     font-size: 0.72rem;
     padding: 2px 9px;
     border-radius: 6px;
@@ -440,110 +440,108 @@ function resolveEntry(entry: CareerEntry) {
 </style>
 
 <ol class="timeline">
-  {
-    entries.map((entry) => {
-      const meta = KIND[entry.kind];
-      const { roles, hasRoles, start, end, current } = resolveEntry(entry);
-      const range = fmtRange(start, end);
-      const duration = fmtDuration(start, end);
+  {entries.map((entry) => {
+    const meta = KIND[entry.kind];
+    const { roles, hasRoles, start, end, current } = resolveEntry(entry);
+    const range = fmtRange(start, end);
+    const duration = fmtDuration(start, end);
 
-      return (
-        <li
-          class:list={["t-item", { "is-current": current }]}
-          style={`--kind: ${meta.color}`}
-        >
-          <div class="t-node" aria-hidden="true">
-            <span class="t-dot" />
+    return (
+      <li
+        class:list={["t-item", { "is-current": current }]}
+        style={`--kind: ${meta.color}`}
+      >
+        <div class="t-node" aria-hidden="true">
+          <span class="t-dot" />
+        </div>
+
+        <div class="t-card">
+          <div class="t-meta-header">
+            <span class="t-kind" translate="no">
+              {meta.label[lang]}
+            </span>
+            {current && (
+              <span class="t-now" translate="no">
+                ● {nowLabel}
+              </span>
+            )}
           </div>
 
-          <div class="t-card">
-            <div class="t-meta-header">
-              <span class="t-kind" translate="no">
-                {meta.label[lang]}
-              </span>
-              {current && (
-                <span class="t-now" translate="no">
-                  ● {nowLabel}
-                </span>
-              )}
-            </div>
+          <div class="t-meta">
+            <span class="t-period" translate="no">
+              {range}
+            </span>
+            <span class="t-dur" translate="no">
+              · {duration}
+            </span>
+          </div>
 
-            <div class="t-meta">
-              <span class="t-period" translate="no">
-                {range}
-              </span>
-              <span class="t-dur" translate="no">
-                · {duration}
-              </span>
-            </div>
-
-            <h3 class="t-title">
-              {hasRoles ? (
-                entry.orgUrl ? (
-                  <a href={entry.orgUrl} target="_blank" rel="noopener">
-                    {(entry.org ?? entry.title)[lang]}
-                  </a>
-                ) : (
-                  (entry.org ?? entry.title)[lang]
-                )
+          <h3 class="t-title">
+            {hasRoles ? (
+              entry.orgUrl ? (
+                <a href={entry.orgUrl} target="_blank" rel="noopener">
+                  {(entry.org ?? entry.title)[lang]}
+                </a>
               ) : (
-                <>
-                  {entry.title[lang]}
-                  {entry.org && (
-                    <span class="t-org" translate="no">
-                      {entry.orgUrl ? (
-                        <a href={entry.orgUrl} target="_blank" rel="noopener">
-                          {entry.org[lang]}
-                        </a>
-                      ) : (
-                        entry.org[lang]
+                (entry.org ?? entry.title)[lang]
+              )
+            ) : (
+              <>
+                {entry.title[lang]}
+                {entry.org && (
+                  <span class="t-org" translate="no">
+                    {entry.orgUrl ? (
+                      <a href={entry.orgUrl} target="_blank" rel="noopener">
+                        {entry.org[lang]}
+                      </a>
+                    ) : (
+                      entry.org[lang]
+                    )}
+                  </span>
+                )}
+              </>
+            )}
+          </h3>
+
+          <p class="t-summary">{entry.summary[lang]}</p>
+
+          {hasRoles && (
+            <ol class="t-roles">
+              {roles.map((role) => (
+                <li class:list={["t-role", { "is-current": role.current }]}>
+                  <div class="t-role-node" aria-hidden="true">
+                    <span class="t-role-dot" />
+                  </div>
+                  <div>
+                    <div class="t-role-head">
+                      <span class="t-role-title">{role.title[lang]}</span>
+                      {role.employment && (
+                        <span class="t-emp" translate="no">
+                          {EMPLOYMENT[role.employment][lang]}
+                        </span>
                       )}
-                    </span>
-                  )}
-                </>
-              )}
-            </h3>
-
-            <p class="t-summary">{entry.summary[lang]}</p>
-
-            {hasRoles && (
-              <ol class="t-roles">
-                {roles.map((role) => (
-                  <li class:list={["t-role", { "is-current": role.current }]}>
-                    <div class="t-role-node" aria-hidden="true">
-                      <span class="t-role-dot" />
                     </div>
-                    <div>
-                      <div class="t-role-head">
-                        <span class="t-role-title">{role.title[lang]}</span>
-                        {role.employment && (
-                          <span class="t-emp" translate="no">
-                            {EMPLOYMENT[role.employment][lang]}
-                          </span>
-                        )}
-                      </div>
-                      <div class="t-role-meta" translate="no">
-                        {fmtRange(role.start, role.end)} ·{" "}
-                        {fmtDuration(role.start, role.end)}
-                      </div>
+                    <div class="t-role-meta" translate="no">
+                      {fmtRange(role.start, role.end)} ·{" "}
+                      {fmtDuration(role.start, role.end)}
                     </div>
-                  </li>
-                ))}
-              </ol>
-            )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
 
-            {entry.tags && entry.tags.length > 0 && (
-              <ul class="t-tags">
-                {entry.tags.map((tag) => (
-                  <li class="t-tag" translate="no">
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </li>
-      );
-    })
-  }
+          {entry.tags && entry.tags.length > 0 && (
+            <ul class="t-tags">
+              {entry.tags.map((tag) => (
+                <li class="t-tag" translate="no">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </li>
+    );
+  })}
 </ol>

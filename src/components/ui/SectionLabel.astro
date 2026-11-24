@@ -1,0 +1,72 @@
+---
+interface Props {
+  label: string;
+  id?: string;
+}
+
+function slugify(text: string): string {
+  const trMap: Record<string, string> = {
+    ç: "c",
+    Ç: "c",
+    ğ: "g",
+    Ğ: "g",
+    ı: "i",
+    İ: "i",
+    ö: "o",
+    Ö: "o",
+    ş: "s",
+    Ş: "s",
+    ü: "u",
+    Ü: "u",
+  };
+
+  return text
+    .replace(/[çÇğĞıİöÖşŞüÜ]/g, (match) => trMap[match] || match)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "") // Harf, rakam, boşluk ve tire dışındakileri sil
+    .replace(/\s+/g, "-") // Boşlukları tireye çevir
+    .replace(/-+/g, "-"); // Üst üste binen tireleri teke indir
+}
+
+const { label, id = slugify(label) } = Astro.props;
+---
+
+<style>
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-monospace);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    padding: 5px 12px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: transform 200ms ease;
+  }
+
+  .section-label:hover {
+    transform: translateY(-2px);
+  }
+
+  .section-label::before {
+    content: "# ";
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .heading {
+    font-size: inherit;
+    margin: 0;
+  }
+</style>
+
+<a href={`#${id}`} class="section-label">
+  <h2 class="heading" id={id}>
+    {label}
+  </h2>
+</a>
