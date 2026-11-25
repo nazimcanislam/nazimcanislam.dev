@@ -1,0 +1,16 @@
+---
+import "@styles/components/page-shell.css";
+
+interface Props {
+  narrow?: boolean;
+  class?: string;
+}
+
+const { narrow = false, class: className } = Astro.props;
+---
+
+<div class:list={["page-shell", { "page-shell--narrow": narrow }, className]}>
+  <div class="page-shell-inner">
+    <slot />
+  </div>
+</div>

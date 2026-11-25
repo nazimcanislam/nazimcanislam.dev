@@ -1,8 +1,9 @@
 ---
-import { getLang, useTranslations } from "@/i18n/utils";
-import { profile, getAge } from "@/data/profile";
+import "@styles/sections/briefly-about.css";
+import { getLang, useTranslations } from "@i18n/utils";
+import { profile, getAge } from "@data/profile";
 import { Icon } from "astro-icon/components";
-import { escapeHtml, highlightJson } from "@/utils/highlight-json";
+import { escapeHtml, highlightJson } from "@utils/highlight-json";
 import Button from "@ui/Button.astro";
 
 const lang = getLang(Astro);
@@ -20,77 +21,6 @@ const brieflyAbout = `{
 }`;
 const brieflyAboutHtml = highlightJson(escapeHtml(brieflyAbout));
 ---
-
-<style>
-  .briefly-about {
-    padding: 0 16px;
-  }
-
-  .code-block {
-    text-align: left;
-    font-size: clamp(0.8rem, 2vw, 1.15rem);
-    max-width: 1024px;
-    width: 100%;
-    margin-inline: auto;
-    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
-  }
-
-  .code-block pre {
-    background-color: var(--color-code-background) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    line-height: 1.4;
-    margin: 0;
-    padding: 16px;
-    color: var(--color-text-primary);
-    font-family: var(--font-monospace);
-    border-top: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .code-block pre code {
-    background: none !important;
-    padding: 0 !important;
-  }
-
-  .code-title-bar {
-    background-color: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 8px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .code-title-filename {
-    color: var(--color-text-secondary);
-    font-size: 0.825rem;
-  }
-
-  #about-copy-button .about-copy-button-onclick-icon {
-    display: none;
-  }
-
-  #about-copy-button.copied .about-copy-button-default-icon {
-    display: none;
-  }
-
-  #about-copy-button.copied .about-copy-button-onclick-icon {
-    display: block;
-  }
-
-  @media (scripting: none) {
-    #about-copy-button {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-  }
-</style>
 
 <section
   class="briefly-about mt-lg mb-lg"
@@ -131,53 +61,6 @@ const brieflyAboutHtml = highlightJson(escapeHtml(brieflyAbout));
 </section>
 
 <script>
-  async function copyToClipboard(text: string): Promise<boolean> {
-    if (!navigator.clipboard) {
-      return false;
-    }
-
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function initCopyButton() {
-    const button = document.getElementById(
-      "about-copy-button",
-    ) as HTMLButtonElement | null;
-    if (!button) return;
-
-    const label = button.querySelector<HTMLSpanElement>(
-      "#about-copy-button-text",
-    );
-    const textToCopy = button.dataset.copyText ?? "";
-    const defaultText = button.dataset.defaultText ?? "";
-    const copiedText = button.dataset.copiedText ?? "";
-    let resetTimer: ReturnType<typeof setTimeout> | null = null;
-
-    button.addEventListener("click", async () => {
-      const success = await copyToClipboard(textToCopy);
-      if (!success) return;
-
-      button.classList.add("copied");
-      button.setAttribute("aria-label", copiedText);
-      if (label) label.textContent = copiedText;
-
-      if (resetTimer) clearTimeout(resetTimer);
-
-      resetTimer = setTimeout(() => {
-        button.classList.remove("copied");
-        button.setAttribute("aria-label", defaultText);
-        if (label) label.textContent = defaultText;
-        resetTimer = null;
-      }, 3000);
-    });
-  }
-
-  document.addEventListener("astro:page-load", () => {
-    initCopyButton();
-  });
+  import { initBrieflyAbout } from "@scripts/sections/briefly-about";
+  initBrieflyAbout();
 </script>

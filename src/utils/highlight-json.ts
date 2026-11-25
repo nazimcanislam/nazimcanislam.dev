@@ -1,10 +1,9 @@
 // Ortak JSON renklendirici: hem build zamanında (BrieflyAbout) hem
 // tarayıcıda (ApiExplorer typewriter) kullanılır. Renkler CSS'teki
 // .json-* sınıflarından gelir (utilities.css).
+import { escapeHtml } from "@utils/html";
 
-export function escapeHtml(str: string): string {
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
+export { escapeHtml };
 
 /** `escapeHtml` uygulanmış JSON/JSONC metnini <span class="json-*"> ile sarar. */
 export function highlightJson(text: string): string {

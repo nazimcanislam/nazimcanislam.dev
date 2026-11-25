@@ -1,0 +1,61 @@
+.page-command-title {
+  font-family: var(--font-monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  margin: 0 0 16px;
+}
+
+.page-command-title.large {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+}
+
+.page-command-separator {
+  color: var(--color-code-green-text);
+  margin: 0 8px;
+}
+
+.page-name {
+  text-transform: lowercase;
+  color: var(--color-accent);
+}
+
+.page-command {
+  color: var(--color-text-secondary);
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 0.4em;
+  height: 0.85em;
+  background-color: var(--color-text-secondary);
+  margin-left: 0.1em;
+  vertical-align: middle;
+  animation: cursor-blink 0.7s step-end infinite;
+}
+
+.typewriter-cursor.hidden {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (scripting: none) {
+  .typewriter-cursor {
+    display: none;
+  }
+}
+
+@media (scripting: enabled) {
+  .page-command.no-js {
+    display: none;
+  }
+}

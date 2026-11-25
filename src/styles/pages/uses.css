@@ -1,38 +1,3 @@
-.uses-page {
-  max-width: 100%;
-  width: 100%;
-  padding: 64px 16px;
-}
-
-.uses-page-wrapper {
-  max-width: 1024px;
-  margin-inline: auto;
-}
-
-.uses-hero {
-  margin-bottom: 48px;
-}
-
-.uses-hero-title {
-  font-size: clamp(2.2rem, 5vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin: 0 0 12px;
-  color: var(--color-text-primary);
-}
-.uses-hero-title .dot {
-  color: var(--color-accent);
-}
-
-.uses-hero-subtitle {
-  font-family: var(--font-monospace);
-  font-size: 1rem;
-  color: var(--color-accent);
-  margin: 0;
-  opacity: 0.9;
-}
-
 .category-item {
   background-color: var(--color-glass-bg);
   padding: 24px;

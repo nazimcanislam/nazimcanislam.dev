@@ -38,6 +38,8 @@ html {
 
   --color-warning: #854d0e;
 
+  /* Layout */
+  --container-max-width: 1024px;
   --border-radius-for-section: 24px;
   --border-radius-for-button: 8px;
 

@@ -10,6 +10,10 @@
       "@layout/*": ["./src/components/layout/*"],
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],
+      "@scripts/*": ["./src/scripts/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@services/*": ["./src/services/*"],
       "@i18n/*": ["./src/i18n/*"],
       "@data/*": ["./src/data/*"]
     }

@@ -1,0 +1,107 @@
+.contact-status-wrap {
+  margin-bottom: 24px;
+}
+
+.channels-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.channel-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 16px;
+  text-decoration: none;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.channel-card:hover {
+  transform: translateX(4px);
+  border-color: rgba(var(--color-accent-rgb), 0.4);
+}
+
+.channel-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.channel-icon-wrap {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--color-accent-rgb), 0.08);
+  border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+  border-radius: 12px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+  font-size: 1.4rem;
+}
+
+.channel-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.channel-label {
+  font-size: 0.75rem;
+  font-family: var(--font-monospace);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 2px;
+}
+
+.channel-value {
+  font-family: var(--font-monospace);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0 0 4px;
+  word-break: break-all;
+}
+
+.channel-note {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.channel-arrow {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.channel-card:hover .channel-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+  color: var(--color-accent);
+}
+
+.contact-body {
+  animation: fadeUp 0.6s ease both;
+}
+
+@media (max-width: 768px) {
+  .channel-card {
+    padding: 16px;
+  }
+}

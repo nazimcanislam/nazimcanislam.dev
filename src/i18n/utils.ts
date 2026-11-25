@@ -46,3 +46,13 @@ export function localizePath(path: string, lang: Lang): string {
   if (lang === DEFAULT_LANG) return clean;
   return clean === "/" ? `/${lang}` : `/${lang}${clean}`;
 }
+
+/** Verilen rota hedefinin aktif sayfa olup olmadığını kontrol eder. */
+export function isActiveRoute(currentPath: string, targetHref: string): boolean {
+  const normalized =
+    currentPath.length > 1 && currentPath.endsWith("/")
+      ? currentPath.slice(0, -1)
+      : currentPath;
+  if (targetHref === "/") return normalized === "/";
+  return normalized === targetHref || normalized.startsWith(`${targetHref}/`);
+}

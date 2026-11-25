@@ -1,875 +1,237 @@
 ---
-import PageCommand from "@/components/ui/PageCommand.astro";
-import Layout from "../layouts/Layout.astro";
-import { getLang, useTranslations } from "@/i18n/utils";
-import { profile } from "@/data/profile";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
-import SectionHeader from "@/components/layout/SectionHeader.astro";
+import "@styles/pages/projects.css";
+import Layout from "@/layouts/Layout.astro";
+import PageShell from "@layout/PageShell.astro";
+import SectionHeader from "@layout/SectionHeader.astro";
+import SectionLabel from "@ui/SectionLabel.astro";
+import { profile } from "@data/profile";
+import { getLang, useTranslations } from "@i18n/utils";
+import { getLanguageColor } from "@constants/language-colors";
+import {
+  fetchPublicReposWithLanguageStats,
+  formatPct,
+} from "@services/github";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
 const professionalProjects = profile.professionalProjects;
 
-// Build-time fetch from GitHub API
-type Repo = {
-  name: string;
-  full_name: string;
-  description: string | null;
-  html_url: string;
-  stargazers_count: number;
-  forks_count: number;
-  language: string | null;
-  topics: string[];
-  updated_at: string;
-  fork: boolean;
-};
-
-let repos: Repo[] = [];
-let fetchError = false;
-
-// Opsiyonel: GITHUB_TOKEN tanımlıysa hem repo listesi hem de repo başına
-// /languages çağrıları için kimlik doğrulaması yapılır. Böylece anonim 60/saat
-// yerine 5000/saat limitine çıkılır. Token yoksa da her şey graceful çalışır.
-const ghToken = import.meta.env.GITHUB_TOKEN;
-const ghHeaders: Record<string, string> = { "User-Agent": "nazimcanislam.dev" };
-if (ghToken) ghHeaders.Authorization = `Bearer ${ghToken}`;
-
-try {
-  const res = await fetch(
-    "https://api.github.com/users/nazimcanislam/repos?sort=updated&per_page=100&type=public",
-    { headers: ghHeaders },
+const { repos, languageStats, fetchError } =
+  await fetchPublicReposWithLanguageStats(
+    profile.githubUsername,
+    import.meta.env.GITHUB_TOKEN,
   );
-  if (res.ok) {
-    const data = (await res.json()) as Repo[];
-    repos = data.filter((r) => !r.fork);
-  } else {
-    fetchError = true;
-  }
-} catch {
-  fetchError = true;
-}
-
-// GitHub Linguist renk paleti (en sık kullandıklarım + genişletilmiş liste).
-const langColorMap: Record<string, string> = {
-  Astro: "#ff5a03",
-  TypeScript: "#3178c6",
-  JavaScript: "#f7df1e",
-  Python: "#3572A5",
-  Rust: "#dea584",
-  Swift: "#F05138",
-  C: "#555555",
-  "C++": "#f34b7d",
-  "C#": "#178600",
-  CSS: "#563d7c",
-  SCSS: "#c6538c",
-  Less: "#1d365d",
-  HTML: "#e34c26",
-  Vue: "#41b883",
-  Svelte: "#ff3e00",
-  Go: "#00ADD8",
-  Kotlin: "#A97BFF",
-  Java: "#b07219",
-  Shell: "#89e051",
-  PowerShell: "#012456",
-  Batchfile: "#C1F12E",
-  PHP: "#474A8A",
-  Ruby: "#701516",
-  Dart: "#00B4AB",
-  Lua: "#000080",
-  Dockerfile: "#384d54",
-  Makefile: "#427819",
-  Nix: "#7e7eff",
-  Zig: "#ec915c",
-  "Jupyter Notebook": "#DA5B0B",
-  TeX: "#3D6117",
-  MDX: "#fcb32c",
-  Markdown: "#083fa1",
-  "Vim Script": "#199f4b",
-  Nunjucks: "#3d8137",
-  Handlebars: "#f7931e",
-  Procfile: "#3B2F63",
-};
-
-const langFallbackColor = "#8b949e";
-
-// --- Repo başına dil dağılımını (byte cinsinden) çek ---
-// GitHub'ın kendi %'leri /languages endpoint'inden gelir (linguist zaten
-// vendored/generated dosyaları eler). Her repo için ayrı çağrı gerekir.
-// Promise.all ile paralel; herhangi biri patlarsa o repo primary `language`'a
-// düşer, böylece rate-limit'te bile sayfa çalışmaya devam eder.
-const perRepoBytes: Array<Record<string, number>> = await Promise.all(
-  repos.map(async (repo) => {
-    const fallback = repo.language ? { [repo.language]: 1 } : {};
-    try {
-      const r = await fetch(
-        `https://api.github.com/repos/${repo.full_name}/languages`,
-        { headers: ghHeaders },
-      );
-      if (!r.ok) return fallback;
-      const bytes = (await r.json()) as Record<string, number>;
-      return bytes && Object.keys(bytes).length > 0 ? bytes : fallback;
-    } catch {
-      return fallback;
-    }
-  }),
-);
-
-// Her repoya, filtreleme için kullandığı dillerin adlarını iliştir.
-const reposWithLangs = repos.map((repo, i) => ({
-  ...repo,
-  languages: Object.keys(perRepoBytes[i]),
-}));
-
-// Tüm repolar boyunca byte'ları topla → genel dağılım.
-const aggregate: Record<string, number> = {};
-for (const bytes of perRepoBytes) {
-  for (const [name, n] of Object.entries(bytes)) {
-    aggregate[name] = (aggregate[name] ?? 0) + n;
-  }
-}
-const totalBytes = Object.values(aggregate).reduce((a, b) => a + b, 0);
-
-const languageStats = Object.entries(aggregate)
-  .map(([name, bytes]) => ({
-    name,
-    bytes,
-    pct: totalBytes > 0 ? (bytes / totalBytes) * 100 : 0,
-    color: langColorMap[name] ?? langFallbackColor,
-  }))
-  .sort((a, b) => b.bytes - a.bytes);
 
 const showLangBar = !fetchError && languageStats.length > 0;
-
-// GitHub gibi her zaman tek ondalık: "71,0" / "18,1" (Türkçe'de virgül).
-const numLocale = lang === "tr" ? "tr-TR" : "en-US";
-const fmtPct = (p: number) =>
-  p.toLocaleString(numLocale, {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  });
 ---
-
-<style>
-  .projects-page {
-    max-width: 100%;
-    width: 100%;
-    padding: 64px 16px;
-  }
-
-  .projects-page-wrapper {
-    max-width: 1024px;
-    margin-inline: auto;
-  }
-
-  .projects-hero {
-    margin-bottom: 48px;
-  }
-
-  .projects-hero-title {
-    font-size: clamp(2.2rem, 5vw, 3rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin: 0 0 12px;
-    color: var(--color-text-primary);
-  }
-  .projects-hero-title .dot {
-    color: var(--color-accent);
-  }
-
-  .projects-hero-subtitle {
-    font-family: var(--font-monospace);
-    font-size: 1rem;
-    color: var(--color-accent);
-    margin: 0;
-    opacity: 0.9;
-  }
-
-  /* ---------- Profesyonel projeler bölümü ---------- */
-  .professional-section {
-    margin-bottom: 44px;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .professional-note {
-    margin: 14px 2px 0;
-    font-family: var(--font-monospace);
-    font-size: 0.72rem;
-    color: var(--color-text-secondary);
-    opacity: 0.75;
-  }
-
-  /* ---------- Dil dağılımı paneli ---------- */
-  .lang-panel {
-    margin-bottom: 20px;
-    animation: fadeUp 0.6s ease both;
-
-    padding: 20px 24px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 16px;
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
-  }
-
-  .lang-panel-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-
-  .lang-panel-title {
-    font-family: var(--font-monospace);
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    color: var(--color-text-secondary);
-    margin: 0;
-  }
-  .lang-panel-title::before {
-    content: "# ";
-    color: var(--color-accent);
-    font-weight: 600;
-  }
-
-  .lang-panel-total {
-    font-family: var(--font-monospace);
-    font-size: 0.72rem;
-    color: var(--color-text-secondary);
-    opacity: 0.75;
-  }
-
-  /* Oran çubuğu */
-  .lang-bar {
-    display: flex;
-    width: 100%;
-    height: 12px;
-    border-radius: 999px;
-    overflow: hidden;
-    gap: 2px;
-    background: var(--color-card);
-    padding: 2px;
-    border: 1px solid var(--color-glass-border);
-  }
-
-  .lang-bar-segment {
-    flex-basis: 0;
-    min-width: 6px;
-    border-radius: 3px;
-    background: var(--seg-color);
-    cursor: pointer;
-    position: relative;
-    transition:
-      opacity 0.3s ease,
-      transform 0.2s ease,
-      filter 0.2s ease;
-    transform-origin: center bottom;
-  }
-  .lang-bar-segment:hover {
-    filter: brightness(1.15) saturate(1.1);
-    transform: scaleY(1.35);
-  }
-  .lang-bar-segment.is-dimmed {
-    opacity: 0.22;
-  }
-
-  /* Legend / tıklanabilir filtre çipleri */
-  .lang-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 16px;
-  }
-
-  .lang-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-family: var(--font-monospace);
-    font-size: 0.78rem;
-    color: var(--color-text-secondary);
-    padding: 5px 11px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 999px;
-    cursor: pointer;
-    line-height: 1;
-    transition:
-      color 0.18s ease,
-      border-color 0.18s ease,
-      background-color 0.18s ease,
-      transform 0.18s ease;
-  }
-  .lang-chip:hover {
-    transform: translateY(-1px);
-    border-color: rgba(var(--color-accent-rgb), 0.4);
-    color: var(--color-text-primary);
-  }
-  .lang-chip.is-active {
-    color: var(--color-text-primary);
-    background: rgba(var(--color-accent-rgb), 0.1);
-    border-color: rgba(var(--color-accent-rgb), 0.55);
-  }
-
-  .lang-chip-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--dot-color);
-    flex-shrink: 0;
-    box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0);
-    transition: box-shadow 0.18s ease;
-  }
-  .lang-chip.is-active .lang-chip-dot {
-    box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.12);
-  }
-
-  .lang-chip-pct {
-    color: var(--color-text-secondary);
-    opacity: 0.85;
-    font-size: 0.72rem;
-  }
-  .lang-chip.is-active .lang-chip-pct {
-    color: var(--color-accent);
-    opacity: 1;
-  }
-
-  .lang-chip-all::before {
-    content: "*";
-    color: var(--color-accent);
-    font-weight: 700;
-    margin-right: 1px;
-  }
-
-  /* JS kapalıyken filtre etkileşimi anlamsız → çipleri tıklanamaz göstermek
-     yerine sadece görsel çubuk + statik legend kalır (çipler yine bilgilendirir). */
-  @media (scripting: none) {
-    .lang-chip {
-      cursor: default;
-    }
-    .lang-bar-segment {
-      cursor: default;
-    }
-  }
-
-  .repos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
-    grid-auto-rows: 1fr;
-    gap: 16px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .repos-grid li {
-    animation: fadeUp 0.6s ease both;
-  }
-  .repos-grid li[hidden] {
-    display: none;
-  }
-
-  .repo-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 20px 24px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 16px;
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
-    transition:
-      transform 0.2s ease,
-      border-color 0.2s ease;
-    text-decoration: none;
-  }
-  .repo-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(var(--color-accent-rgb), 0.35);
-  }
-
-  .repo-name {
-    font-family: var(--font-monospace);
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-accent);
-    margin: 0 0 8px;
-    word-break: break-word;
-  }
-
-  .repo-desc {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-    flex: 1;
-    margin: 0 0 16px;
-  }
-
-  .repo-topics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-  .repo-topic {
-    font-family: var(--font-monospace);
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    background: rgba(var(--color-accent-rgb), 0.08);
-    border: 1px solid rgba(var(--color-accent-rgb), 0.2);
-    border-radius: 12px;
-    color: var(--color-accent);
-  }
-
-  .repo-meta {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: auto;
-  }
-  .repo-lang {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-  }
-  .repo-lang-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .repo-stat {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-  }
-
-  .filter-empty {
-    text-align: center;
-    padding: 48px 16px;
-    color: var(--color-text-secondary);
-    font-family: var(--font-monospace);
-    font-size: 0.9rem;
-  }
-
-  .error-state,
-  .empty-state {
-    text-align: center;
-    padding: 64px 16px;
-    color: var(--color-text-secondary);
-    font-family: var(--font-monospace);
-  }
-  .error-state a {
-    color: var(--color-accent);
-  }
-
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  .lang-panel-no-js {
-    display: none;
-    margin: 16px 0;
-    color: var(--color-warning);
-    font-size: 14px;
-    font-weight: 600;
-    font-family: var(--font-monospace);
-  }
-
-  @media (max-width: 768px) {
-    .projects-page {
-      padding: 32px 16px;
-    }
-    .projects-hero {
-      margin-bottom: 32px;
-    }
-    .professional-section {
-      margin-bottom: 36px;
-    }
-    .lang-panel {
-      margin-bottom: 36px;
-    }
-  }
-
-  @media (scripting: none) {
-    .lang-pill {
-      -webkit-user-select: none;
-      user-select: none;
-      pointer-events: none;
-      opacity: 0.7;
-    }
-
-    .lang-panel-no-js {
-      display: block;
-    }
-  }
-</style>
 
 <Layout
   title={t("projects", "meta_title")}
   description={t("projects", "meta_desc")}
 >
-  <div class="projects-page">
-    <div class="projects-page-wrapper">
-      <SectionHeader
-        dirName={t("projects", "hero_label")}
-        pageHeading={t("projects", "hero_title")}
-        subHeading={t("projects", "hero_subtitle")}
-        command="ls -la"
-      />
+  <PageShell>
+    <SectionHeader
+      dirName={t("projects", "hero_label")}
+      pageHeading={t("projects", "hero_title")}
+      subHeading={t("projects", "hero_subtitle")}
+      command="ls -la"
+    />
 
-      {
-        professionalProjects.length > 0 && (
-          <section class="professional-section">
-            <SectionLabel
-              label={t("projects", "professional_section_title")}
-            />
+    {
+      professionalProjects.length > 0 && (
+        <section class="professional-section">
+          <SectionLabel label={t("projects", "professional_section_title")} />
 
-            <ul class="repos-grid">
-              {professionalProjects.map((p, i) => (
-                <li style={`animation-delay: ${100 * i + 1}ms;`}>
-                  <a
-                    href={p.url}
-                    class="repo-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${p.name} — ${p.description[lang]}`}
-                  >
-                    <h2 class="repo-name">{p.name}</h2>
-                    <p class="repo-desc">{p.description[lang]}</p>
-                    <div class="repo-topics" aria-hidden="true">
-                      <span class="repo-topic">{p.org[lang]}</span>
-                      {p.tags.map((tag) => (
-                        <span class="repo-topic">{tag}</span>
-                      ))}
-                    </div>
-                    <div class="repo-meta" aria-hidden="true">
-                      <span class="repo-stat">
-                        {t("projects", "view_live")} ↗
-                      </span>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <p class="professional-note">
-              {t("projects", "professional_source_note")}
-            </p>
-          </section>
-        )
-      }
+          <ul class="repos-grid">
+            {professionalProjects.map((p, i) => (
+              <li style={`animation-delay: ${100 * i + 1}ms;`}>
+                <a
+                  href={p.url}
+                  class="repo-card"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${p.name} — ${p.description[lang]}`}
+                >
+                  <h2 class="repo-name">{p.name}</h2>
+                  <p class="repo-desc">{p.description[lang]}</p>
+                  <div class="repo-topics" aria-hidden="true">
+                    <span class="tag-pill">{p.org[lang]}</span>
+                    {p.tags.map((tag) => (
+                      <span class="tag-pill">{tag}</span>
+                    ))}
+                  </div>
+                  <div class="repo-meta" aria-hidden="true">
+                    <span class="repo-stat">
+                      {t("projects", "view_live")} ↗
+                    </span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="professional-note">
+            {t("projects", "professional_source_note")}
+          </p>
+        </section>
+      )
+    }
 
-      <SectionLabel
-        label={t("projects", "section_title")}
-      />
+    <SectionLabel label={t("projects", "section_title")} />
 
-      {
-        showLangBar && (
-          <section
-            class="lang-panel"
-            data-lang-filter-root
-            data-label-projects={t("projects", "count_word")}
-            data-label-all={t("projects", "filter_all")}
+    {
+      showLangBar && (
+        <section
+          class="lang-panel"
+          data-lang-filter-root
+          data-label-projects={t("projects", "count_word")}
+          data-label-all={t("projects", "filter_all")}
+        >
+          <p class="lang-panel-no-js">
+            <span>⚠️</span>
+            {t("projects", "lang_dist_no_js")}
+          </p>
+
+          <div class="lang-panel-head">
+            <p class="lang-panel-title">{t("projects", "lang_dist_label")}</p>
+            <span class="lang-panel-total">
+              {languageStats.length} {t("projects", "languages_word")}
+            </span>
+          </div>
+
+          <div class="lang-bar" role="presentation" aria-hidden="true">
+            {languageStats.map((s) => (
+              <span
+                class="lang-bar-segment"
+                data-lang={s.name}
+                title={`${s.name} — ${formatPct(s.pct, lang)}%`}
+                style={`--seg-color: ${s.color}; flex-grow: ${s.pct};`}
+              />
+            ))}
+          </div>
+
+          <div
+            class="lang-legend"
+            role="group"
+            aria-label={t("projects", "filter_by_lang")}
           >
-            <p class="lang-panel-no-js">
-              <span>⚠️</span>
-              {t("projects", "lang_dist_no_js")}
-            </p>
-
-            <div class="lang-panel-head">
-              <p class="lang-panel-title">{t("projects", "lang_dist_label")}</p>
-              <span class="lang-panel-total">
-                {languageStats.length} {t("projects", "languages_word")}
-              </span>
-            </div>
-
-            <div class="lang-bar" role="presentation" aria-hidden="true">
-              {languageStats.map((s) => (
-                <span
-                  class="lang-bar-segment"
-                  data-lang={s.name}
-                  title={`${s.name} — ${fmtPct(s.pct)}%`}
-                  style={`--seg-color: ${s.color}; flex-grow: ${s.pct};`}
-                />
-              ))}
-            </div>
-
-            <div
-              class="lang-legend"
-              role="group"
-              aria-label={t("projects", "filter_by_lang")}
+            <button
+              type="button"
+              class="lang-chip lang-chip-all is-active"
+              data-lang-filter="*"
+              aria-pressed="true"
             >
+              {t("projects", "filter_all")}
+            </button>
+            {languageStats.map((s) => (
               <button
                 type="button"
-                class="lang-chip lang-chip-all is-active"
-                data-lang-filter="*"
-                aria-pressed="true"
+                class="lang-chip lang-pill"
+                data-lang-filter={s.name}
+                aria-pressed="false"
               >
-                {t("projects", "filter_all")}
+                <span
+                  class="lang-chip-dot"
+                  style={`--dot-color: ${s.color};`}
+                  aria-hidden="true"
+                />
+                <span translate="no">{s.name}</span>
+                <span class="lang-chip-pct">{formatPct(s.pct, lang)}%</span>
               </button>
-              {languageStats.map((s) => (
-                <button
-                  type="button"
-                  class="lang-chip lang-pill"
-                  data-lang-filter={s.name}
-                  aria-pressed="false"
-                >
-                  <span
-                    class="lang-chip-dot"
-                    style={`--dot-color: ${s.color};`}
-                    aria-hidden="true"
-                  />
-                  <span translate="no">{s.name}</span>
-                  <span class="lang-chip-pct">{fmtPct(s.pct)}%</span>
-                </button>
-              ))}
-            </div>
-
-            <p
-              class="visually-hidden"
-              id="filter-status"
-              role="status"
-              aria-live="polite"
-            />
-          </section>
-        )
-      }
-
-      {
-        fetchError ? (
-          <div class="error-state">
-            <p>{t("projects", "error")}</p>
-            <a
-              href="https://github.com/nazimcanislam"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              github.com/nazimcanislam
-            </a>
+            ))}
           </div>
-        ) : reposWithLangs.length === 0 ? (
-          <div class="empty-state">{t("projects", "loading")}</div>
-        ) : (
-          <>
-            <ul class="repos-grid" data-repo-filter-grid>
-              {reposWithLangs.map((repo, i) => (
-                <li
-                  data-languages={repo.languages.join("|")}
-                  style={`animation-delay: ${100 * i + 1}ms;`}
+
+          <p
+            class="visually-hidden"
+            id="filter-status"
+            role="status"
+            aria-live="polite"
+          />
+        </section>
+      )
+    }
+
+    {
+      fetchError ? (
+        <div class="error-state">
+          <p>{t("projects", "error")}</p>
+          <a
+            href={profile.socialUrls.github}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {profile.social.github}
+          </a>
+        </div>
+      ) : repos.length === 0 ? (
+        <div class="empty-state">{t("projects", "loading")}</div>
+      ) : (
+        <>
+          <ul class="repos-grid" data-repo-filter-grid>
+            {repos.map((repo, i) => (
+              <li
+                data-languages={repo.languages.join("|")}
+                style={`animation-delay: ${100 * i + 1}ms;`}
+              >
+                <a
+                  href={repo.html_url}
+                  class="repo-card"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${repo.name} — ${repo.description ?? t("projects", "no_desc")}`}
+                  translate="no"
                 >
-                  <a
-                    href={repo.html_url}
-                    class="repo-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${repo.name} — ${repo.description ?? t("projects", "no_desc")}`}
-                    translate="no"
-                  >
-                    <h2 class="repo-name">{repo.name}</h2>
-                    <p class="repo-desc">
-                      {repo.description ?? t("projects", "no_desc")}
-                    </p>
-                    {repo.topics.length > 0 && (
-                      <div class="repo-topics" aria-hidden="true">
-                        {repo.topics.slice(0, 3).map((topic) => (
-                          <span class="repo-topic">{topic}</span>
-                        ))}
-                      </div>
-                    )}
-                    <div class="repo-meta" aria-hidden="true">
-                      {repo.language && (
-                        <span class="repo-lang">
-                          <span
-                            class="repo-lang-dot"
-                            style={`background: ${langColorMap[repo.language] ?? langFallbackColor}`}
-                          />
-                          {repo.language}
-                        </span>
-                      )}
-                      {repo.stargazers_count > 0 && (
-                        <span
-                          class="repo-stat"
-                          title={`${repo.stargazers_count} ${t("projects", "stars")}`}
-                        >
-                          ★ {repo.stargazers_count}
-                        </span>
-                      )}
-                      {repo.forks_count > 0 && (
-                        <span
-                          class="repo-stat"
-                          title={`${repo.forks_count} ${t("projects", "forks")}`}
-                        >
-                          ⑂ {repo.forks_count}
-                        </span>
-                      )}
+                  <h2 class="repo-name">{repo.name}</h2>
+                  <p class="repo-desc">
+                    {repo.description ?? t("projects", "no_desc")}
+                  </p>
+                  {repo.topics.length > 0 && (
+                    <div class="repo-topics" aria-hidden="true">
+                      {repo.topics.slice(0, 3).map((topic) => (
+                        <span class="tag-pill">{topic}</span>
+                      ))}
                     </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <p class="filter-empty" data-filter-empty hidden>
-              {t("projects", "filter_no_match")}
-            </p>
-          </>
-        )
-      }
-    </div>
-  </div>
+                  )}
+                  <div class="repo-meta" aria-hidden="true">
+                    {repo.language && (
+                      <span class="repo-lang">
+                        <span
+                          class="repo-lang-dot"
+                          style={`background: ${getLanguageColor(repo.language)}`}
+                        />
+                        {repo.language}
+                      </span>
+                    )}
+                    {repo.stargazers_count > 0 && (
+                      <span
+                        class="repo-stat"
+                        title={`${repo.stargazers_count} ${t("projects", "stars")}`}
+                      >
+                        ★ {repo.stargazers_count}
+                      </span>
+                    )}
+                    {repo.forks_count > 0 && (
+                      <span
+                        class="repo-stat"
+                        title={`${repo.forks_count} ${t("projects", "forks")}`}
+                      >
+                        ⑂ {repo.forks_count}
+                      </span>
+                    )}
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="filter-empty" data-filter-empty hidden>
+            {t("projects", "filter_no_match")}
+          </p>
+        </>
+      )
+    }
+  </PageShell>
 </Layout>
 
 <script>
-  // Dile göre projeleri filtrele + FLIP animasyonu.
-  // Legend butonları (klavye/ekran okuyucu erişilebilir) ve çubuk segmentleri
-  // (fare için görsel kısayol) aynı applyFilter() fonksiyonunu tetikler.
-  function initLanguageFilter(): void {
-    const root = document.querySelector<HTMLElement>("[data-lang-filter-root]");
-    const grid = document.querySelector<HTMLUListElement>(
-      "[data-repo-filter-grid]",
-    );
-    if (!root || !grid) return;
-
-    // Aynı DOM üzerinde çift init'i önle (astro:page-load + doğrudan çağrı).
-    if (grid.dataset.filterInit === "1") return;
-    grid.dataset.filterInit = "1";
-
-    const items = Array.from(grid.querySelectorAll<HTMLLIElement>("li"));
-    const chips = Array.from(
-      root.querySelectorAll<HTMLButtonElement>("[data-lang-filter]"),
-    );
-    const segments = Array.from(
-      root.querySelectorAll<HTMLElement>(".lang-bar-segment"),
-    );
-    const statusEl = root.querySelector<HTMLElement>("#filter-status");
-    const emptyEl = document.querySelector<HTMLElement>("[data-filter-empty]");
-
-    const projectsWord = root.dataset.labelProjects ?? "projects";
-    const allLabel = root.dataset.labelAll ?? "All";
-
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    let active = "*"; // "*" = tümü
-
-    const matches = (li: HTMLLIElement, lang: string): boolean => {
-      if (lang === "*") return true;
-      const langs = (li.dataset.languages ?? "").split("|").filter(Boolean);
-      return langs.includes(lang);
-    };
-
-    function setActiveUI(lang: string): void {
-      chips.forEach((c) => {
-        const on = c.dataset.langFilter === lang;
-        c.setAttribute("aria-pressed", String(on));
-        c.classList.toggle("is-active", on);
-      });
-      segments.forEach((seg) => {
-        const on = lang === "*" || seg.dataset.lang === lang;
-        seg.classList.toggle("is-dimmed", !on);
-      });
-    }
-
-    function announce(count: number, lang: string): void {
-      if (!statusEl) return;
-      statusEl.textContent =
-        lang === "*"
-          ? `${allLabel} · ${count} ${projectsWord}`
-          : `${lang} · ${count} ${projectsWord}`;
-    }
-
-    function applyFilter(lang: string): void {
-      // Aktif dile tekrar tıklamak → tümüne dön (rahat toggle davranışı).
-      const next = lang !== "*" && lang === active ? "*" : lang;
-      active = next;
-      setActiveUI(next);
-
-      // FLIP — 1) Eski konumları ölç.
-      const firstRects = new Map<HTMLLIElement, DOMRect>();
-      items.forEach((li) => {
-        if (!li.hidden) firstRects.set(li, li.getBoundingClientRect());
-      });
-
-      // 2) Görünürlüğü uygula.
-      let visible = 0;
-      items.forEach((li) => {
-        const show = matches(li, next);
-        li.hidden = !show;
-        if (show) visible++;
-      });
-
-      if (emptyEl) emptyEl.hidden = visible !== 0;
-      announce(visible, next);
-
-      if (reduceMotion) return;
-
-      // 3) Yeni konumları ölç, invert uygula.
-      items.forEach((li) => {
-        if (li.hidden) return;
-        const first = firstRects.get(li);
-        const last = li.getBoundingClientRect();
-        if (first) {
-          const dx = first.left - last.left;
-          const dy = first.top - last.top;
-          if (dx || dy) {
-            li.style.transition = "none";
-            li.style.transform = `translate(${dx}px, ${dy}px)`;
-          }
-        } else {
-          // Yeni giren kart: hafifçe belirerek gelsin.
-          li.style.transition = "none";
-          li.style.transform = "scale(0.94)";
-          li.style.opacity = "0";
-        }
-      });
-
-      // Reflow'u zorla, sonra hedefe doğru oynat (play).
-      void grid!.offsetHeight;
-
-      requestAnimationFrame(() => {
-        items.forEach((li) => {
-          if (li.hidden) return;
-          li.style.transition =
-            "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease";
-          li.style.transform = "";
-          li.style.opacity = "";
-        });
-      });
-    }
-
-    // Animasyon bitince inline stilleri temizle (DOM temiz kalsın).
-    grid.addEventListener("transitionend", (e) => {
-      const li = e.target as HTMLElement;
-      if (li.tagName === "LI") {
-        li.style.transition = "";
-        li.style.transform = "";
-        li.style.opacity = "";
-      }
-    });
-
-    chips.forEach((chip) =>
-      chip.addEventListener("click", () =>
-        applyFilter(chip.dataset.langFilter ?? "*"),
-      ),
-    );
-    segments.forEach((seg) =>
-      seg.addEventListener("click", () => applyFilter(seg.dataset.lang ?? "*")),
-    );
-  }
-
-  // View Transitions desteği + doğrudan fallback (Tooltip ile aynı desen).
-  document.addEventListener("astro:page-load", initLanguageFilter);
+  import { initLanguageFilter } from "@scripts/pages/projects";
   initLanguageFilter();
 </script>

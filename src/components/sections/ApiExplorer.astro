@@ -1,10 +1,11 @@
 ---
-// src/sections/ApiExplorer.astro
-import { getLang, useTranslations, localizePath } from "@/i18n/utils";
-import { profile, getAge } from "@/data/profile";
+import "@styles/sections/api-explorer.css";
+import { getLang, useTranslations, localizePath } from "@i18n/utils";
+import { profile, getAge } from "@data/profile";
 import Button from "@ui/Button.astro";
 
-const t = useTranslations(getLang(Astro));
+const lang = getLang(Astro);
+const t = useTranslations(lang);
 
 interface Endpoint {
   method: string;
@@ -13,7 +14,6 @@ interface Endpoint {
   response: Record<string, unknown>;
 }
 
-// Tüm veriler TEK KAYNAK'tan (profile.ts) gelir.
 const endpoints: Endpoint[] = [
   {
     method: "GET",
@@ -56,307 +56,7 @@ const endpoints: Endpoint[] = [
 ];
 ---
 
-<style>
-  .wrapper {
-    padding: 0 16px;
-  }
-
-  .api-explorer {
-    max-width: 1024px;
-    width: 100%;
-    margin-inline: auto;
-  }
-
-  .api-base-url-label {
-    font-size: 0.6rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-secondary);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin: 0 0 6px;
-  }
-
-  .api-base-url-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    padding: 5px 12px;
-    margin-bottom: 20px;
-    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
-  }
-
-  .api-base-url-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #a6e3a1;
-    box-shadow: 0 0 8px #a6e3a1;
-    flex-shrink: 0;
-  }
-
-  .api-base-url-text {
-    font-size: 0.8rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-primary);
-  }
-
-  .api-panel {
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    overflow: hidden;
-    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.25));
-  }
-
-  .api-endpoints {
-    border-bottom: 1px solid var(--color-border);
-    padding: 8px 0;
-  }
-
-  .api-endpoints-label {
-    font-size: 0.6rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-secondary);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 4px 16px 8px;
-    margin: 0;
-  }
-
-  .api-endpoint-btn {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-left: 2px solid transparent;
-    padding: 10px 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.15s ease;
-  }
-
-  .api-endpoint-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  .api-endpoint-btn:active {
-    background: rgba(0, 0, 0, 0.09);
-  }
-
-  .api-endpoint-btn[aria-selected="true"] {
-    background: rgba(137, 180, 250, 0.2);
-    border-left-color: #6483b5;
-  }
-
-  .api-method-badge {
-    font-size: 0.6rem;
-    font-weight: 700;
-    font-family: var(--font-monospace);
-    color: var(--color-code-green-text);
-    background: var(--color-code-green-background);
-    border: 1px solid var(--color-code-green-border);
-    border-radius: 3px;
-    padding: 1px 6px;
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
-  }
-
-  .api-endpoint-path {
-    font-size: 0.78rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-secondary);
-    transition: color 0.15s ease;
-    text-align: left;
-  }
-
-  .api-endpoint-btn[aria-selected="true"] .api-endpoint-path {
-    color: var(--color-text-primary);
-  }
-
-  /* Response panel */
-  .api-response {
-    min-height: 180px;
-  }
-
-  .api-response-inner {
-    padding: 16px;
-    display: none;
-  }
-
-  .api-response-inner.active {
-    display: block;
-  }
-
-  .api-response-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .api-response-label {
-    font-size: 0.6rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  .api-response-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .api-status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.5625rem;
-    font-family: var(--font-monospace);
-    color: var(--color-code-green-text);
-    background: var(--color-code-green-background);
-    border: 1px solid var(--color-code-green-border);
-    border-radius: 4px;
-    padding: 2px 8px;
-    letter-spacing: 0.04em;
-    opacity: 0;
-    line-height: normal;
-    transition: opacity 0.3s ease;
-  }
-
-  .api-status-badge.no-js {
-    display: none;
-  }
-
-  .api-status-badge.visible {
-    opacity: 1;
-  }
-
-  .api-status-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #a6e3a1;
-    box-shadow: 0 0 5px #a6e3a1;
-  }
-
-  .api-content-type {
-    font-size: 0.6rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-secondary);
-    opacity: 0.9;
-  }
-
-  .api-json-block {
-    background: var(--color-json-background);
-    border-radius: 6px;
-    padding: 14px 16px;
-
-    border: 1px solid var(--color-border);
-  }
-
-  .api-json-block pre {
-    margin: 0;
-    font-family: var(--font-monospace);
-    font-size: 0.78rem;
-    line-height: 1.7;
-    color: var(--color-text-primary);
-    /* white-space: pre-wrap; */
-    overflow-x: auto;
-    word-break: break-word;
-    background: none !important;
-    padding: 0 !important;
-    border: none !important;
-  }
-
-  .api-empty {
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-secondary);
-    letter-spacing: 0.04em;
-  }
-
-  @keyframes blink {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
-
-  .cursor {
-    animation: blink 1s step-end infinite;
-    display: inline-block;
-  }
-
-  .api-empty.no-js {
-    display: none;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .api-endpoint-btn:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .api-endpoint-btn:active {
-      background: rgba(255, 255, 255, 0.09);
-    }
-
-    .api-endpoint-btn[aria-selected="true"] {
-      background: rgba(137, 180, 250, 0.2);
-      border-left-color: #89b4fa;
-    }
-  }
-
-  @media (scripting: none) {
-    .api-endpoint-btn {
-      cursor: default;
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .api-empty {
-      display: none;
-    }
-
-    .api-empty.no-js {
-      font-size: 1rem;
-      display: flex;
-      color: var(--color-warning);
-    }
-
-    .api-base-url-dot {
-      background: #ee4b5e;
-      box-shadow: 0 0 8px #ee4b5e;
-    }
-
-    .api-status-badge.no-js {
-      display: inline-flex;
-    }
-
-    .api-status-badge,
-    .api-method-badge {
-      color: var(--color-code-red-text) !important;
-      background: var(--color-code-red-background) !important;
-
-      opacity: 1;
-      color: white;
-    }
-  }
-</style>
-
-<div class="wrapper">
+<div class="api-explorer-wrapper">
   <div class="api-explorer" lang="en" translate="no">
     <p class="api-base-url-label">base url</p>
     <div class="api-base-url-badge">
@@ -375,50 +75,54 @@ const endpoints: Endpoint[] = [
           aria-labelledby="api-endpoints-label"
           aria-orientation="vertical"
         >
-          {endpoints.map((ep, index) => (
-            <button
-              role="tab"
-              id={`tab-${ep.key}`}
-              class="api-endpoint-btn"
-              aria-selected="false"
-              aria-controls={`response-${ep.key}`}
-              tabindex={index === 0 ? 0 : -1}
-              data-key={ep.key}
-              data-response={JSON.stringify(ep.response)}
-              type="button"
-              title={`Get ${ep.path} endpoint response`}
-            >
-              <span class="api-method-badge">{ep.method}</span>
-              <span class="api-endpoint-path">{ep.path}</span>
-            </button>
-          ))}
+          {
+            endpoints.map((ep, index) => (
+              <button
+                role="tab"
+                id={`tab-${ep.key}`}
+                class="api-endpoint-btn"
+                aria-selected="false"
+                aria-controls={`response-${ep.key}`}
+                tabindex={index === 0 ? 0 : -1}
+                data-key={ep.key}
+                data-response={JSON.stringify(ep.response)}
+                type="button"
+                title={`Get ${ep.path} endpoint response`}
+              >
+                <span class="api-method-badge">{ep.method}</span>
+                <span class="api-endpoint-path">{ep.path}</span>
+              </button>
+            ))
+          }
         </div>
       </div>
 
       <div class="api-response" aria-live="polite" aria-atomic="true">
-        {endpoints.map((ep) => (
-          <div
-            class="api-response-inner"
-            id={`response-${ep.key}`}
-            role="tabpanel"
-            aria-labelledby={`tab-${ep.key}`}
-            tabindex="0"
-          >
-            <div class="api-response-header">
-              <span class="api-response-label">Response body</span>
-              <div class="api-response-meta">
-                <span class="api-status-badge" id={`status-${ep.key}`}>
-                  <span class="api-status-dot" />
-                  <span>200 OK</span>
-                </span>
-                <span class="api-content-type">application/json</span>
+        {
+          endpoints.map((ep) => (
+            <div
+              class="api-response-inner"
+              id={`response-${ep.key}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${ep.key}`}
+              tabindex="0"
+            >
+              <div class="api-response-header">
+                <span class="api-response-label">Response body</span>
+                <div class="api-response-meta">
+                  <span class="api-status-badge" id={`status-${ep.key}`}>
+                    <span class="api-status-dot" />
+                    <span>200 OK</span>
+                  </span>
+                  <span class="api-content-type">application/json</span>
+                </div>
+              </div>
+              <div class="api-json-block">
+                <pre id={`json-${ep.key}`} />
               </div>
             </div>
-            <div class="api-json-block">
-              <pre id={`json-${ep.key}`} />
-            </div>
-          </div>
-        ))}
+          ))
+        }
 
         <div class="api-empty" id="api-empty-state">
           ← select an endpoint
@@ -434,7 +138,7 @@ const endpoints: Endpoint[] = [
       <Button
         variant="primary"
         size="lg"
-        href={localizePath("/about", getLang(Astro))}
+        href={localizePath("/about", lang)}
         title={t("home_about", "about_button")}
         class="right-arrow"
       >
@@ -445,144 +149,6 @@ const endpoints: Endpoint[] = [
 </div>
 
 <script>
-  import { escapeHtml, highlightJson } from "@/utils/highlight-json";
-
-  function typewrite(
-    el: HTMLPreElement,
-    text: string,
-    statusEl: HTMLElement,
-    speed = 10,
-  ): void {
-    let i = 0;
-    let lastTime: number | null = null;
-
-    const tick = (timestamp: number) => {
-      if (!lastTime) lastTime = timestamp;
-      const elapsed = timestamp - lastTime;
-
-      if (elapsed >= speed) {
-        lastTime = timestamp;
-        i++;
-        const current = escapeHtml(text.slice(0, i));
-
-        if (i >= text.length) {
-          el.innerHTML = highlightJson(current);
-          statusEl.classList.add("visible");
-          return;
-        }
-
-        el.innerHTML = highlightJson(current) + '<span class="cursor">▊</span>';
-      }
-
-      requestAnimationFrame(tick);
-    };
-
-    requestAnimationFrame(tick);
-  }
-
-  function initApiExplorer(): void {
-    const buttons = Array.from(
-      document.querySelectorAll<HTMLButtonElement>(".api-endpoint-btn"),
-    );
-    const emptyState = document.getElementById("api-empty-state");
-
-    let activeKey: string | null = null;
-
-    // Roving tabindex: tab'lardan yalnızca biri sekme (Tab) sırasındadır;
-    // tab'lar arası gezinme ok tuşlarıyla yapılır (WAI-ARIA tabs deseni).
-    function focusTab(index: number): void {
-      const target = (index + buttons.length) % buttons.length;
-      buttons.forEach((b, i) =>
-        b.setAttribute("tabindex", i === target ? "0" : "-1"),
-      );
-      buttons[target].focus();
-    }
-
-    buttons.forEach((btn) => {
-      // Dikey tablist klavye gezinmesi. Etkinleştirme MANUEL'dir: ok tuşları
-      // yalnızca odağı taşır (typewriter'ı her ok basışında tetiklememek için),
-      // seçim Enter/Space ile (button'ın yerel click davranışı) yapılır.
-      btn.addEventListener("keydown", (e) => {
-        const i = buttons.indexOf(btn);
-        switch (e.key) {
-          case "ArrowDown":
-          case "ArrowRight":
-            e.preventDefault();
-            focusTab(i + 1);
-            break;
-          case "ArrowUp":
-          case "ArrowLeft":
-            e.preventDefault();
-            focusTab(i - 1);
-            break;
-          case "Home":
-            e.preventDefault();
-            focusTab(0);
-            break;
-          case "End":
-            e.preventDefault();
-            focusTab(buttons.length - 1);
-            break;
-        }
-      });
-
-      btn.addEventListener("click", () => {
-        const key = btn.dataset.key;
-        if (!key) return;
-
-        // Tıklanan/etkinleştirilen tab artık sekme sırasındaki tab olur.
-        buttons.forEach((b) =>
-          b.setAttribute("tabindex", b === btn ? "0" : "-1"),
-        );
-
-        // Toggle
-        if (key === activeKey) {
-          btn.setAttribute("aria-selected", "false");
-          document
-            .getElementById(`response-${key}`)
-            ?.classList.remove("active");
-          if (emptyState) emptyState.style.display = "";
-          activeKey = null;
-          return;
-        }
-
-        // Deactivate previous
-        if (activeKey) {
-          document
-            .querySelector<HTMLButtonElement>(`[data-key="${activeKey}"]`)
-            ?.setAttribute("aria-selected", "false");
-          document
-            .getElementById(`response-${activeKey}`)
-            ?.classList.remove("active");
-        }
-
-        // Activate new
-        btn.setAttribute("aria-selected", "true");
-        const responseEl = document.getElementById(`response-${key}`);
-        const jsonEl = document.getElementById(
-          `json-${key}`,
-        ) as HTMLPreElement | null;
-        const statusEl = document.getElementById(`status-${key}`);
-
-        if (!responseEl || !jsonEl || !statusEl) return;
-
-        if (emptyState) emptyState.style.display = "none";
-        responseEl.classList.add("active");
-
-        // Reset & retype
-        statusEl.classList.remove("visible");
-        jsonEl.innerHTML = "";
-
-        const raw = btn.dataset.response ?? "{}";
-        const text = JSON.stringify(JSON.parse(raw), null, 2);
-        typewrite(jsonEl, text, statusEl);
-
-        activeKey = key;
-      });
-    });
-  }
-
-  document.addEventListener("astro:page-load", () => {
-    initApiExplorer();
-  });
+  import { initApiExplorer } from "@scripts/sections/api-explorer";
+  initApiExplorer();
 </script>

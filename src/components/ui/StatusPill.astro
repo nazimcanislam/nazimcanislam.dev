@@ -1,0 +1,28 @@
+---
+import "@styles/components/status-pill.css";
+
+interface Props {
+  variant?: "success" | "accent";
+  pulse?: boolean;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  variant = "success",
+  pulse = false,
+  class: className,
+  ariaLabel,
+} = Astro.props;
+---
+
+<div
+  class:list={["status-pill", `status-pill--${variant}`, className]}
+  aria-label={ariaLabel}
+>
+  <span
+    class:list={["status-dot", { "status-dot--pulse": pulse }]}
+    aria-hidden="true"
+  ></span>
+  <slot />
+</div>

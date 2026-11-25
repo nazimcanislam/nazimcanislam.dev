@@ -1,6 +1,7 @@
 ---
-import { getLang, useTranslations, localizePath } from "@/i18n/utils";
-import { profile } from "@/data/profile";
+import { getLang, useTranslations, localizePath } from "@i18n/utils";
+import { profile } from "@data/profile";
+import { NAV_LINKS } from "@constants/navigation";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
@@ -14,38 +15,14 @@ const navCommands = [
     icon: "mdi:home",
     group: "nav",
   },
-  {
-    id: "nav-about",
-    cmd: "about",
-    label: t("nav", "about"),
-    href: localizePath("/about", lang),
-    icon: "mdi:account",
+  ...NAV_LINKS.filter((link) => link.href !== "/uses").map((link) => ({
+    id: `nav-${link.cmd}`,
+    cmd: link.cmd,
+    label: t("nav", link.labelKey),
+    href: localizePath(link.href, lang),
+    icon: link.icon,
     group: "nav",
-  },
-  {
-    id: "nav-projects",
-    cmd: "projects",
-    label: t("nav", "projects"),
-    href: localizePath("/projects", lang),
-    icon: "mdi:code-tags",
-    group: "nav",
-  },
-  {
-    id: "nav-blog",
-    cmd: "blog",
-    label: t("nav", "blog"),
-    href: localizePath("/blog", lang),
-    icon: "mdi:post",
-    group: "nav",
-  },
-  {
-    id: "nav-contact",
-    cmd: "contact",
-    label: t("nav", "contact"),
-    href: localizePath("/contact", lang),
-    icon: "mdi:email",
-    group: "nav",
-  },
+  })),
 ];
 
 const terminalCommands = [
@@ -122,7 +99,7 @@ const socialCommands = [
     id: "social-github",
     cmd: "github",
     label: "GitHub Profile",
-    href: "https://github.com/nazimcanislam",
+    href: profile.socialUrls.github,
     icon: "mdi:github",
     external: true,
     group: "social",
@@ -131,7 +108,7 @@ const socialCommands = [
     id: "social-linkedin",
     cmd: "linkedin",
     label: "LinkedIn Profile",
-    href: "https://linkedin.com/in/nazimcanislam",
+    href: profile.socialUrls.linkedin,
     icon: "mdi:linkedin",
     external: true,
     group: "social",
@@ -140,7 +117,7 @@ const socialCommands = [
     id: "social-email",
     cmd: "email",
     label: profile.social.email,
-    href: `mailto:${profile.social.email}`,
+    href: profile.socialUrls.email,
     icon: "mdi:email-outline",
     group: "social",
   },
@@ -162,45 +139,12 @@ const data = {
 ---
 
 <!--
-  Palet modalı HTML'de yer almaz: ilk kullanımda src/scripts/palette.ts
+  Palet modalı HTML'de yer almaz: ilk kullanımda @scripts/palette/index
   (JS + CSS + ikonlar) dinamik import ile yüklenir ve DOM'u kurar.
-  JS kapalıyken palet zaten kullanılamaz (bkz. NoScript).
 -->
 <script type="application/json" id="cmd-data" set:html={JSON.stringify(data)} />
 
 <script>
-  type PaletteModule = typeof import("@/scripts/palette");
-  let loading: Promise<PaletteModule> | null = null;
-  const load = (): Promise<PaletteModule> =>
-    (loading ??= import("@/scripts/palette"));
-
-  // Kısayollar: Ctrl/Cmd+K, ` ve / (Kalıcı - Window)
-  window.addEventListener("keydown", (e) => {
-    const tag = (e.target as HTMLElement | null)?.tagName;
-    const typing = tag === "INPUT" || tag === "TEXTAREA";
-    const isCmdK = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k";
-    if (isCmdK || (!typing && (e.key === "`" || e.key === "/"))) {
-      e.preventDefault();
-      load().then((m) => m.toggle());
-    }
-  });
-
-  // Header / footer butonlarından gelen olay (Kalıcı - Window)
-  window.addEventListener("open-command-palette", (e) => {
-    const cmd = (e as CustomEvent<{ runCommand?: string } | undefined>).detail
-      ?.runCommand;
-    load().then((m) => m.open(cmd));
-  });
-
-  // Sayfa geçişlerinde tetiklenecek DOM dinleyicileri (Geçici)
-  // Tıklama dinleyicileri Header.astro / Footer.astro içinde; burada sadece ısıtma.
-  document.addEventListener("astro:page-load", () => {
-    ["header-cmd-trigger", "mobile-cmd-trigger", "system-status-btn"].forEach(
-      (id) => {
-        const el = document.getElementById(id);
-        el?.addEventListener("pointerenter", () => void load(), { once: true });
-        el?.addEventListener("focus", () => void load(), { once: true });
-      },
-    );
-  });
+  import { initCommandPaletteLoader } from "@scripts/ui/command-palette-loader";
+  initCommandPaletteLoader();
 </script>

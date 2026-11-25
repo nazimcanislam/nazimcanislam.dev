@@ -1,255 +1,87 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { getLang, useTranslations } from "@/i18n/utils";
-import { profile } from "@/data/profile";
+import "@styles/pages/contact.css";
+import Layout from "@/layouts/Layout.astro";
+import PageShell from "@layout/PageShell.astro";
+import SectionHeader from "@layout/SectionHeader.astro";
+import SectionLabel from "@ui/SectionLabel.astro";
+import StatusPill from "@ui/StatusPill.astro";
 import { Icon } from "astro-icon/components";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
-import SectionHeader from "@/components/layout/SectionHeader.astro";
+import { profile } from "@data/profile";
+import { SOCIAL_LINKS } from "@constants/navigation";
+import { getLang, useTranslations } from "@i18n/utils";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
 
-const channels = [
-  {
-    key: "email",
-    label: t("contact", "email_label"),
-    note: t("contact", "email_note"),
-    href: "mailto:nazimcanislam@gmail.com",
-    value: "nazimcanislam@gmail.com",
-    icon: "mdi:email",
-  },
-  {
-    key: "github",
-    label: t("contact", "github_label"),
-    note: t("contact", "github_note"),
-    href: "https://github.com/nazimcanislam",
-    value: "github.com/nazimcanislam",
-    icon: "mdi:github",
-  },
-  {
-    key: "linkedin",
-    label: t("contact", "linkedin_label"),
-    note: t("contact", "linkedin_note"),
-    href: "https://linkedin.com/in/nazimcanislam",
-    value: "linkedin.com/in/nazimcanislam",
-    icon: "mdi:linkedin",
-  },
-  {
-    key: "instagram",
-    label: t("contact", "instagram_label"),
-    note: t("contact", "instagram_note"),
-    href: "https://instagram.com/nazimcanislam",
-    value: "instagram.com/nazimcanislam",
-    icon: "mdi:instagram",
-  },
-];
+const channelOrder = ["email", "github", "linkedin", "instagram"] as const;
+const channels = channelOrder.map((key) => {
+  const link = SOCIAL_LINKS.find((item) => item.key === key)!;
+  return {
+    ...link,
+    label: t("contact", `${key}_label`),
+    note: t("contact", `${key}_note`),
+  };
+});
 ---
-
-<style>
-  .contact-page {
-    max-width: 100%;
-    width: 100%;
-    padding: 64px 16px;
-  }
-
-  .contact-page-wrapper {
-    max-width: 1024px;
-    margin-inline: auto;
-  }
-
-  .contact-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-monospace);
-    font-size: 0.75rem;
-    color: var(--color-code-green-text);
-    background: var(--color-code-green-background);
-    border: 1px solid var(--color-code-green-border);
-    border-radius: 20px;
-    padding: 4px 12px;
-    margin-bottom: 24px;
-    max-width: max-content;
-  }
-  .contact-status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    box-shadow: 0 0 6px currentColor;
-    flex-shrink: 0;
-  }
-
-  .channels-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .channel-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 16px;
-    text-decoration: none;
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
-    transition:
-      transform 0.2s ease,
-      border-color 0.2s ease;
-  }
-  .channel-card:hover {
-    transform: translateX(4px);
-    border-color: rgba(var(--color-accent-rgb), 0.4);
-  }
-  .channel-card:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 3px;
-  }
-
-  .channel-icon-wrap {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(var(--color-accent-rgb), 0.08);
-    border: 1px solid rgba(var(--color-accent-rgb), 0.2);
-    border-radius: 12px;
-    color: var(--color-accent);
-    flex-shrink: 0;
-    font-size: 1.4rem;
-  }
-
-  .channel-info {
-    flex: 1;
-    min-width: 0;
-  }
-  .channel-label {
-    font-size: 0.75rem;
-    font-family: var(--font-monospace);
-    color: var(--color-text-secondary);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin: 0 0 2px;
-  }
-  .channel-value {
-    font-family: var(--font-monospace);
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin: 0 0 4px;
-    word-break: break-all;
-  }
-  .channel-note {
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-    margin: 0;
-    line-height: 1.4;
-  }
-
-  .channel-arrow {
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
-    color: var(--color-text-secondary);
-    opacity: 0.5;
-    flex-shrink: 0;
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s ease;
-  }
-  .channel-card:hover .channel-arrow {
-    opacity: 1;
-    transform: translateX(2px);
-    color: var(--color-accent);
-  }
-
-  .contact-body {
-    animation: fadeUp 0.6s ease both;
-  }
-
-  @media (max-width: 768px) {
-    .channel-card {
-      padding: 16px;
-    }
-    .contact-page {
-      padding: 32px 16px;
-    }
-    .contact-hero {
-      margin-bottom: 36px;
-    }
-  }
-</style>
 
 <Layout
   title={t("contact", "meta_title")}
   description={t("contact", "meta_desc")}
 >
-  <div class="contact-page">
-    <div class="contact-page-wrapper">
-      <SectionHeader
-        dirName={t("contact", "hero_label")}
-        pageHeading={t("contact", "hero_title")}
-        subHeading={t("contact", "hero_subtitle")}
-        command="ping"
-      />
+  <PageShell>
+    <SectionHeader
+      dirName={t("contact", "hero_label")}
+      pageHeading={t("contact", "hero_title")}
+      subHeading={t("contact", "hero_subtitle")}
+      command="ping"
+    />
 
-      <div class="contact-body">
-        <div
-          class="contact-status"
-          aria-label={profile.work.isEmployed
+    <div class="contact-body">
+      <div class="contact-status-wrap">
+        <StatusPill
+          variant="success"
+          ariaLabel={profile.work.isEmployed
             ? profile.work.statusLabel[lang]
             : "Status: open to work"}
         >
-          <span class="contact-status-dot" aria-hidden="true"></span>
           {
             profile.work.isEmployed
               ? `${profile.work.statusLabel[lang]} — ${profile.work.statusNote[lang]}`
               : `${t("contact", "open_to")} — ${t("contact", "open_to_note")}`
           }
-        </div>
-
-        <SectionLabel
-          label={t("contact", "section_channels")}
-        />
-
-        <ul class="channels-list">
-          {
-            channels.map((ch) => (
-              <li>
-                <a
-                  href={ch.href}
-                  class="channel-card"
-                  target={ch.href.startsWith("mailto") ? undefined : "_blank"}
-                  rel={
-                    ch.href.startsWith("mailto")
-                      ? undefined
-                      : "noopener noreferrer"
-                  }
-                  aria-label={`${ch.label}: ${ch.value}`}
-                >
-                  <div class="channel-icon-wrap" aria-hidden="true">
-                    <Icon name={ch.icon} />
-                  </div>
-                  <div class="channel-info">
-                    <p class="channel-label">{ch.label}</p>
-                    <p class="channel-value" translate="no">
-                      {ch.value}
-                    </p>
-                    <p class="channel-note">{ch.note}</p>
-                  </div>
-
-                  <span class="channel-arrow">→</span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        </StatusPill>
       </div>
+
+      <SectionLabel label={t("contact", "section_channels")} />
+
+      <ul class="channels-list">
+        {
+          channels.map((ch) => (
+            <li>
+              <a
+                href={ch.href}
+                class="channel-card"
+                target={ch.external ? "_blank" : undefined}
+                rel={ch.external ? "noopener noreferrer" : undefined}
+                aria-label={`${ch.label}: ${ch.value}`}
+              >
+                <div class="channel-icon-wrap" aria-hidden="true">
+                  <Icon name={ch.icon} />
+                </div>
+                <div class="channel-info">
+                  <p class="channel-label">{ch.label}</p>
+                  <p class="channel-value" translate="no">
+                    {ch.value}
+                  </p>
+                  <p class="channel-note">{ch.note}</p>
+                </div>
+
+                <span class="channel-arrow">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
-  </div>
+  </PageShell>
 </Layout>

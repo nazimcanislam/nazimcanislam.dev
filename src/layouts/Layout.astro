@@ -1,20 +1,20 @@
 ---
 import Header from "@layout/Header.astro";
 import Footer from "@layout/Footer.astro";
-import CommandPalette from "@/components/ui/CommandPalette.astro";
-import BubbleBackgroundCanvas from "@/components/sections/BubbleBackgroundCanvas.astro";
-import NoScript from "@/components/layout/NoScript.astro";
+import CommandPalette from "@ui/CommandPalette.astro";
+import BubbleBackgroundCanvas from "@sections/BubbleBackgroundCanvas.astro";
+import NoScript from "@layout/NoScript.astro";
 import StructuredData from "@/components/data/StructuredData.astro";
 import {
   getLang,
   useTranslations,
   localizePath,
   stripLocale,
-} from "@/i18n/utils";
+} from "@i18n/utils";
 import "@styles/base.css";
 import "@styles/typography.css";
 import "@styles/utilities.css";
-import { profile } from "@/data/profile";
+import { profile } from "@data/profile";
 import { ClientRouter } from "astro:transitions";
 
 interface Props {
@@ -32,11 +32,8 @@ const basePath = stripLocale(Astro.url.pathname);
 const enUrl = new URL(localizePath(basePath, "en"), Astro.site).href;
 const trUrl = new URL(localizePath(basePath, "tr"), Astro.site).href;
 
-// fallbackType: "rewrite" altında Astro.url.pathname /tr sayfalarında bile
-// İngilizce yolu döndürür. Bu yüzden canonical/og:url'yi dile göre doğru
-// URL'den türetiyoruz (yoksa tüm /tr sayfaları İngilizce'yi kanonik gösterir).
+// fallbackType: "rewrite" altında canonical/og:url'yi dile göre doğru URL'den türetiyoruz.
 const canonicalUrl = lang === "tr" ? trUrl : enUrl;
-// og görseli kökte; yola eklemek yerine mutlak URL ver (alt sayfalarda kırılmasın).
 const ogImage = new URL("/og-image.jpg", Astro.site).href;
 
 const {
@@ -56,9 +53,7 @@ const {
     <meta name="color-scheme" content="dark light" />
 
     <!--
-      Dil otomatik tespiti (cold-start YOK; bu istemci tarafında çalışır).
-      İlk ziyarette tarayıcı diline göre, sonraki ziyaretlerde kaydedilmiş
-      tercihe göre doğru dile yönlendirir. Boyama öncesi çalışsın diye en üstte.
+      Dil otomatik tespiti (boyama öncesi çalışması için is:inline olarak <head> en üstünde tutulur).
     -->
     <script is:inline>
       (function () {
@@ -113,12 +108,9 @@ const {
       media="(prefers-color-scheme: dark)"
     />
 
-    <!-- Open Graph  -->
+    <!-- Open Graph -->
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
-    <!-- og:site_name: arama sonuçlarında "Vercel" yerine gerçek marka adının
-         görünmesi için kritik. Google, site adını sıklıkla bu alandan (veya
-         yokluğunda hostname'den) türetir. -->
     <meta property="og:site_name" content="Nazımcan İslam" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -145,7 +137,7 @@ const {
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalUrl} />
 
-    <!-- hreflang alternates (çok dilli SEO) -->
+    <!-- hreflang alternates -->
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="tr" href={trUrl} />
     <link rel="alternate" hreflang="x-default" href={enUrl} />
@@ -167,7 +159,7 @@ const {
     <meta name="apple-mobile-web-app-title" content="ni.dev" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Add sitemap link -->
+    <!-- Sitemap -->
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <StructuredData
@@ -197,31 +189,23 @@ const {
           },
         ],
       }}
-      }
     />
 
-    <!-- Rem easter egg on for console -->
-    <script>
-      console.info(
-        "%cSubaru-kun? No, Nazımcan's portfolio! Rem Here to guard Nazımcan's code base! 💙",
-        "color: #2f6feb; font-weight: bold; font-size: 14px;",
-      );
-    </script>
-
+    <!-- Samsung Internet ClientRouter scrollend workaround (ClientRouter öncesi senkron çalışmalı) -->
     <script is:inline>
-      // Samsung Internet: The history.replaceState() call made by ClientRouter on 'scrollend'
-      // breaks the browser's "scroll to top" button. Disable the listener in this browser.
       if (/SamsungBrowser/i.test(navigator.userAgent)) {
-        addEventListener("scrollend", (e) => e.stopImmediatePropagation());
+        addEventListener("scrollend", function (e) {
+          e.stopImmediatePropagation();
+        });
       }
     </script>
 
     <ClientRouter />
   </head>
   <body>
-    <a href="#main-content" class="skip-link"
-      >{t("shared", "skip_to_main_content")}</a
-    >
+    <a href="#main-content" class="skip-link">
+      {t("shared", "skip_to_main_content")}
+    </a>
     <Header />
     <NoScript />
     <main id="main-content">
@@ -230,5 +214,8 @@ const {
     </main>
     <Footer />
     <CommandPalette />
+    <script>
+      import "@scripts/layout/console-greeting";
+    </script>
   </body>
 </html>

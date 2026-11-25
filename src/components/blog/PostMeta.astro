@@ -1,0 +1,22 @@
+---
+import "@styles/components/post-meta.css";
+import type { Lang } from "@i18n/translations";
+import { formatDate } from "@utils/date";
+
+interface Props {
+  date: Date;
+  lang: Lang;
+  tags?: string[];
+  maxTags?: number;
+}
+
+const { date, lang, tags = [], maxTags } = Astro.props;
+const visibleTags = maxTags ? tags.slice(0, maxTags) : tags;
+---
+
+<div class="post-meta">
+  <time class="post-date" datetime={date.toISOString()}>
+    {formatDate(date, lang)}
+  </time>
+  {visibleTags.map((tag) => <span class="tag-pill">#{tag}</span>)}
+</div>

@@ -1,0 +1,21 @@
+.page-shell {
+  max-width: 100%;
+  width: 100%;
+  padding: 64px 16px;
+}
+
+.page-shell-inner {
+  max-width: var(--container-max-width);
+  width: 100%;
+  margin-inline: auto;
+}
+
+.page-shell--narrow .page-shell-inner {
+  max-width: 720px;
+}
+
+@media (max-width: 768px) {
+  .page-shell {
+    padding: 32px 16px;
+  }
+}

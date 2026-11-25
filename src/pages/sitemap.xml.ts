@@ -1,13 +1,15 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
+import { profile } from "@data/profile";
+import { NAV_LINKS } from "@constants/navigation";
 
 export const GET: APIRoute = async () => {
-  const posts = await getCollection("blog");
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
 
-  const baseUrl = "https://nazimcanislam-dev.vercel.app";
+  const baseUrl = profile.url;
   const today = new Date().toISOString().split("T")[0];
 
-  const staticPages = ["", "about", "projects", "blog", "contact", "uses"];
+  const staticPages = ["", ...NAV_LINKS.map((link) => link.href.slice(1))];
 
   const blogUrls = posts.map(
     (post) => `  <url>

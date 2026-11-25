@@ -1,10 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SectionLabel from '@/components/ui/SectionLabel.astro';
-import SectionHeader from '@/components/layout/SectionHeader.astro';
-import { usesData } from '../data/uses';
-import { getLang, useTranslations } from '@/i18n/utils';
 import "@styles/pages/uses.css";
+import Layout from "@/layouts/Layout.astro";
+import PageShell from "@layout/PageShell.astro";
+import SectionHeader from "@layout/SectionHeader.astro";
+import SectionLabel from "@ui/SectionLabel.astro";
+import { usesData } from "@data/uses";
+import { getLang, useTranslations } from "@i18n/utils";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
@@ -14,22 +15,23 @@ const pageDescription = t("uses", "meta_subtitle");
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <div class="uses-page">
-    <div class="uses-page-wrapper">
-      <SectionHeader
-        dirName={t("uses", "hero_label")}
-        pageHeading={t("uses", "hero_title")}
-        subHeading={t("uses", "hero_subtitle")}
-        command="neofetch"
-      />
+  <PageShell>
+    <SectionHeader
+      dirName={t("uses", "hero_label")}
+      pageHeading={t("uses", "hero_title")}
+      subHeading={t("uses", "hero_subtitle")}
+      command="neofetch"
+    />
 
-      <div class="categories-section">
-        {usesData.map((category, index) => (
-          <section id={category.id} class="category-item" style={`animation-delay: ${0.3 * index}s`}>
-            <SectionLabel
-              label={category.title[lang]}
-              id={category.id}
-            />
+    <div class="categories-section">
+      {
+        usesData.map((category, index) => (
+          <section
+            id={category.id}
+            class="category-item"
+            style={`animation-delay: ${0.3 * index}s`}
+          >
+            <SectionLabel label={category.title[lang]} id={category.id} />
 
             <div class="items-grid">
               {category.items.map((item) => (
@@ -38,28 +40,28 @@ const pageDescription = t("uses", "meta_subtitle");
                     {item.link ? (
                       <a
                         class="item-link"
-                        href={item.link} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         title={`${item.title} sitesine git`}
                         aria-label={`${item.title} bağlantısını yeni sekmede aç`}
                       >
                         {item.emoji} {item.title}
                       </a>
-                    ) : 
-                      <span>{item.emoji} {item.title}</span>
-                    }
+                    ) : (
+                      <span>
+                        {item.emoji} {item.title}
+                      </span>
+                    )}
                   </h3>
-                  
-                  <p class="item-desc">
-                    {item.description[lang]}
-                  </p>
+
+                  <p class="item-desc">{item.description[lang]}</p>
                 </div>
               ))}
             </div>
           </section>
-        ))}
-      </div>
+        ))
+      }
     </div>
-  </div>
+  </PageShell>
 </Layout>

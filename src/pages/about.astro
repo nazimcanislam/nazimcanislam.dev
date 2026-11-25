@@ -1,321 +1,52 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { getLang, useTranslations, localizePath } from "@/i18n/utils";
-import { profile } from "@/data/profile";
-import Button from "@ui/Button.astro";
+import "@styles/pages/about.css";
+import Layout from "@/layouts/Layout.astro";
+import PageShell from "@layout/PageShell.astro";
+import SectionHeader from "@layout/SectionHeader.astro";
 import CareerTimeline from "@sections/CareerTimeline.astro";
-import SectionHeader from "@/components/layout/SectionHeader.astro";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
+import Button from "@ui/Button.astro";
+import SectionLabel from "@ui/SectionLabel.astro";
+import StatusPill from "@ui/StatusPill.astro";
+import { profile } from "@data/profile";
+import { getLang, useTranslations, localizePath } from "@i18n/utils";
 
 const lang = getLang(Astro);
 const t = useTranslations(lang);
 
-// Yetenekler ve ilgi alanları TEK KAYNAK'tan (profile.ts) gelir.
-const skills = profile.skills;
-const interests = profile.interests;
-const work = profile.work;
+const { skills, interests, work } = profile;
 
-const personelData = {
+const personalData = {
   fileName: "personal.json",
   fileData: {
     name: profile.name,
     location: profile.location[lang],
     role: profile.role[lang],
     languages: profile.spokenLanguages,
-    open_to_work: !work.isEmployed
+    open_to_work: !work.isEmployed,
   },
 };
-const jsonString = JSON.stringify(personelData.fileData, null, 2);
+const jsonString = JSON.stringify(personalData.fileData, null, 2);
 const byteSize = Buffer.byteLength(jsonString, "utf-8");
 
-const formatValue = (val: unknown) => {
-  if (typeof val === "string") return `"${val}"`;
-  return JSON.stringify(val);
-};
+const formatValue = (val: unknown) =>
+  typeof val === "string" ? `"${val}"` : JSON.stringify(val);
+
+const skillGroups = [
+  { label: t("about", "skills_languages"), items: skills.languages },
+  { label: t("about", "skills_frameworks"), items: skills.frameworks },
+  { label: t("about", "skills_tools"), items: skills.tools },
+  {
+    label: t("about", "skills_learning"),
+    items: skills.learning,
+    learning: true,
+  },
+];
 ---
 
-<style>
-  .about-page {
-    max-width: 100%;
-    width: 100%;
-    margin-inline: auto;
-    padding: 64px 16px;
-  }
-
-  .about-page-wrapper {
-    max-width: 1024px;
-    margin-inline: auto;
-  }
-
-  .about-hero {
-    margin-bottom: 72px;
-  }
-
-  .about-section {
-    margin-bottom: 64px;
-    animation: fadeUp 0.5s ease both;
-  }
-  .about-section:nth-child(2) {
-    animation-delay: 0.05s;
-  }
-  .about-section:nth-child(3) {
-    animation-delay: 0.1s;
-  }
-  .about-section:nth-child(4) {
-    animation-delay: 0.15s;
-  }
-  .about-section:nth-child(5) {
-    animation-delay: 0.2s;
-  }
-  .about-section:nth-child(6) {
-    animation-delay: 0.25s;
-  }
-  .about-section:nth-child(7) {
-    animation-delay: 0.3s;
-  }
-
-  .sponsor-section {
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 64px;
-    animation: fadeUp 0.5s ease both;
-    padding: 32px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 20px;
-    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.15));
-  }
-
-  .bio-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-  }
-  .bio-text p {
-    font-size: clamp(1rem, 2vw, 1.1rem);
-    line-height: 1.75;
-    margin-bottom: 16px;
-  }
-  .bio-text p:last-child {
-    margin-bottom: 0;
-  }
-
-  /*
-   * bio-card is now a <dl> for semantic key/value pairs.
-   * Reader mode renders <dl>/<dt>/<dd> as structured text;
-   * visually it looks identical to before.
-   */
-  .bio-card {
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 16px;
-    padding: 24px;
-    font-family: var(--font-monospace);
-    font-size: 0.85rem;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-    align-self: start;
-    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
-    /* Reset <dl> browser defaults */
-    margin: 0;
-  }
-  .bio-card-title {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    color: var(--color-text-secondary);
-    margin-bottom: 12px;
-    opacity: 0.7;
-  }
-  .bio-stat {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--color-border);
-    /* Reset <div> wrapper inside <dl> */
-    margin: 0;
-  }
-  .bio-stat:last-child {
-    border-bottom: none;
-  }
-  .bio-stat-key {
-    color: #89b4fa;
-    /* Reset <dt> browser defaults */
-    font-weight: normal;
-  }
-  .bio-stat-value {
-    color: #a6e3a1;
-    text-align: right;
-    max-width: 55%;
-    /* Reset <dd> browser defaults */
-    margin: 0;
-  }
-
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-auto-rows: 1fr;
-    gap: 16px;
-  }
-  .skill-card {
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 16px;
-    padding: 20px 24px;
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
-    transition:
-      transform 0.2s ease,
-      border-color 0.2s ease;
-  }
-  .skill-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(var(--color-accent-rgb), 0.4);
-  }
-  .skill-card-label {
-    font-family: var(--font-monospace);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    margin-bottom: 12px;
-    opacity: 0.9;
-  }
-  .skill-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .skill-item {
-    font-family: var(--font-monospace);
-    font-size: 0.8rem;
-    padding: 3px 10px;
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    color: var(--color-text-secondary);
-    white-space: nowrap;
-  }
-  .skill-item.learning {
-    border-color: rgba(var(--color-accent-rgb), 0.5);
-    color: var(--color-accent);
-    background: rgba(var(--color-accent-rgb), 0.06);
-  }
-
-  .interests-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .interest-tag {
-    font-family: var(--font-monospace);
-    font-size: 0.85rem;
-    padding: 6px 14px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 8px;
-    color: var(--color-text-secondary);
-    transition:
-      border-color 0.2s ease,
-      color 0.2s ease;
-  }
-  .interest-tag:hover {
-    border-color: rgba(var(--color-accent-rgb), 0.4);
-    color: var(--color-text-primary);
-  }
-  /* Decorative comment prefix — CSS only so reader mode ignores it */
-  .interest-tag::before {
-    content: "// ";
-    color: var(--color-accent);
-    opacity: 0.7;
-  }
-
-  .about-cta {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 32px;
-    background: var(--color-glass-bg);
-    border: 1px solid var(--color-glass-border);
-    border-radius: 20px;
-    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.15));
-  }
-  .about-cta-text {
-    flex: 1;
-  }
-  .about-cta-text p {
-    margin: 0;
-    font-size: 1rem;
-  }
-
-  .about-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-monospace);
-    font-size: 0.75rem;
-    color: var(--color-code-green-text);
-    background: var(--color-code-green-background);
-    border: 1px solid var(--color-code-green-border);
-    border-radius: 20px;
-    padding: 4px 12px;
-    margin-bottom: 8px;
-  }
-  .about-status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    box-shadow: 0 0 6px currentColor;
-    flex-shrink: 0;
-  }
-
-  @media (max-width: 768px) {
-    .about-page {
-      padding: 32px 16px;
-    }
-    .about-hero {
-      margin-bottom: 40px;
-    }
-    .about-section {
-      margin-bottom: 44px;
-    }
-    .bio-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    .about-cta {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 24px 18px;
-      gap: 16px;
-    }
-    .sponsor-section {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 24px 18px;
-      gap: 16px;
-    }
-  }
-</style>
-
 <Layout title={t("about", "meta_title")} description={t("about", "meta_desc")}>
-  <div class="about-page">
-    <!--
-      <article> signals to reader mode parsers (Firefox, Safari, etc.)
-      that this is the primary readable content of the page.
-    -->
-    <article class="about-page-wrapper">
+  <PageShell>
+    <!-- <article> signals to reader mode parsers that this is primary content -->
+    <article>
       <SectionHeader
         dirName={t("about", "hero_label")}
         pageHeading={t("about", "hero_title")}
@@ -323,23 +54,15 @@ const formatValue = (val: unknown) => {
         command="whoami"
       />
 
-      <section class="about-section" aria-labelledby="whoami-label">
-        <SectionLabel
-          label={t("about", "section_whoami")}
-        />
+      <section class="about-section" aria-label={t("about", "section_whoami")}>
+        <SectionLabel label={t("about", "section_whoami")} />
         <div class="bio-grid">
           <div class="bio-text">
             <p>{t("about", "bio_1")}</p>
             <p>{t("about", "bio_2")}</p>
             <p>{t("about", "bio_3")}</p>
           </div>
-          <!--
-            bio-card is now a <dl> (description list) — the correct semantic
-            element for key/value pairs. Reader mode renders <dt>/<dd> as
-            structured text instead of a blob of colored spans.
-            The decorative "personal.json" header is aria-hidden since it
-            adds no real information.
-          -->
+
           <dl
             class="bio-card"
             lang="en"
@@ -347,96 +70,62 @@ const formatValue = (val: unknown) => {
             aria-label="Personal stats"
           >
             <div class="bio-card-title" aria-hidden="true">
-              <span>{personelData.fileName}</span>
+              <span>{personalData.fileName}</span>
               <span>{byteSize} B</span>
             </div>
 
             {
-              Object.entries(personelData.fileData).map(([key, value]) => (
+              Object.entries(personalData.fileData).map(([key, value]) => (
                 <div class="bio-stat">
                   <dt class="bio-stat-key">"{key}"</dt>
                   <dd class="bio-stat-value">{formatValue(value)}</dd>
                 </div>
               ))
-              }
+            }
           </dl>
         </div>
       </section>
 
-      <section class="about-section" aria-labelledby="journey-label">
-        <SectionLabel
-          label={t("about", "section_journey")}
-        />
+      <section class="about-section" aria-label={t("about", "section_journey")}>
+        <SectionLabel label={t("about", "section_journey")} />
 
-        <p class="lead" style="margin-bottom: 32px;">
+        <p class="lead about-journey-intro">
           {t("about", "journey_intro")}
         </p>
         <CareerTimeline lang={lang} />
       </section>
 
-      <section class="about-section" aria-labelledby="skills-label">
-        <SectionLabel
-          label={t("about", "section_skills")}
-        />
+      <section class="about-section" aria-label={t("about", "section_skills")}>
+        <SectionLabel label={t("about", "section_skills")} />
 
         <div class="skills-grid">
-          <div class="skill-card">
-            <p class="skill-card-label">{t("about", "skills_languages")}</p>
-            <ul class="skill-list">
-              {
-                skills.languages.map((s) => (
-                  <li class="skill-item" translate="no">
-                    {s}
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-          <div class="skill-card">
-            <p class="skill-card-label">{t("about", "skills_frameworks")}</p>
-            <ul class="skill-list">
-              {
-                skills.frameworks.map((s) => (
-                  <li class="skill-item" translate="no">
-                    {s}
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-          <div class="skill-card">
-            <p class="skill-card-label">{t("about", "skills_tools")}</p>
-            <ul class="skill-list">
-              {
-                skills.tools.map((s) => (
-                  <li class="skill-item" translate="no">
-                    {s}
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
-          <div class="skill-card">
-            <p class="skill-card-label">{t("about", "skills_learning")}</p>
-            <ul class="skill-list">
-              {
-                skills.learning.map((s) => (
-                  <li class="skill-item learning" translate="no">
-                    {s}
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
+          {
+            skillGroups.map((group) => (
+              <div class="skill-card">
+                <p class="skill-card-label">{group.label}</p>
+                <ul class="skill-list">
+                  {group.items.map((item) => (
+                    <li
+                      class:list={["skill-item", { learning: group.learning }]}
+                      translate="no"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
         </div>
       </section>
 
-      <section class="about-section" aria-labelledby="interests-label">
-        <SectionLabel
-          label={t("about", "section_interests")}
-        />
+      <section
+        class="about-section"
+        aria-label={t("about", "section_interests")}
+      >
+        <SectionLabel label={t("about", "section_interests")} />
 
-        <p class="lead" style="margin-bottom: 20px;">
+        <p class="lead about-interests-intro">
           {t("about", "interests_text")}
         </p>
         <ul class="interests-list">
@@ -455,22 +144,22 @@ const formatValue = (val: unknown) => {
         aria-labelledby="contact-cta-label"
       >
         <div class="about-cta-text">
-          <div
-            class="about-status"
-            aria-label={work.isEmployed
+          <StatusPill
+            variant="success"
+            class="about-cta-status"
+            ariaLabel={work.isEmployed
               ? work.statusLabel[lang]
               : "Status: open to work"}
           >
-            <span class="about-status-dot" aria-hidden="true"></span>
             {work.isEmployed ? work.statusKey : t("contact", "open_to")}
-          </div>
+          </StatusPill>
           <p id="contact-cta-label">{t("about", "contact_text")}</p>
         </div>
         <Button
           href={localizePath("/contact", lang)}
           variant="primary"
           size="lg"
-          title={t("about", "contact_button_title")}
+          title={t("about", "contact_button")}
           class="right-arrow"
         >
           {t("about", "contact_button")}
@@ -478,27 +167,17 @@ const formatValue = (val: unknown) => {
       </section>
 
       <section
-        class="about-section about-cta sponsor-section"
+        class="about-section about-cta"
         aria-labelledby="sponsor-label"
       >
         <div class="about-cta-text">
-          <div
-            class="about-status"
-            style="color: var(--color-accent); background: rgba(var(--color-accent-rgb), 0.08); border-color: rgba(var(--color-accent-rgb), 0.3);"
-          >
-            <span
-              class="about-status-dot"
-              aria-hidden="true"
-              style="background: var(--color-accent); box-shadow: 0 0 6px var(--color-accent);"
-            ></span>
+          <StatusPill variant="accent" class="about-cta-status">
             {t("about", "open_source")}
-          </div>
-          <p id="sponsor-label" style="margin: 0; font-size: 1rem;">
-            {t("about", "sponsor_text")}
-          </p>
+          </StatusPill>
+          <p id="sponsor-label">{t("about", "sponsor_text")}</p>
         </div>
         <Button
-          href="https://github.com/sponsors/nazimcanislam"
+          href={profile.sponsorUrl}
           variant="primary"
           size="lg"
           title="Sponsor on GitHub"
@@ -509,5 +188,5 @@ const formatValue = (val: unknown) => {
         </Button>
       </section>
     </article>
-  </div>
+  </PageShell>
 </Layout>

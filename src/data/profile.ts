@@ -99,7 +99,7 @@ export const profile = {
 
   sameAs: [
     "https://github.com/nazimcanislam",
-    "linkedin.com/in/nazimcanislam"
+    "https://linkedin.com/in/nazimcanislam",
   ],
 
   region: "🇹🇷 Türkiye",
@@ -367,10 +367,19 @@ export const profile = {
   ] satisfies ProfessionalProject[],
 
   // ── SOSYAL / İLETİŞİM ────────────────────────────────────────────────────
+  githubUsername: "nazimcanislam",
+  sponsorUrl: "https://github.com/sponsors/nazimcanislam",
   social: {
     email: "nazimcanislam@gmail.com",
     github: "github.com/nazimcanislam",
     linkedin: "linkedin.com/in/nazimcanislam",
+    instagram: "instagram.com/nazimcanislam",
+  },
+  socialUrls: {
+    email: "mailto:nazimcanislam@gmail.com",
+    github: "https://github.com/nazimcanislam",
+    linkedin: "https://www.linkedin.com/in/nazimcanislam/",
+    instagram: "https://www.instagram.com/nazimcanislam",
   },
 } as const;
 

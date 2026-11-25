@@ -1,0 +1,231 @@
+.about-section {
+  margin-bottom: 64px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.about-section:nth-child(2) {
+  animation-delay: 0.05s;
+}
+.about-section:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.about-section:nth-child(4) {
+  animation-delay: 0.15s;
+}
+.about-section:nth-child(5) {
+  animation-delay: 0.2s;
+}
+.about-section:nth-child(6) {
+  animation-delay: 0.25s;
+}
+.about-section:nth-child(7) {
+  animation-delay: 0.3s;
+}
+
+.about-journey-intro {
+  margin-bottom: 32px;
+}
+
+.about-interests-intro {
+  margin-bottom: 20px;
+}
+
+.bio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.bio-text p {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+.bio-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* bio-card is a <dl> for semantic key/value pairs */
+.bio-card {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  font-family: var(--font-monospace);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  align-self: start;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+  margin: 0;
+}
+
+.bio-card-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.bio-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border);
+  margin: 0;
+}
+
+.bio-stat:last-child {
+  border-bottom: none;
+}
+
+.bio-stat-key {
+  color: #89b4fa;
+  font-weight: normal;
+}
+
+.bio-stat-value {
+  color: #a6e3a1;
+  text-align: right;
+  max-width: 55%;
+  margin: 0;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 16px;
+}
+
+.skill-card {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.skill-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(var(--color-accent-rgb), 0.4);
+}
+
+.skill-card-label {
+  font-family: var(--font-monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.skill-item {
+  font-family: var(--font-monospace);
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.skill-item.learning {
+  border-color: rgba(var(--color-accent-rgb), 0.5);
+  color: var(--color-accent);
+  background: rgba(var(--color-accent-rgb), 0.06);
+}
+
+.interests-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.interest-tag {
+  font-family: var(--font-monospace);
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.interest-tag:hover {
+  border-color: rgba(var(--color-accent-rgb), 0.4);
+  color: var(--color-text-primary);
+}
+
+.interest-tag::before {
+  content: "// ";
+  color: var(--color-accent);
+  opacity: 0.7;
+}
+
+.about-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 32px;
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 20px;
+  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.15));
+}
+
+.about-cta-text {
+  flex: 1;
+}
+
+.about-cta-status {
+  margin-bottom: 8px;
+}
+
+.about-cta-text p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    margin-bottom: 44px;
+  }
+
+  .bio-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .about-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 18px;
+    gap: 16px;
+  }
+}

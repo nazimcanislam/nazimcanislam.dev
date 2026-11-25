@@ -1,0 +1,13 @@
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.post-date {
+  font-family: var(--font-monospace);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.03em;
+}
